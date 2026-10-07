@@ -1,19 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { UserRole } from "./types";
 
-const roleHome = {
-  ADMIN: "/admin",
-  SITE_MANAGER: "/site-manager",
-  WORKER: "/worker",
-} as const;
+const roleHome: Record<UserRole, string> = {
+  PRODUCER: "/producer/dashboard",
+  DRIVER: "/driver/dashboard",
+  BUYER: "/",
+  ADMIN: "/producer/dashboard",
+};
 
-function readRole(token: string) {
+function readRole(token: string): UserRole | null {
   try {
     const payload = token.split(".")[1];
+    if (!payload) return null;
     const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
     const decoded = atob(
       normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "="),
     );
-    return JSON.parse(decoded).role as keyof typeof roleHome;
+    const parsed = JSON.parse(decoded);
+    return (parsed.role as UserRole) || null;
   } catch {
     return null;
   }
@@ -25,38 +29,66 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const role = token ? readRole(token) : null;
 
-  const isAuthRoute = [
+  const authRoutes = [
     "/login",
+    "/register",
+    "/verify-otp",
     "/forgot-password",
     "/reset-password",
-    "/accept-invite",
-    "/auth/login",
-    "/auth/reset-password",
-  ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
-  const isProtectedRoute = !isAuthRoute;
+  ];
 
-  if (!token && isProtectedRoute) {
-    const loginUrl = new URL("/login", req.url);
-    return NextResponse.redirect(loginUrl);
-  }
+  const isAuthRoute = authRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
 
-  if (token && !role) return NextResponse.redirect(new URL("/login", req.url));
-
+  // If already authenticated and visits auth route, redirect to role home
   if (token && role && isAuthRoute) {
-    const homeUrl = new URL(roleHome[role], req.url);
-    return NextResponse.redirect(homeUrl);
+    const target = roleHome[role] || "/";
+    return NextResponse.redirect(new URL(target, req.url));
   }
 
-  if (token && role) {
-    const restrictedRoutes = {
-      ADMIN: ["/site-manager", "/worker"],
-      SITE_MANAGER: ["/admin"],
-      WORKER: ["/admin", "/site-manager"],
-    } as const;
-    const blocked = restrictedRoutes[role].some(
-      (route) => pathname === route || pathname.startsWith(`${route}/`),
-    );
-    if (blocked) return NextResponse.redirect(new URL(roleHome[role], req.url));
+  // Producer routes protection
+  if (pathname.startsWith("/producer")) {
+    if (!token || !role) {
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (role !== "PRODUCER" && role !== "ADMIN") {
+      return NextResponse.redirect(new URL(roleHome[role] || "/", req.url));
+    }
+  }
+
+  // Driver routes protection
+  if (pathname.startsWith("/driver")) {
+    if (!token || !role) {
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (role !== "DRIVER" && role !== "ADMIN") {
+      return NextResponse.redirect(new URL(roleHome[role] || "/", req.url));
+    }
+  }
+
+  // Buyer protected checkout & orders & profile
+  const buyerProtectedRoutes = [
+    "/checkout",
+    "/orders",
+    "/profile",
+    "/wishlist",
+    "/messages",
+  ];
+  const isBuyerProtected = buyerProtectedRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isBuyerProtected) {
+    if (!token || !role) {
+      const loginUrl = new URL("/login", req.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
   }
 
   return NextResponse.next();

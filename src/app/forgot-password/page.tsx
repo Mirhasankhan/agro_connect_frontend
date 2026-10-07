@@ -1,93 +1,134 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Mail, Send } from "lucide-react";
+import React from "react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
+import { ArrowLeft, Loader2, Mail, Send, Sprout } from "lucide-react";
+import { toast } from "react-toastify";
+import { useSendForgotPasswordOtpMutation } from "@/redux/features/auth/authApi";
 
-const schema = z.object({
-  email: z.string().email("Enter a valid email address"),
+const forgotSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
 });
+
+type ForgotFormValues = z.infer<typeof forgotSchema>;
+
 export default function ForgotPasswordPage() {
-  const [sent, setSent] = useState(false);
-  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+  const router = useRouter();
+  const [sendOtp, { isLoading }] = useSendForgotPasswordOtpMutation();
+
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) });
-  const onSubmit = async (values: z.infer<typeof schema>) => {
+  } = useForm<ForgotFormValues>({
+    resolver: zodResolver(forgotSchema),
+  });
+
+  const onSubmit = async (values: ForgotFormValues) => {
     try {
-      await forgotPassword(values).unwrap();
-      setSent(true);
-    } catch (error) {
-      setError("root", {
-        message:
-          (error as { data?: { message?: string } })?.data?.message ||
-          "Unable to send reset instructions.",
-      });
+      const response = await sendOtp(values).unwrap();
+      toast.success(
+        response.message || "Password reset code sent to your email!",
+      );
+      router.push(`/reset-password?email=${encodeURIComponent(values.email)}`);
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Failed to send reset code. Please check your email.";
+      setError("root", { message: errorMessage });
+      toast.error(errorMessage);
     }
   };
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-5 py-10">
-      <section className="card-surface w-full max-w-md rounded-xl p-7 sm:p-9">
-        <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-[9px] bg-amber-100 text-amber-700">
-          <Mail size={21} />
-        </div>
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Reset your password
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-slate-500">
-          Enter your account email and we&apos;ll send a secure reset link.
-        </p>
-        {sent ? (
-          <div className="mt-6 rounded-[6px] bg-green-50 p-4 text-sm text-green-700">
-            Reset instructions sent. Check your email to continue.
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#061a10] via-[#092c1d] to-[#04140c] px-4 py-12">
+      <div className="w-full max-w-md">
+        {/* Brand Header */}
+        <div className="mb-8 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white hover:opacity-90"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+              <Sprout className="h-5 w-5" />
+            </span>
+            <span>
+              Agro<span className="text-emerald-400">Connect</span>
+            </span>
+          </Link>
+          <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+            <Mail className="h-6 w-6" />
           </div>
-        ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-7 space-y-5">
+          <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
+            Forgot password?
+          </h1>
+          <p className="mt-2 text-sm text-slate-300">
+            Enter your email to receive a password reset code
+          </p>
+        </div>
+
+        {/* Card */}
+        <div className="rounded-2xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur-md sm:p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {errors.root && (
+              <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-700">
+                {errors.root.message}
+              </div>
+            )}
+
             <div>
-              <label className="form-label" htmlFor="email">
-                Email address
+              <label htmlFor="email" className="form-label">
+                Account Email Address
               </label>
               <input
                 id="email"
                 type="email"
+                placeholder="name@example.com"
                 className="form-input"
-                placeholder="Enter your email address"
+                autoComplete="email"
+                disabled={isLoading}
                 {...register("email")}
               />
               {errors.email && (
                 <p className="form-error">{errors.email.message}</p>
               )}
             </div>
-            {errors.root && (
-              <p className="rounded-[6px] bg-red-50 px-3 py-2 text-sm text-red-700">
-                {errors.root.message}
-              </p>
-            )}
+
             <button
-              className="btn-primary w-full"
               type="submit"
               disabled={isLoading}
+              className="btn-primary mt-2 w-full"
             >
-              <Send size={17} />
-              {isLoading ? "Sending..." : "Send reset link"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Sending code...</span>
+                </>
+              ) : (
+                <>
+                  <span>Send reset code</span>
+                  <Send className="h-4 w-4" />
+                </>
+              )}
             </button>
           </form>
-        )}
-        <Link
-          href="/login"
-          className="mt-7 flex items-center justify-center gap-2 text-sm font-medium text-amber-700"
-        >
-          <ArrowLeft size={15} />
-          Back to sign in
-        </Link>
-      </section>
-    </main>
+
+          <div className="mt-6 border-t border-slate-200/80 pt-6 text-center">
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to sign in</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,91 +1,144 @@
 import { baseApi } from "../../api/baseApi";
+import { TApiResponse, TUser, UserRole } from "@/types";
+
+interface LoginResponse {
+  accessToken: string;
+  role: UserRole;
+  isSetuCompleted: boolean;
+}
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation({
+    register: builder.mutation<
+      TApiResponse<null>,
+      { fullName: string; email: string; password: string; role: UserRole }
+    >({
+      query: (data) => ({
+        url: "/auth/register",
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    verifyRegistration: builder.mutation<
+      TApiResponse<{ id: string; role: UserRole; accessToken: string }>,
+      { email: string; otp: string; fcmToken?: string }
+    >({
+      query: (data) => ({
+        url: "/auth/verify-registration",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    login: builder.mutation<
+      TApiResponse<LoginResponse>,
+      { email: string; password: string; fcmToken?: string }
+    >({
       query: (userInfo) => ({
         url: "/auth/login",
         method: "POST",
         body: userInfo,
       }),
-      invalidatesTags: ["users"],
+      invalidatesTags: ["User"],
     }),
-    profile: builder.query({
+
+    getProfile: builder.query<TApiResponse<TUser>, void>({
       query: () => ({
-        url: "/profile",
+        url: "/auth/profile",
         method: "GET",
       }),
-      providesTags: ["users"],
+      providesTags: ["User"],
     }),
-    verifyInvite: builder.query({
-      query: (token: string) => ({
-        url: `/invites/verify/${encodeURIComponent(token)}`,
-        method: "GET",
+
+    updateProfile: builder.mutation<TApiResponse<null>, FormData>({
+      query: (formData) => ({
+        url: "/auth/update-profile",
+        method: "PUT",
+        body: formData,
       }),
+      invalidatesTags: ["User"],
     }),
-    acceptInvite: builder.mutation({
+
+    createProducerProfile: builder.mutation<TApiResponse<null>, FormData>({
+      query: (formData) => ({
+        url: "/auth/create-producer-profile",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    createDriverProfile: builder.mutation<TApiResponse<null>, FormData>({
+      query: (formData) => ({
+        url: "/auth/create-driver-profile",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
+    sendForgotPasswordOtp: builder.mutation<
+      TApiResponse<null>,
+      { email: string }
+    >({
       query: (data) => ({
-        url: "/auth/accept-invite",
+        url: "/auth/send-otp/password-reset",
         method: "POST",
         body: data,
       }),
     }),
-    sendOtp: builder.mutation({
+
+    verifyForgotPasswordOtp: builder.mutation<
+      TApiResponse<null>,
+      { email: string; otp: string }
+    >({
       query: (data) => ({
-        url: "/auth/send-otp",
+        url: "/auth/verify-otp/password-reset",
         method: "POST",
         body: data,
       }),
     }),
-    verifyOtp: builder.mutation({
-      query: (data) => ({
-        url: "/auth/verify-otp",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    forgotPassword: builder.mutation({
-      query: (data) => ({
-        url: "/auth/forgot-password",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    resetPassword: builder.mutation({
-      query: (data) => ({
+
+    resetPassword: builder.mutation<
+      TApiResponse<null>,
+      { password: string; token?: string }
+    >({
+      query: ({ password, token }) => ({
         url: "/auth/reset-password",
         method: "POST",
-        body: data,
+        body: { password },
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       }),
     }),
-    changePassword: builder.mutation({
+
+    changePassword: builder.mutation<
+      TApiResponse<null>,
+      { oldPassword: string; newPassword: string }
+    >({
       query: (data) => ({
         url: "/auth/change-password",
         method: "POST",
         body: data,
       }),
     }),
-    updateProfile: builder.mutation({
-      query: (data) => ({
-        url: "/profile",
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: ["users"],
-    }),
   }),
 });
 
 export const {
-  useProfileQuery,
+  useRegisterMutation,
+  useVerifyRegistrationMutation,
   useLoginMutation,
+  useGetProfileQuery,
   useUpdateProfileMutation,
-  useChangePasswordMutation,
-  useVerifyInviteQuery,
-  useAcceptInviteMutation,
-  useSendOtpMutation,
-  useVerifyOtpMutation,
-  useForgotPasswordMutation,
+  useCreateProducerProfileMutation,
+  useCreateDriverProfileMutation,
+  useSendForgotPasswordOtpMutation,
+  useVerifyForgotPasswordOtpMutation,
   useResetPasswordMutation,
+  useChangePasswordMutation,
 } = authApi;
 
+export const useProfileQuery = useGetProfileQuery;
+export const useForgotPasswordMutation = useSendForgotPasswordOtpMutation;

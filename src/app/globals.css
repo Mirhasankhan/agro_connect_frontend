@@ -4,49 +4,94 @@
 
 :root {
   color-scheme: light;
-  --background: 210 40% 98%;
-  --foreground: 222 47% 11%;
+  --background: 140 10% 98%;
+  --foreground: 160 40% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 222 47% 11%;
-  --primary: 32 95% 44%;
+  --card-foreground: 160 40% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 160 40% 10%;
+  --primary: 142 76% 36%;
   --primary-foreground: 0 0% 100%;
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
-  --border: 214 32% 91%;
-  --ring: 32 95% 44%;
+  --secondary: 152 57% 11%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 140 14% 95%;
+  --muted-foreground: 150 10% 45%;
+  --accent: 142 71% 45%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 140 16% 90%;
+  --input: 140 16% 90%;
+  --ring: 142 76% 36%;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
 @layer components {
+  /* Surfaces & Cards */
   .card-surface {
-    @apply border border-slate-200 bg-white shadow-sm;
+    @apply rounded-xl border border-slate-200/90 bg-white p-6 shadow-sm transition-shadow hover:shadow;
   }
+  .card-surface-flat {
+    @apply rounded-xl border border-slate-200/90 bg-white p-6;
+  }
+
+  /* Form Labels & Controls */
   .form-label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700;
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-700;
   }
   .form-input {
-    @apply w-full rounded-[6px] border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-amber-600 focus:ring-2 focus:ring-amber-600/20 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500;
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400;
+  }
+  .form-textarea {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400;
+  }
+  .form-select {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400;
   }
   .form-error {
-    @apply mt-1 text-xs text-red-600;
+    @apply mt-1 text-xs font-medium text-rose-600;
   }
+
+  /* User-requested alias classes */
+  .input-design {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-50;
+  }
+  .label-design {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+
+  /* Button Variations */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-[6px] bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-[6px] border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
   }
-  .status-badge {
-    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold;
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-rose-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-rose-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-hero-glass {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/20 active:scale-[0.98];
+  }
+
+  /* Status Badges & Table Row Styling */
+  .badge-status {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
   }
   .table-row-hover {
-    @apply border-b border-slate-100 transition hover:bg-amber-50/40;
+    @apply border-b border-slate-100 transition-colors hover:bg-emerald-50/40;
   }
-}
-
-.input-design {
-  @apply w-full rounded-[8px] border border-gray-200 px-3 py-2 text-sm placeholder:text-gray-400 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60;
-}
-
-.label-design {
-  @apply block text-gray-600 font-medium;
 }

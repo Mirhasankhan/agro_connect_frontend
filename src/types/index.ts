@@ -1,0 +1,363 @@
+export type UserRole = "BUYER" | "PRODUCER" | "DRIVER" | "ADMIN";
+
+export type ActivityStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
+
+export type SellingUnit =
+  | "KG"
+  | "GRAM"
+  | "PIECE"
+  | "DOZEN"
+  | "LITER"
+  | "BAG"
+  | "BUNDLE";
+
+export type OrderStatus =
+  | "Pending"
+  | "Active"
+  | "PartiallyCancelled"
+  | "Shipped"
+  | "Delivered"
+  | "Cancelled"
+  | "Refunded";
+
+export type PaymentStatus =
+  | "Pending"
+  | "Paid"
+  | "Failed"
+  | "PartiallyRefunded"
+  | "Refunded";
+
+export type ItemStatus =
+  | "Pending"
+  | "SentToHub"
+  | "Delivered"
+  | "Cancelled"
+  | "Refunded";
+
+export type DeliveryStatus = "Assigned" | "PickedUp" | "Delivered";
+
+export type ProducerType = "Private" | "Company";
+
+export type DriverVehicleType =
+  | "BIKE"
+  | "MOTORCYCLE"
+  | "THREE_WHEELER"
+  | "VAN"
+  | "TRUCK"
+  | "PICKUP";
+
+export type VerificationStatus = "Pending" | "Accepted" | "Rejected";
+
+export interface TUser {
+  id: string;
+  fullName: string;
+  email: string;
+  role: UserRole;
+  status?: ActivityStatus;
+  isSetupCompleted?: boolean;
+  phoneNumber?: string | null;
+  profileImage?: string | null;
+  city?: string | null;
+  region?: string | null;
+  address?: string | null;
+  createdAt?: string;
+  producerProfile?: {
+    id?: string;
+    farmName?: string;
+    farmSize?: number;
+    producerType?: ProducerType;
+    companyName?: string;
+    rccmNo?: string;
+    sirenNo?: string;
+    city?: string;
+    verificationStatus?: VerificationStatus;
+    rejectionReason?: string | null;
+  } | null;
+  driverProfile?: {
+    id?: string;
+    vehicleType?: DriverVehicleType;
+    licensePlate?: string;
+    verificationStatus?: VerificationStatus;
+    rejectionReason?: string | null;
+  } | null;
+}
+
+export interface TPricingTier {
+  id?: string;
+  productId?: string;
+  quantity: number;
+  pricePerUnit: number;
+}
+
+export interface TCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
+export interface TReview {
+  id?: string;
+  rating: number;
+  comment: string;
+  createdAt?: string;
+  buyer?: {
+    fullName: string;
+    profileImage?: string | null;
+  };
+}
+
+export interface TProduct {
+  id: string;
+  name: string;
+  description: string;
+  categoryId: string;
+  sellingUnit: SellingUnit;
+  pricePerUnit: number;
+  availableQuantity: number;
+  sold?: number;
+  imageUrls: string[];
+  isFeatured?: boolean;
+  isCertified?: boolean;
+  isActive?: boolean;
+  avgRating?: number;
+  totalReviews?: number;
+  createdAt?: string;
+  category?: {
+    id?: string;
+    name: string;
+    slug?: string;
+  };
+  pricingTiers?: TPricingTier[];
+  _count?: {
+    pricingTiers?: number;
+    orderItems?: number;
+  };
+  producer?: {
+    id?: string;
+    fullName?: string;
+    profileImage?: string | null;
+    address?: string | null;
+    producerProfile?: {
+      farmName?: string;
+      companyName?: string | null;
+      city?: string | null;
+      farmSize?: number;
+      producerType?: ProducerType;
+    };
+  };
+  wishlists?: { id: string }[] | boolean;
+  reviews?: TReview[];
+}
+
+export interface TCartItem {
+  id: string;
+  quantity: number;
+  product: {
+    id: string;
+    name: string;
+    pricePerUnit: number;
+    imageUrls: string[];
+    availableQuantity?: number;
+    sellingUnit?: SellingUnit;
+    pricingTiers?: TPricingTier[];
+  };
+}
+
+export interface TWishlistItem {
+  id: string;
+  product: {
+    id: string;
+    name: string;
+    pricePerUnit: number;
+    imageUrls: string[];
+    availableQuantity?: number;
+    sellingUnit?: SellingUnit;
+  };
+}
+
+export interface TShippingAddress {
+  id: string;
+  addressLine: string;
+  city: string;
+  postCode: string;
+  instruction: string;
+  createdAt?: string;
+}
+
+export interface TOrderItem {
+  id: string;
+  orderId?: string;
+  productId: string;
+  productName: string;
+  sellingUnit: SellingUnit;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  status: ItemStatus;
+  createdAt?: string;
+  isReviewed?: boolean;
+  cancelReason?: string | null;
+  order?: {
+    id?: string;
+    orderId?: string;
+    customer?: {
+      fullName?: string;
+      profileImage?: string | null;
+      buyerProfile?: {
+        institution?: string | null;
+      };
+    };
+  };
+  product?: {
+    id?: string;
+    imageUrls: string[];
+    producer?: {
+      id?: string;
+      fullName?: string;
+      profileImage?: string | null;
+      address?: string | null;
+      city?: string | null;
+      producerProfile?: {
+        farmName?: string;
+        farmSize?: number;
+        producerType?: ProducerType;
+      };
+    };
+  };
+}
+
+export interface TOrder {
+  id: string;
+  orderId: string;
+  customerId?: string;
+  totalAmount: number;
+  deliveryCharge: number;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  cancelReason?: string | null;
+  createdAt: string;
+  shippingAddress?: TShippingAddress;
+  items: TOrderItem[];
+  customer?: {
+    id?: string;
+    fullName: string;
+    email?: string;
+    profileImage?: string | null;
+  };
+}
+
+export interface TPaginationMeta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+}
+
+export interface TProducerEarning {
+  id: string;
+  amount: number;
+  isTransferred: boolean;
+  createdAt: string;
+  paidAt?: string | null;
+  orderItem?: {
+    productName: string;
+    quantity: number;
+    sellingUnit: SellingUnit;
+    unitPrice: number;
+    subtotal: number;
+  };
+}
+
+export interface TDriverEarning {
+  id: string;
+  amount: number;
+  isTransferred: boolean;
+  createdAt: string;
+  paidAt?: string | null;
+  order?: {
+    id: string;
+    orderId: string;
+    items?: {
+      productName: string;
+      quantity: number;
+      sellingUnit: SellingUnit;
+      unitPrice: number;
+      subtotal: number;
+    }[];
+  };
+}
+
+export interface TDelivery {
+  id: string;
+  orderId: string;
+  driverId?: string;
+  status: DeliveryStatus;
+  createdAt?: string;
+  order?: {
+    id: string;
+    orderId: string;
+    totalAmount?: number;
+    deliveryCharge?: number;
+    shippingAddress?: TShippingAddress;
+    customer?: {
+      id?: string;
+      fullName: string;
+      email?: string;
+      phoneNumber?: string | null;
+    };
+    items?: TOrderItem[];
+  };
+}
+
+export interface TChatMessage {
+  id?: string;
+  conversationId?: string;
+  senderId?: string;
+  receiverId?: string;
+  message: string;
+  images?: string[];
+  isRead?: boolean;
+  isSendByMe?: boolean;
+  createdAt?: string;
+}
+
+export interface TParticipant {
+  id: string;
+  fullName: string;
+  profileImage?: string | null;
+  role?: UserRole;
+  isOnline?: boolean;
+}
+
+export interface TConversationItem {
+  participant: TParticipant;
+  lastMessage: {
+    message: string;
+    images?: string[];
+    createdAt: string;
+  } | null;
+  unreadCount: number;
+}
+
+export interface TConversationDetails {
+  id: string;
+  participant?: TParticipant | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface TConversationHistory {
+  conversation: TConversationDetails;
+  messages: TChatMessage[];
+}
+
+export interface TApiResponse<T> {
+  statusCode?: number;
+  message: string;
+  data: T;
+  pagination?: TPaginationMeta;
+}
+

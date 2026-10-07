@@ -1,0 +1,256 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Package,
+  Plus,
+  Search,
+  TrendingDown,
+  Eye,
+} from "lucide-react";
+import { toast } from "react-toastify";
+import {
+  useGetProducerProductsQuery,
+  useUpdateProductMutation,
+} from "@/redux/features/product/productApi";
+import AddPricingTierModal from "@/components/producer/AddPricingTierModal";
+import { formatCurrency, formatUnit } from "@/utils/formatters";
+import { TProduct, SellingUnit } from "@/types";
+
+export default function ProducerProductsPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "active" | "outOfStock">("all");
+
+  const queryParams: any = {
+    limit: 50,
+  };
+  if (searchTerm.trim()) queryParams.search = searchTerm.trim();
+  if (statusFilter !== "all") queryParams.status = statusFilter;
+
+  const { data, isLoading } = useGetProducerProductsQuery(queryParams);
+  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+
+  const products = data?.data?.products || [];
+
+  // Add Tier Modal State
+  const [selectedProductForTier, setSelectedProductForTier] = useState<{
+    id: string;
+    name: string;
+    basePrice: number;
+    sellingUnit: SellingUnit;
+  } | null>(null);
+
+  const handleToggleActive = async (product: TProduct) => {
+    try {
+      await updateProduct({
+        productId: product.id,
+        isActive: !product.isActive,
+      }).unwrap();
+      toast.success(
+        `${product.name} is now ${!product.isActive ? "Active" : "Hidden from marketplace"}`
+      );
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update product status");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-forest-800 pb-5">
+        <div>
+          <h1 className="font-serif text-2xl font-bold text-white">Harvest Inventory</h1>
+          <p className="text-xs text-white/60 mt-0.5">
+            Manage your agricultural produce, available stock, and bulk wholesale discount tiers.
+          </p>
+        </div>
+
+        <Link
+          href="/producer/products/create"
+          className="btn-primary text-xs py-2.5 px-4 flex items-center justify-center gap-2 shadow-md shadow-emerald-950/60"
+        >
+          <Plus className="w-4 h-4" />
+          Add New Harvest
+        </Link>
+      </div>
+
+      {/* Filters Bar */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#071f11] p-3 rounded-2xl border border-forest-700/60">
+        <div className="relative w-full sm:max-w-xs">
+          <input
+            type="text"
+            placeholder="Search your harvests..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-forest-950 border border-forest-700 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-white/40 focus:outline-none focus:border-emerald-500"
+          />
+          <Search className="w-4 h-4 text-emerald-400 absolute left-3 top-2.5" />
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <span className="text-xs text-white/50">Stock:</span>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as any)}
+            className="bg-forest-950 border border-forest-700 rounded-xl py-1.5 px-3 text-xs text-white focus:outline-none focus:border-emerald-500 w-full sm:w-auto"
+          >
+            <option value="all">All Harvests</option>
+            <option value="active">In Stock (Active)</option>
+            <option value="outOfStock">Out of Stock</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Products Table */}
+      <div className="bg-[#071f11] border border-forest-700/60 rounded-3xl overflow-hidden shadow-xl">
+        {isLoading ? (
+          <div className="p-8 space-y-4 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-16 bg-forest-900/40 rounded-xl" />
+            ))}
+          </div>
+        ) : products.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-white/80">
+              <thead className="bg-forest-950/70 text-white/50 uppercase tracking-wider text-[10px] border-b border-forest-800">
+                <tr>
+                  <th className="py-3.5 px-4">Harvest</th>
+                  <th className="py-3.5 px-4">Category</th>
+                  <th className="py-3.5 px-4">Base Unit Price</th>
+                  <th className="py-3.5 px-4">Available Stock</th>
+                  <th className="py-3.5 px-4">Units Sold</th>
+                  <th className="py-3.5 px-4">Bulk Tiers</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-forest-800/60">
+                {products.map((prod) => {
+                  const img =
+                    prod.imageUrls?.[0] ||
+                    "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=150&q=80";
+
+                  return (
+                    <tr key={prod.id} className="table-row-hover">
+                      {/* Harvest image + name */}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-forest-950 shrink-0 border border-forest-800">
+                            <Image src={img} alt={prod.name} fill className="object-cover" />
+                          </div>
+                          <div>
+                            <p className="font-serif font-bold text-white text-sm line-clamp-1">
+                              {prod.name}
+                            </p>
+                            <span className="text-[10px] text-white/40">
+                              Unit: {formatUnit(prod.sellingUnit)}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Category */}
+                      <td className="py-3.5 px-4 text-emerald-400 font-medium">
+                        {prod.category?.name || "General"}
+                      </td>
+
+                      {/* Price */}
+                      <td className="py-3.5 px-4 font-mono font-bold text-emerald-400">
+                        {formatCurrency(prod.pricePerUnit)}
+                      </td>
+
+                      {/* Stock */}
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`font-mono font-semibold ${
+                            prod.availableQuantity > 0 ? "text-white" : "text-red-400"
+                          }`}
+                        >
+                          {prod.availableQuantity} {formatUnit(prod.sellingUnit)}
+                        </span>
+                      </td>
+
+                      {/* Sold */}
+                      <td className="py-3.5 px-4 font-mono text-white/70">{prod.sold || 0}</td>
+
+                      {/* Bulk Pricing Tier Builder */}
+                      <td className="py-3.5 px-4">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setSelectedProductForTier({
+                              id: prod.id,
+                              name: prod.name,
+                              basePrice: prod.pricePerUnit,
+                              sellingUnit: prod.sellingUnit,
+                            })
+                          }
+                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-[11px] font-semibold transition-colors"
+                        >
+                          <TrendingDown className="w-3.5 h-3.5" />
+                          <span>+ Add Tier</span>
+                        </button>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-3.5 px-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/products/${prod.id}`}
+                            target="_blank"
+                            className="p-1.5 text-white/60 hover:text-emerald-400 transition-colors"
+                            title="Preview on Marketplace"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Link>
+
+                          <button
+                            type="button"
+                            onClick={() => handleToggleActive(prod)}
+                            disabled={isUpdating}
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors ${
+                              prod.isActive
+                                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/40"
+                                : "bg-forest-900 text-white/50 border-forest-700 hover:text-white"
+                            }`}
+                          >
+                            {prod.isActive ? "Active" : "Hidden"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-16 px-4">
+            <Package className="w-12 h-12 text-emerald-400/60 mx-auto mb-3" />
+            <h3 className="font-serif text-lg font-bold text-white">No Harvests Found</h3>
+            <p className="text-xs text-white/60 max-w-sm mx-auto mt-1 mb-6">
+              You haven&apos;t added any produce yet. List your vegetables, fruits, or tubers to
+              start selling to verified buyers.
+            </p>
+            <Link href="/producer/products/create" className="btn-primary text-xs py-2 px-5">
+              Add Your First Harvest
+            </Link>
+          </div>
+        )}
+      </div>
+
+      {/* Add Pricing Tier Modal */}
+      {selectedProductForTier && (
+        <AddPricingTierModal
+          isOpen={Boolean(selectedProductForTier)}
+          onClose={() => setSelectedProductForTier(null)}
+          productId={selectedProductForTier.id}
+          productName={selectedProductForTier.name}
+          basePrice={selectedProductForTier.basePrice}
+          sellingUnit={selectedProductForTier.sellingUnit}
+        />
+      )}
+    </div>
+  );
+}

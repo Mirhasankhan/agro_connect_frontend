@@ -12,7 +12,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        alex: ['"Alex Brush"', "cursive"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -31,12 +32,33 @@ module.exports = {
           foreground: "hsl(var(--popover-foreground))",
         },
         primary: {
-          DEFAULT: "#D97706",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#16a34a",
+          foreground: "#ffffff",
+          50: "#f0fdf4",
+          100: "#dcfce7",
+          500: "#22c55e",
+          600: "#16a34a",
+          700: "#15803d",
+          800: "#166534",
+          900: "#14532d",
         },
         secondary: {
-          DEFAULT: "#2b645c",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#0c2b1c",
+          foreground: "#ffffff",
+        },
+        forest: {
+          950: "#03130b",
+          900: "#061a10",
+          800: "#0c2b1c",
+          700: "#123825",
+          600: "#184931",
+        },
+        gold: {
+          DEFAULT: "#eab308",
+          300: "#fde047",
+          400: "#facc15",
+          500: "#eab308",
+          600: "#ca8a04",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",

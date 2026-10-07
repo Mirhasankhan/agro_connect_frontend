@@ -8,8 +8,8 @@ import {
   useUpdateProfileMutation,
   useChangePasswordMutation,
 } from "@/redux/features/auth/authApi";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setUser, useCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { updateProfileData } from "@/redux/features/auth/authSlice";
 import {
   Camera,
   CheckCircle2,
@@ -56,7 +56,6 @@ const roleBadgeStyles: Record<string, { bg: string; text: string; label: string 
 
 export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
   const dispatch = useAppDispatch();
-  const currentAuth = useAppSelector(useCurrentUser);
 
   const {
     data: profileResponse,
@@ -70,7 +69,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
   const [changePassword, { isLoading: isChangingPassword }] =
     useChangePasswordMutation();
 
-  const profile = profileResponse?.data || profileResponse?.result;
+  const profile = profileResponse?.data || (profileResponse as any)?.result;
   const workerInfo = profile?.workerProfile;
 
   // Personal Info Form State
@@ -188,17 +187,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
       toast.success(res?.message || "Profile details updated successfully!");
 
       // Update Redux user name if changed
-      if (currentAuth?.token) {
-        dispatch(
-          setUser({
-            id: currentAuth.id,
-            name: trimmedName,
-            email: currentAuth.email,
-            token: currentAuth.token,
-            role: currentAuth.role,
-          })
-        );
-      }
+      dispatch(updateProfileData({ fullName: trimmedName }));
 
       refetch();
     } catch (err: any) {

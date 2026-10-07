@@ -1,0 +1,200 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Eye, EyeOff, Loader2, Sprout, ArrowRight } from "lucide-react";
+import { toast } from "react-toastify";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useAppDispatch } from "@/redux/hooks";
+import { setUser } from "@/redux/features/auth/authSlice";
+
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
+  const dispatch = useAppDispatch();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [login, { isLoading }] = useLoginMutation();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (values: LoginFormValues) => {
+    try {
+      const response = await login(values).unwrap();
+      const { accessToken, role, isSetuCompleted } = response.data;
+
+      dispatch(
+        setUser({
+          token: accessToken,
+          role,
+          isSetupCompleted: isSetuCompleted,
+        }),
+      );
+
+      toast.success(response.message || "Welcome back to Agro Connect!");
+
+      // Role-based routing
+      if (redirectPath) {
+        router.push(redirectPath);
+      } else if (role === "PRODUCER") {
+        if (!isSetuCompleted) {
+          router.push("/onboarding/producer");
+        } else {
+          router.push("/producer/dashboard");
+        }
+      } else if (role === "DRIVER") {
+        if (!isSetuCompleted) {
+          router.push("/onboarding/driver");
+        } else {
+          router.push("/driver/dashboard");
+        }
+      } else {
+        router.push("/");
+      }
+    } catch (err: unknown) {
+      const errorMessage =
+        (err as { data?: { message?: string } })?.data?.message ||
+        "Invalid email or password. Please try again.";
+      setError("root", { message: errorMessage });
+      toast.error(errorMessage);
+    }
+  };
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#061a10] via-[#092c1d] to-[#04140c] px-4 py-12">
+      <div className="w-full max-w-md">
+        {/* Brand Header */}
+        <div className="mb-8 text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white hover:opacity-90"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+              <Sprout className="h-5 w-5" />
+            </span>
+            <span>
+              Agro<span className="text-emerald-400">Connect</span>
+            </span>
+          </Link>
+          <h1 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
+            Welcome back
+          </h1>
+          <p className="mt-2 text-sm text-slate-300">
+            Sign in to access your marketplace account
+          </p>
+        </div>
+
+        {/* Card */}
+        <div className="rounded-2xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur-md sm:p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {errors.root && (
+              <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-700">
+                {errors.root.message}
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="email" className="form-label">
+                Email Address
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                className="form-input"
+                autoComplete="email"
+                disabled={isLoading}
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="form-error">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  className="form-input pr-10"
+                  autoComplete="current-password"
+                  disabled={isLoading}
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="form-error">{errors.password.message}</p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="btn-primary mt-2 w-full"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Signing in...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign in</span>
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 border-t border-slate-200/80 pt-6 text-center text-sm text-slate-600">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="font-semibold text-emerald-700 hover:text-emerald-800"
+            >
+              Create account
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
