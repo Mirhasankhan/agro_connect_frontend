@@ -37,6 +37,7 @@ function MessagesContent() {
 
   const [activeParticipant, setActiveParticipant] = useState<TParticipant | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const activeParticipantId = activeParticipant?.id;
 
   useEffect(() => {
     if (!user) {
@@ -51,10 +52,10 @@ function MessagesContent() {
         (c) => c.participant.id === targetUserId
       );
       if (existing) {
-        if (activeParticipant?.id !== existing.participant.id) {
+        if (activeParticipantId !== existing.participant.id) {
           setActiveParticipant(existing.participant);
         }
-      } else if (activeParticipant?.id !== targetUserId) {
+      } else if (activeParticipantId !== targetUserId) {
         // Initialize synthetic participant for initiating conversation
         setActiveParticipant({
           id: targetUserId,
@@ -63,10 +64,10 @@ function MessagesContent() {
           isOnline: false,
         });
       }
-    } else if (conversations.length > 0 && !activeParticipant) {
+    } else if (conversations.length > 0 && !activeParticipantId) {
       setActiveParticipant(conversations[0].participant);
     }
-  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipant?.id]);
+  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipantId]);
 
   const filteredConversations = useMemo(() => {
     if (!searchQuery.trim()) return conversations;

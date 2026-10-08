@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -89,8 +89,10 @@ export default function EditProductPage() {
   const { data: categoriesData, isLoading: isLoadingCategories } =
     useGetAllCategoriesQuery();
 
-  const categories =
-    categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [];
+  const categories = useMemo(
+    () => categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [],
+    [categoriesData]
+  );
 
   const product = productData?.data?.product;
 
@@ -111,7 +113,7 @@ export default function EditProductPage() {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isDirty: isFormDirty },
+    formState: { errors },
   } = useForm<UpdateProductFormValues>({
     resolver: zodResolver(updateProductSchema),
     defaultValues: {
@@ -558,7 +560,7 @@ export default function EditProductPage() {
                   className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 />
                 <div>
-                  <span className="text-xs font-semibold text-slate-900 block flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
                     Featured Produce <Sparkles className="h-3 w-3 text-amber-500" />
                   </span>
                   <span className="text-[11px] text-slate-500">

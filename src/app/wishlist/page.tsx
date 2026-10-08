@@ -102,7 +102,7 @@ export default function WishlistPage() {
       } else {
         toast.error("Could not add items to cart. Please try again.");
       }
-    } catch (err: any) {
+    } catch {
       toast.error("Failed to add items to cart");
     } finally {
       setIsAddingAll(false);

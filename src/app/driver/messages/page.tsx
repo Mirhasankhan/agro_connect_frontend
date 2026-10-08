@@ -34,6 +34,7 @@ function DriverMessagesContent() {
 
   const [activeParticipant, setActiveParticipant] = useState<TParticipant | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const activeParticipantId = activeParticipant?.id;
 
   // Handle URL initiated conversations
   useEffect(() => {
@@ -42,10 +43,10 @@ function DriverMessagesContent() {
         (c) => c.participant.id === targetUserId
       );
       if (existing) {
-        if (activeParticipant?.id !== existing.participant.id) {
+        if (activeParticipantId !== existing.participant.id) {
           setActiveParticipant(existing.participant);
         }
-      } else if (activeParticipant?.id !== targetUserId) {
+      } else if (activeParticipantId !== targetUserId) {
         setActiveParticipant({
           id: targetUserId,
           fullName: targetUserName || "Producer / Customer",
@@ -53,10 +54,10 @@ function DriverMessagesContent() {
           isOnline: false,
         });
       }
-    } else if (conversations.length > 0 && !activeParticipant) {
+    } else if (conversations.length > 0 && !activeParticipantId) {
       setActiveParticipant(conversations[0].participant);
     }
-  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipant?.id]);
+  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipantId]);
 
   const filteredConversations = useMemo(() => {
     if (!searchQuery.trim()) return conversations;
