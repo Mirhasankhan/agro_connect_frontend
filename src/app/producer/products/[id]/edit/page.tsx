@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -20,10 +20,8 @@ import {
   Loader2,
   Eye,
   Camera,
-  Trash2,
-  CheckCircle2,
-  Info,
-  DollarSign,
+  Trash2,  
+  Info,  
   Layers,
 } from "lucide-react";
 import {
@@ -76,7 +74,7 @@ type UpdateProductFormValues = z.infer<typeof updateProductSchema>;
 export default function EditProductPage() {
   const params = useParams();
   const productId = params?.id as string;
-  const router = useRouter();
+ 
 
   const [isTierModalOpen, setIsTierModalOpen] = useState(false);
 

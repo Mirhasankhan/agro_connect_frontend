@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { MapPin, Sprout, ArrowRight, Compass, ShieldCheck } from "lucide-react";
+import { MapPin, ArrowRight, Compass, ShieldCheck } from "lucide-react";
 
 interface RegionalHub {
   name: string;

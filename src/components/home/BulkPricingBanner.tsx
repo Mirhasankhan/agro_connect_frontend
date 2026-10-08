@@ -7,12 +7,9 @@ import {
   TrendingDown,
   Percent,
   CheckCircle2,
-  ArrowRight,
-  ShieldCheck,
+  ArrowRight,  
   Building2,
   UtensilsCrossed,
-  Sparkles,
-  DollarSign,
 } from "lucide-react";
 
 export default function BulkPricingBanner() {

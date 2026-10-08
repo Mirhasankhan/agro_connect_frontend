@@ -18,8 +18,7 @@ import {
   Package,
   Carrot,
   Leaf,
-  Coffee,
-  Sparkles,
+  Coffee,  
 } from "lucide-react";
 import { TCategory } from "@/types";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -12,13 +12,9 @@ import {
   DollarSign,
   TrendingUp,
   Star,
-  CheckCircle2,
-  Clock,
-  Truck,
+  CheckCircle2,  
   Sparkles,
-  MapPin,
-  Calendar,
-  User,
+  MapPin,  
   ShoppingBag,
   Loader2,
   AlertCircle,
@@ -31,7 +27,6 @@ import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
 export default function ProducerProductDetailsPage() {
   const params = useParams();
   const productId = params?.id as string;
-  const router = useRouter();
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isTierModalOpen, setIsTierModalOpen] = useState(false);

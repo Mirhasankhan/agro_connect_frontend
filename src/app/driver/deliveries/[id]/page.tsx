@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,8 +16,6 @@ import {
   Package,
   Loader2,
   AlertCircle,
-  FileText,
-  DollarSign,
   User,
   Info,
 } from "lucide-react";
@@ -32,8 +30,7 @@ import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function DriverDeliveryDetailsPage() {
   const params = useParams();
-  const deliveryId = params?.id as string;
-  const router = useRouter();
+  const deliveryId = params?.id as string; 
 
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 

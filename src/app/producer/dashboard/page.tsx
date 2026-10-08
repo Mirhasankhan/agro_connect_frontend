@@ -11,8 +11,7 @@ import {
   Plus,
   ArrowRight,
   Truck,
-  Sprout,
-  MapPin,
+  Sprout,  
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useGetProducerProductsQuery } from "@/redux/features/product/productApi";

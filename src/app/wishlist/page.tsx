@@ -8,13 +8,11 @@ import {
   ShoppingCart,
   Trash2,
   ArrowRight,
-  ShieldCheck,
-  Package,
+  ShieldCheck,  
   ArrowLeft,
   Sparkles,
   Loader2,
-  ExternalLink,
-  CheckCircle2,
+  ExternalLink,  
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Navbar from "@/components/layout/Navbar";
@@ -28,14 +26,14 @@ import { useAppSelector } from "@/redux/hooks";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function WishlistPage() {
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const { data, isLoading } = useGetWishlistQuery(undefined, {
     skip: !isAuthenticated,
   });
 
-  const [toggleWishlist, { isLoading: isToggling }] = useToggleWishlistMutation();
-  const [addToCart, { isLoading: isAddingCart }] = useAddToCartMutation();
+  const [toggleWishlist] = useToggleWishlistMutation();
+  const [addToCart] = useAddToCartMutation();
 
   // Track loading per specific product for smooth UI
   const [processingProductId, setProcessingProductId] = useState<string | null>(null);

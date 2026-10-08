@@ -14,8 +14,7 @@ import {
   Package,
   Loader2,
   Eye,
-  User,
-  ArrowRight,
+  User,  
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -26,7 +25,6 @@ import {
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import { formatCurrency } from "@/utils/formatters";
-import { DeliveryStatus } from "@/types";
 
 const FILTER_TABS: { label: string; value: string }[] = [
   { label: "All Deliveries", value: "ALL" },
