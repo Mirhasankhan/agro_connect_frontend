@@ -46,10 +46,11 @@ export default function LoginPage() {
   const onSubmit = async (values: LoginFormValues) => {
     try {
       const response = await login(values).unwrap();
-      const { accessToken, role, isSetuCompleted } = response.data;
+      const { accessToken, role, isSetuCompleted, user: userData } = (response.data as any) || {};
 
       dispatch(
         setUser({
+          user: userData,
           token: accessToken,
           role,
           isSetupCompleted: isSetuCompleted,

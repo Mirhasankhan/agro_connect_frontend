@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import {
   Sprout,
@@ -17,9 +18,11 @@ import {
   ChevronDown,
   ShoppingBag,
   MessageSquare,
+  User,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logout } from "@/redux/features/auth/authSlice";
+import { logout, updateProfileData } from "@/redux/features/auth/authSlice";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useGetCartQuery, useGetWishlistQuery } from "@/redux/features/shopping/shoppingApi";
 
 export default function Navbar() {
@@ -28,11 +31,29 @@ export default function Navbar() {
   const dispatch = useAppDispatch();
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
+  // Fetch real-time profile when authenticated to guarantee accurate full name and avatar
+  const { data: profileResponse } = useGetProfileQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+
+  const profile = profileResponse?.data;
+  const displayUser = profile || user;
+  const displayName =
+    displayUser?.fullName?.trim() ||
+    displayUser?.email?.split("@")[0] ||
+    "User";
+
+  useEffect(() => {
+    if (profile?.fullName && profile.fullName !== user?.fullName) {
+      dispatch(updateProfileData(profile));
+    }
+  }, [profile, user?.fullName, dispatch]);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const isBuyerOrGuest = !user || user.role === "BUYER";
+  const isBuyerOrGuest = !displayUser || displayUser.role === "BUYER";
 
   // Only query cart and wishlist if authenticated buyer
   const { data: cartData } = useGetCartQuery(undefined, {
@@ -184,18 +205,28 @@ export default function Navbar() {
             )}
 
             {/* Auth Dropdown or Login / Register */}
-            {isAuthenticated && user ? (
+            {isAuthenticated && displayUser ? (
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 hover:border-emerald-500 text-sm transition-all focus:outline-none"
                 >
-                  <div className="w-7 h-7 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-xs font-bold text-emerald-800">
-                    {user.fullName?.charAt(0).toUpperCase() || "U"}
+                  <div className="w-7 h-7 rounded-full bg-emerald-100 border border-emerald-200 overflow-hidden flex items-center justify-center text-xs font-bold text-emerald-800 shrink-0">
+                    {displayUser.profileImage ? (
+                      <Image
+                        src={displayUser.profileImage}
+                        alt={displayName}
+                        width={28}
+                        height={28}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      displayName.charAt(0).toUpperCase()
+                    )}
                   </div>
-                  <span className="hidden sm:inline font-medium text-xs text-slate-800 max-w-[100px] truncate">
-                    {user.fullName || "User"}
+                  <span className="hidden sm:inline font-medium text-xs text-slate-800 max-w-[120px] truncate">
+                    {displayName}
                   </span>
                   <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
                 </button>
@@ -203,17 +234,33 @@ export default function Navbar() {
                 {/* Dropdown Menu */}
                 {userMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
+                    className="absolute right-0 mt-2 w-60 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
                     onMouseLeave={() => setUserMenuOpen(false)}
                   >
-                    <div className="px-4 py-2 border-b border-slate-100">
-                      <p className="text-xs font-semibold text-slate-900 truncate">{user.fullName}</p>
-                      <p className="text-[11px] text-emerald-700 font-medium">
-                        Role: {user.role}
+                    <div className="px-4 py-2.5 border-b border-slate-100">
+                      <p className="text-xs font-semibold text-slate-900 truncate">
+                        {displayName}
+                      </p>
+                      {displayUser.email && (
+                        <p className="text-[11px] text-slate-500 truncate mt-0.5">
+                          {displayUser.email}
+                        </p>
+                      )}
+                      <p className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider mt-1">
+                        Role: {displayUser.role}
                       </p>
                     </div>
 
-                    {user.role === "PRODUCER" && (
+                    <Link
+                      href="/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-emerald-600" />
+                      My Profile & Password
+                    </Link>
+
+                    {displayUser.role === "PRODUCER" && (
                       <Link
                         href="/producer/dashboard"
                         onClick={() => setUserMenuOpen(false)}
@@ -224,7 +271,7 @@ export default function Navbar() {
                       </Link>
                     )}
 
-                    {user.role === "DRIVER" && (
+                    {displayUser.role === "DRIVER" && (
                       <Link
                         href="/driver/dashboard"
                         onClick={() => setUserMenuOpen(false)}
@@ -235,7 +282,7 @@ export default function Navbar() {
                       </Link>
                     )}
 
-                    {user.role === "BUYER" && (
+                    {displayUser.role === "BUYER" && (
                       <>
                         <Link
                           href="/messages"
@@ -352,41 +399,95 @@ export default function Navbar() {
             >
               Benefits
             </Link>
-            {isAuthenticated && user?.role === "BUYER" && (
-              <>
+            {isAuthenticated && displayUser && (
+              <div className="pt-2 border-t border-slate-100 space-y-1">
+                <div className="flex items-center gap-3 px-3 py-2 bg-slate-50 rounded-xl mb-1">
+                  <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-200 overflow-hidden flex items-center justify-center text-xs font-bold text-emerald-800 shrink-0">
+                    {displayUser.profileImage ? (
+                      <Image
+                        src={displayUser.profileImage}
+                        alt={displayName}
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      displayName.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-slate-900 truncate">
+                      {displayName}
+                    </p>
+                    {displayUser.email && (
+                      <p className="text-[11px] text-slate-500 truncate">
+                        {displayUser.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
                 <Link
-                  href="/messages"
+                  href="/profile"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-medium"
                 >
-                  Messages
+                  <User className="w-4 h-4 text-emerald-600" />
+                  My Profile & Password
                 </Link>
-                <Link
-                  href="/orders"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
+
+                {displayUser.role === "BUYER" && (
+                  <>
+                    <Link
+                      href="/messages"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-medium"
+                    >
+                      <MessageSquare className="w-4 h-4 text-emerald-600" />
+                      Direct Messages
+                    </Link>
+                    <Link
+                      href="/orders"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-medium"
+                    >
+                      <Package className="w-4 h-4 text-emerald-600" />
+                      My Orders
+                    </Link>
+                  </>
+                )}
+
+                {displayUser.role === "PRODUCER" && (
+                  <Link
+                    href="/producer/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 text-xs font-semibold"
+                  >
+                    <LayoutDashboard className="w-4 h-4 text-emerald-600" />
+                    Producer Dashboard
+                  </Link>
+                )}
+
+                {displayUser.role === "DRIVER" && (
+                  <Link
+                    href="/driver/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 text-xs font-semibold"
+                  >
+                    <Truck className="w-4 h-4 text-emerald-600" />
+                    Driver Dashboard
+                  </Link>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-rose-600 hover:bg-rose-50 text-xs font-medium text-left"
                 >
-                  My Orders
-                </Link>
-              </>
-            )}
-            {isAuthenticated && user?.role === "PRODUCER" && (
-              <Link
-                href="/producer/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 font-semibold"
-              >
-                Producer Dashboard
-              </Link>
-            )}
-            {isAuthenticated && user?.role === "DRIVER" && (
-              <Link
-                href="/driver/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 font-semibold"
-              >
-                Driver Dashboard
-              </Link>
+                  <LogOut className="w-4 h-4 text-rose-500" />
+                  Sign Out
+                </button>
+              </div>
             )}
           </nav>
         </div>
