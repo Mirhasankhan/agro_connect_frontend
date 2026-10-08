@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Truck,
   MapPin,
@@ -12,16 +13,19 @@ import {
   Search,
   Package,
   Loader2,
+  Eye,
+  User,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
+  useGetDriverWiseDeliveriesQuery,
   useMarkDeliveryStatusMutation,
   useSendDeliveryCompletionOtpMutation,
 } from "@/redux/features/order/orderApi";
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
-import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
-import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
+import { formatCurrency } from "@/utils/formatters";
 import { DeliveryStatus } from "@/types";
 
 const FILTER_TABS: { label: string; value: string }[] = [
@@ -40,9 +44,15 @@ export default function DriverDeliveriesPage() {
   const isAccepted = verificationStatus === "Accepted";
   const isRejected = verificationStatus === "Rejected";
 
-  const { data: paymentsData, isLoading } = useGetDriverWisePaymentsQuery();
-  const [markDeliveryStatus, { isLoading: isUpdatingStatus }] = useMarkDeliveryStatusMutation();
-  const [sendOtpMutation, { isLoading: isSendingOtp }] = useSendDeliveryCompletionOtpMutation();
+  const {
+    data: deliveriesData,
+    isLoading,
+    refetch,
+  } = useGetDriverWiseDeliveriesQuery();
+  const [markDeliveryStatus, { isLoading: isUpdatingStatus }] =
+    useMarkDeliveryStatusMutation();
+  const [sendOtpMutation, { isLoading: isSendingOtp }] =
+    useSendDeliveryCompletionOtpMutation();
 
   const [otpModalData, setOtpModalData] = useState<{
     deliveryId: string;
@@ -50,8 +60,19 @@ export default function DriverDeliveriesPage() {
     customerName?: string;
   } | null>(null);
 
-  // Derive delivery items from payment/order records or active assigned records
-  const payments = paymentsData?.data?.payments || [];
+  const deliveries = deliveriesData?.data || [];
+
+  const filteredDeliveries = deliveries.filter((item) => {
+    if (selectedFilter !== "ALL" && item.status !== selectedFilter) return false;
+    if (!searchTerm.trim()) return true;
+
+    const term = searchTerm.toLowerCase();
+    const orderId = item.order?.orderId?.toLowerCase() || "";
+    const customer = item.order?.customer?.fullName?.toLowerCase() || "";
+    const city = item.order?.shippingAddress?.city?.toLowerCase() || "";
+
+    return orderId.includes(term) || customer.includes(term) || city.includes(term);
+  });
 
   const handlePickUp = async (deliveryId: string) => {
     try {
@@ -60,6 +81,7 @@ export default function DriverDeliveriesPage() {
         status: "PickedUp",
       }).unwrap();
       toast.success("Delivery marked as Picked Up! Safe journey to the destination.");
+      refetch();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update delivery status");
     }
@@ -68,7 +90,7 @@ export default function DriverDeliveriesPage() {
   const handleSendOtp = async (deliveryId: string) => {
     try {
       await sendOtpMutation(deliveryId).unwrap();
-      toast.success("4-Digit OTP sent to customer via email & SMS!");
+      toast.success("4-Digit OTP sent to customer via email!");
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to send OTP code");
     }
@@ -107,7 +129,9 @@ export default function DriverDeliveriesPage() {
 
       {/* Header */}
       <div className="border-b border-slate-200 pb-5">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Assigned Deliveries</h1>
+        <h1 className="font-serif text-2xl font-bold text-slate-900">
+          Assigned Deliveries
+        </h1>
         <p className="text-xs text-slate-500 mt-0.5">
           Manage your active transit routes, confirm hub departures, and complete handovers via
           buyer OTP.
@@ -152,17 +176,19 @@ export default function DriverDeliveriesPage() {
             <div key={i} className="h-40 bg-slate-100 rounded-2xl border border-slate-200" />
           ))}
         </div>
-      ) : payments.length > 0 ? (
+      ) : filteredDeliveries.length > 0 ? (
         <div className="space-y-4">
-          {payments.map((p) => {
-            const deliveryId = p.id;
-            const orderId = p.order?.orderId || p.id.slice(-6).toUpperCase();
-            const isCompleted = p.isTransferred;
-            const status = (isCompleted ? "Delivered" : "PickedUp") as DeliveryStatus;
+          {filteredDeliveries.map((item) => {
+            const deliveryId = item.id;
+            const orderId = item.order?.orderId || item.id.slice(-6).toUpperCase();
+            const status = item.status;
+            const city = item.order?.shippingAddress?.city || "Local Delivery";
+            const customerName = item.order?.customer?.fullName || "Buyer Customer";
+            const itemsCount = item.order?._count?.items ?? 0;
 
             return (
               <div
-                key={p.id}
+                key={item.id}
                 className="bg-white border border-slate-200 hover:border-emerald-500/70 rounded-2xl p-6 transition-all shadow-sm space-y-4"
               >
                 {/* Header row: Order # & Status Badge */}
@@ -172,69 +198,72 @@ export default function DriverDeliveriesPage() {
                       <Truck className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="font-mono font-bold text-slate-900 text-base">#{orderId}</span>
+                      <Link
+                        href={`/driver/deliveries/${deliveryId}`}
+                        className="font-mono font-bold text-slate-900 text-base hover:text-emerald-700 transition-colors"
+                      >
+                        #{orderId}
+                      </Link>
                       <span className="text-[11px] text-slate-400 block">
-                        Assigned on {p.createdAt ? formatDate(p.createdAt) : "Recently"}
+                        Assigned Cargo Delivery
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 flex-wrap">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 border ${
                         status === "Delivered"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : status === "PickedUp"
-                          ? "bg-blue-50 text-blue-700 border border-blue-200"
-                          : "bg-amber-50 text-amber-700 border border-amber-200"
+                          ? "bg-blue-50 text-blue-700 border-blue-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
                       }`}
                     >
                       {status === "Delivered" && <CheckCircle2 className="w-3.5 h-3.5" />}
                       {status === "PickedUp" && <Truck className="w-3.5 h-3.5" />}
                       {status === "Assigned" && <Clock className="w-3.5 h-3.5" />}
-                      {status}
+                      {status === "PickedUp" ? "In Transit" : status}
                     </span>
 
                     <span className="font-mono font-bold text-emerald-700 text-sm bg-slate-50 px-3 py-1 rounded-xl border border-slate-200">
-                      Fee: {formatCurrency(p.amount || 50)}
+                      Order: {formatCurrency(item.order.totalAmount)}
                     </span>
                   </div>
                 </div>
 
                 {/* Cargo Details */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   {/* Destination */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[11px]">
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
                       <MapPin className="w-3.5 h-3.5" />
-                      Destination & Delivery Note
+                      Destination City
                     </div>
-                    <p className="font-bold text-slate-900">Abidjan Urban Delivery</p>
-                    <p className="text-slate-500">
-                      Delivery instructions: Hand over directly to recipient with OTP verification.
-                    </p>
+                    <p className="font-bold text-slate-900 text-sm">{city}</p>
+                    <p className="text-slate-500 text-[11px]">Direct handover to recipient</p>
                   </div>
 
-                  {/* Produce in Cargo */}
-                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[11px]">
-                      <Package className="w-3.5 h-3.5" />
-                      Produce Manifest
+                  {/* Customer */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
+                      <User className="w-3.5 h-3.5" />
+                      Recipient Buyer
                     </div>
-                    {p.order?.items && p.order.items.length > 0 ? (
-                      <div className="space-y-1">
-                        {p.order.items.map((it, idx) => (
-                          <div key={idx} className="flex justify-between text-slate-700">
-                            <span>{it.productName || "Crop"}</span>
-                            <span className="font-mono">
-                              {it.quantity} {it.sellingUnit && formatUnit(it.sellingUnit)}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-slate-500">Harvest crate handover attached to manifest.</p>
-                    )}
+                    <p className="font-bold text-slate-900 text-sm">{customerName}</p>
+                    <p className="text-slate-500 text-[11px]">Requires OTP verification</p>
+                  </div>
+
+                  {/* Cargo Crates */}
+                  <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
+                      <Package className="w-3.5 h-3.5" />
+                      Produce Cargo
+                    </div>
+                    <p className="font-mono font-bold text-slate-900 text-sm">
+                      {itemsCount} Produce Item{itemsCount !== 1 ? "s" : ""}
+                    </p>
+                    <p className="text-slate-500 text-[11px]">Inspect produce before pickup</p>
                   </div>
                 </div>
 
@@ -242,10 +271,18 @@ export default function DriverDeliveriesPage() {
                 <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
                   <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Requires 6-digit OTP confirmation to release delivery charge</span>
+                    <span>Requires 4-digit buyer OTP confirmation upon delivery</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <Link
+                      href={`/driver/deliveries/${deliveryId}`}
+                      className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      View Details
+                    </Link>
+
                     {status === "Assigned" && (
                       <button
                         type="button"
@@ -271,7 +308,7 @@ export default function DriverDeliveriesPage() {
                           ) : (
                             <Send className="w-3.5 h-3.5 text-emerald-600" />
                           )}
-                          Send OTP to Buyer
+                          Send Buyer OTP
                         </button>
 
                         <button
@@ -280,13 +317,13 @@ export default function DriverDeliveriesPage() {
                             setOtpModalData({
                               deliveryId,
                               orderReference: orderId,
-                              customerName: "Buyer Recipient",
+                              customerName,
                             })
                           }
                           className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
                         >
                           <KeyRound className="w-3.5 h-3.5" />
-                          Verify 6-Digit OTP
+                          Verify OTP
                         </button>
                       </>
                     )}
@@ -294,7 +331,7 @@ export default function DriverDeliveriesPage() {
                     {status === "Delivered" && (
                       <span className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
                         <CheckCircle2 className="w-4 h-4" />
-                        Handover Completed & Fee Released
+                        Handover Completed
                       </span>
                     )}
                   </div>
@@ -306,7 +343,9 @@ export default function DriverDeliveriesPage() {
       ) : (
         <div className="text-center py-20 px-4 bg-white border border-slate-200 rounded-2xl max-w-lg mx-auto shadow-sm">
           <Truck className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h2 className="font-serif text-2xl font-bold text-slate-900">No Deliveries Found</h2>
+          <h2 className="font-serif text-2xl font-bold text-slate-900">
+            No Deliveries Found
+          </h2>
           <p className="text-xs text-slate-500 mt-2">
             There are currently no deliveries matching your filter. Once regional hubs assign
             crates to your vehicle, they will be listed here.
@@ -318,7 +357,10 @@ export default function DriverDeliveriesPage() {
       {otpModalData && (
         <DeliveryOtpModal
           isOpen={Boolean(otpModalData)}
-          onClose={() => setOtpModalData(null)}
+          onClose={() => {
+            setOtpModalData(null);
+            refetch();
+          }}
           deliveryId={otpModalData.deliveryId}
           orderReference={otpModalData.orderReference}
           customerName={otpModalData.customerName}

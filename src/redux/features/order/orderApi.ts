@@ -6,6 +6,8 @@ import {
   TPaginationMeta,
   OrderStatus,
   PaymentStatus,
+  TDriverDeliverySummary,
+  TDriverDeliveryDetails,
 } from "@/types";
 
 export interface OrderQueryParams {
@@ -62,6 +64,28 @@ const orderApi = baseApi.injectEndpoints({
       providesTags: ["Order"],
     }),
 
+    getDriverWiseDeliveries: builder.query<
+      TApiResponse<TDriverDeliverySummary[]>,
+      void
+    >({
+      query: () => ({
+        url: "/order/delivery-driver-wise",
+        method: "GET",
+      }),
+      providesTags: ["Order"],
+    }),
+
+    getDriverDeliveryDetails: builder.query<
+      TApiResponse<TDriverDeliveryDetails>,
+      string
+    >({
+      query: (id) => ({
+        url: `/order/delivery/details/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Order", id }],
+    }),
+
     markOrderItemSentToHub: builder.mutation<TApiResponse<null>, string>({
       query: (id) => ({
         url: `/order/mark-sent-to-hub/${id}`,
@@ -108,6 +132,8 @@ export const {
   useGetUserOrdersQuery,
   useGetOrderDetailsQuery,
   useGetProducerWiseOrdersQuery,
+  useGetDriverWiseDeliveriesQuery,
+  useGetDriverDeliveryDetailsQuery,
   useMarkOrderItemSentToHubMutation,
   useMarkDeliveryStatusMutation,
   useSendDeliveryCompletionOtpMutation,

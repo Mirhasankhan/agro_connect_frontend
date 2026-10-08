@@ -9,14 +9,20 @@ import {
   CheckCircle2,
   ArrowRight,
   ShieldCheck,
+  Clock,
+  AlertCircle,
+  MapPin,
+  Package,
+  Eye,
+  User,
 } from "lucide-react";
 import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
+import { useGetDriverWiseDeliveriesQuery } from "@/redux/features/order/orderApi";
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useAppSelector } from "@/redux/hooks";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import DriverProfileSetupModal from "@/components/driver/DriverProfileSetupModal";
 import { formatCurrency, formatDate } from "@/utils/formatters";
-import { Clock, AlertCircle } from "lucide-react";
 
 export default function DriverDashboardPage() {
   const searchParams = useSearchParams();
@@ -34,7 +40,10 @@ export default function DriverDashboardPage() {
     }
   }, [searchParams, isSetupCompleted]);
 
-  const { data: paymentsData, isLoading: isLoadingPayments } = useGetDriverWisePaymentsQuery();
+  const { data: paymentsData, isLoading: isLoadingPayments } =
+    useGetDriverWisePaymentsQuery();
+  const { data: deliveriesData, isLoading: isLoadingDeliveries } =
+    useGetDriverWiseDeliveriesQuery();
 
   const [otpModalData, setOtpModalData] = useState<{
     deliveryId: string;
@@ -43,10 +52,21 @@ export default function DriverDashboardPage() {
   } | null>(null);
 
   const payments = paymentsData?.data?.payments || [];
+  const deliveries = deliveriesData?.data || [];
+
+  const activeDeliveries = deliveries.filter(
+    (d) => d.status === "Assigned" || d.status === "PickedUp"
+  );
+  const completedDeliveries = deliveries.filter((d) => d.status === "Delivered");
+
   const totalEarnings =
     paymentsData?.data?.earningSummary?.amount ||
     payments.reduce((acc, p) => acc + (p.amount || 0), 0);
-  const completedDeliveriesCount = payments.filter((p) => p.isTransferred).length;
+
+  const completedTripsCount =
+    completedDeliveries.length > 0
+      ? completedDeliveries.length
+      : payments.filter((p) => p.isTransferred).length;
 
   return (
     <div className="space-y-8">
@@ -78,6 +98,7 @@ export default function DriverDashboardPage() {
           </div>
         </div>
       )}
+
       {/* Profile Setup Pending Notice */}
       {!isSetupCompleted && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm">
@@ -90,7 +111,8 @@ export default function DriverDashboardPage() {
                 Driver Profile Setup Required
               </h3>
               <p className="mt-0.5 text-xs text-amber-800">
-                Register your vehicle details and upload your verification documents to start accepting delivery orders and earning delivery fees.
+                Provide your driving license, vehicle type, and insurance documentation to start
+                receiving logistics trips.
               </p>
             </div>
           </div>
@@ -99,29 +121,29 @@ export default function DriverDashboardPage() {
             onClick={() => setIsSetupModalOpen(true)}
             className="btn-primary shrink-0 self-start sm:self-auto bg-amber-600 hover:bg-amber-700 text-white border-0 text-xs py-2 px-4 shadow-sm"
           >
-            Complete Profile Setup
+            Complete Driver Setup
           </button>
         </div>
       )}
 
-      {/* Driver Profile Setup Modal */}
+      {/* Setup Profile Modal */}
       <DriverProfileSetupModal
         isOpen={isSetupModalOpen}
         onClose={() => setIsSetupModalOpen(false)}
       />
 
-      {/* Welcome Hero */}
+      {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
         <div className="space-y-1">
           <span className="text-xs uppercase tracking-widest text-emerald-600 font-bold">
-            Agro-Logistics Operations
+            Logistics Console
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
             Driver Delivery Control Center
           </h1>
           <p className="text-xs text-slate-600 max-w-xl">
             Transport fresh farm harvests from regional hubs to urban tables. Confirm pickups,
-            send OTP verification codes, and secure instant earnings.
+            verify customer handovers with 4-digit OTP codes, and secure instant earnings.
           </p>
         </div>
 
@@ -159,21 +181,23 @@ export default function DriverDashboardPage() {
             </div>
           </div>
           <p className="font-mono text-2xl font-bold text-slate-900">
-            {isLoadingPayments ? "..." : completedDeliveriesCount}
+            {isLoadingDeliveries ? "..." : completedTripsCount}
           </p>
-          <p className="text-[11px] text-slate-500">Verified with 6-digit OTP check</p>
+          <p className="text-[11px] text-slate-500">Verified with 4-digit OTP check</p>
         </div>
 
-        {/* In-Transit Deliveries */}
+        {/* Active In-Transit */}
         <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
           <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span>Security Mechanism</span>
+            <span>Active Deliveries</span>
             <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-              <ShieldCheck className="w-4 h-4" />
+              <Truck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-base font-bold text-slate-900">6-Digit OTP Escrow</p>
-          <p className="text-[11px] text-slate-500">Zero cash risk or fraud</p>
+          <p className="font-mono text-2xl font-bold text-slate-900">
+            {isLoadingDeliveries ? "..." : activeDeliveries.length}
+          </p>
+          <p className="text-[11px] text-slate-500">Assigned or in transit to buyers</p>
         </div>
 
         {/* Fleet Readiness */}
@@ -181,12 +205,106 @@ export default function DriverDashboardPage() {
           <div className="flex items-center justify-between text-slate-500 text-xs">
             <span>Fleet Status</span>
             <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-              <Truck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-base font-bold text-emerald-700">On Duty & Active</p>
+          <p className="text-base font-bold text-emerald-700">
+            {isAccepted ? "On Duty & Active" : "Pending Verification"}
+          </p>
           <p className="text-[11px] text-slate-500">Côte d&apos;Ivoire Agro-Grid</p>
         </div>
+      </div>
+
+      {/* Active Assigned Deliveries Section */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div>
+            <h2 className="font-serif text-lg font-bold text-slate-900">
+              Active Assigned Deliveries
+            </h2>
+            <p className="text-xs text-slate-500">
+              Shipments ready for pickup at hubs or currently in transit to customer destinations.
+            </p>
+          </div>
+          <Link
+            href="/driver/deliveries"
+            className="text-xs text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1"
+          >
+            Manage All ({deliveries.length})
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {isLoadingDeliveries ? (
+          <div className="space-y-3 animate-pulse">
+            {[1, 2].map((i) => (
+              <div key={i} className="h-16 bg-slate-100 rounded-xl" />
+            ))}
+          </div>
+        ) : activeDeliveries.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th className="py-3 px-4">Order Ref</th>
+                  <th className="py-3 px-4">Destination City</th>
+                  <th className="py-3 px-4">Buyer Customer</th>
+                  <th className="py-3 px-4">Produce Items</th>
+                  <th className="py-3 px-4">Order Value</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {activeDeliveries.map((d) => (
+                  <tr key={d.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                      #{d.order.orderId}
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-900 flex items-center gap-1.5 mt-2">
+                      <MapPin className="w-3 h-3 text-emerald-600" />
+                      {d.order.shippingAddress?.city || "Destination"}
+                    </td>
+                    <td className="py-3 px-4 text-slate-700 font-medium">
+                      {d.order.customer?.fullName || "Buyer"}
+                    </td>
+                    <td className="py-3 px-4 font-mono">
+                      {d.order._count?.items ?? 0} item(s)
+                    </td>
+                    <td className="py-3 px-4 font-mono font-bold text-emerald-700">
+                      {formatCurrency(d.order.totalAmount)}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                          d.status === "PickedUp"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-amber-50 text-amber-700 border-amber-200"
+                        }`}
+                      >
+                        {d.status === "PickedUp" ? "In Transit" : "Assigned"}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <Link
+                        href={`/driver/deliveries/${d.id}`}
+                        className="btn-secondary text-[11px] py-1 px-3 inline-flex items-center gap-1"
+                      >
+                        <Eye className="w-3 h-3" />
+                        Details
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-8 text-xs text-slate-500">
+            No active deliveries assigned at the moment. When logistics hubs assign deliveries to
+            your vehicle, they will appear here.
+          </div>
+        )}
       </div>
 
       {/* Operational Instructions Banner */}
@@ -206,7 +324,7 @@ export default function DriverDashboardPage() {
             verification code.
           </li>
           <li>
-            <strong>Handover & Payment:</strong> Input the buyer&apos;s 6-digit code in the{" "}
+            <strong>Handover & Payment:</strong> Input the buyer&apos;s 4-digit code in the{" "}
             <span className="text-emerald-700 font-semibold">Verify OTP</span> modal to immediately
             complete delivery and claim your fee.
           </li>
@@ -217,7 +335,9 @@ export default function DriverDashboardPage() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div>
-            <h2 className="font-serif text-lg font-bold text-slate-900">Recent Delivery Trips</h2>
+            <h2 className="font-serif text-lg font-bold text-slate-900">
+              Recent Delivery Trips & Payouts
+            </h2>
             <p className="text-xs text-slate-500">
               Completed and settled logistics journeys with trip fees.
             </p>

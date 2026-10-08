@@ -329,6 +329,51 @@ export interface TDelivery {
   };
 }
 
+export interface TDriverDeliverySummary {
+  id: string;
+  status: DeliveryStatus;
+  order: {
+    orderId: string;
+    totalAmount: number;
+    shippingAddress?: {
+      city: string;
+    } | null;
+    customer?: {
+      fullName: string;
+    } | null;
+    _count?: {
+      items: number;
+    };
+  };
+}
+
+export interface TDriverDeliveryDetails {
+  id: string;
+  status: DeliveryStatus;
+  order: {
+    orderId: string;
+    totalAmount: number;
+    status: OrderStatus;
+    shippingAddress?: {
+      addressLine: string;
+      city: string;
+      instruction?: string | null;
+      postCode?: string | null;
+    } | null;
+    customer?: {
+      fullName: string;
+      profileImage?: string | null;
+    } | null;
+    items: {
+      productName: string;
+      subtotal: number;
+      unitPrice: number;
+      quantity: number;
+      sellingUnit: SellingUnit;
+    }[];
+  };
+}
+
 export interface TChatMessage {
   id?: string;
   conversationId?: string;
