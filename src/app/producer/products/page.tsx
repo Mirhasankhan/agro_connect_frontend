@@ -7,9 +7,10 @@ import {
   Package,
   Plus,
   Search,
-  TrendingDown,
   AlertCircle,
   Clock,
+  Eye,
+  Pencil,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -173,7 +174,7 @@ export default function ProducerProductsPage() {
                   <th className="py-3.5 px-4">Base Unit Price</th>
                   <th className="py-3.5 px-4">Available Stock</th>
                   <th className="py-3.5 px-4">Units Sold</th>
-                  <th className="py-3.5 px-4">Bulk Tiers</th>
+                  <th className="py-3.5 px-4">Offers</th>
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
@@ -188,13 +189,19 @@ export default function ProducerProductsPage() {
                       {/* Harvest image + name */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                          <Link
+                            href={`/producer/products/${prod.id}`}
+                            className="relative w-11 h-11 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 hover:opacity-90 transition-opacity"
+                          >
                             <Image src={img} alt={prod.name} fill className="object-cover" />
-                          </div>
+                          </Link>
                           <div>
-                            <p className="font-serif font-bold text-slate-900 text-sm line-clamp-1">
+                            <Link
+                              href={`/producer/products/${prod.id}`}
+                              className="font-serif font-bold text-slate-900 text-sm line-clamp-1 hover:text-emerald-700 transition-colors"
+                            >
                               {prod.name}
-                            </p>
+                            </Link>
                             <span className="text-[10px] text-slate-400">
                               Unit: {formatUnit(prod.sellingUnit)}
                             </span>
@@ -240,19 +247,38 @@ export default function ProducerProductsPage() {
                           }
                           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 text-[11px] font-semibold transition-colors"
                         >
-                          <TrendingDown className="w-3.5 h-3.5" />
+                         
                           <span>+ Add Tier</span>
                         </button>
                       </td>
 
                       {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Link
+                            href={`/producer/products/${prod.id}`}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50 text-[11px] font-medium transition-colors"
+                            title="View Harvest Details"
+                          >
+                            <Eye className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Details</span>
+                          </Link>
+
+                          <Link
+                            href={`/producer/products/${prod.id}/edit`}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 hover:text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50 text-[11px] font-medium transition-colors"
+                            title="Edit Harvest"
+                          >
+                            <Pencil className="w-3.5 h-3.5 text-blue-600" />
+                            <span>Edit</span>
+                          </Link>
+
                           <button
                             type="button"
                             onClick={() => handleToggleActive(prod)}
                             disabled={isUpdating}
-                            className={`px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors ${
+                            title={prod.isActive ? "Hide from marketplace" : "Make visible on marketplace"}
+                            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${
                               prod.isActive
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-red-50 hover:text-red-700 hover:border-red-200"
                                 : "bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-700"

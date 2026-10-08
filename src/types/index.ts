@@ -150,6 +150,24 @@ export interface TProduct {
   };
   wishlists?: { id: string }[] | boolean;
   reviews?: TReview[];
+  orderItems?: {
+    quantity: number;
+    subtotal: number;
+    status: ItemStatus;
+    createdAt: string;
+    order?: {
+      customer?: {
+        fullName: string;
+        profileImage?: string | null;
+        shippingAddresses?: {
+          addressLine: string;
+          city: string;
+          instruction?: string | null;
+          postCode: string;
+        }[];
+      };
+    };
+  }[];
 }
 
 export interface TCartItem {
@@ -206,9 +224,8 @@ export interface TOrderItem {
     customer?: {
       fullName?: string;
       profileImage?: string | null;
-      buyerProfile?: {
-        institution?: string | null;
-      };
+      city?: string | null;
+      address?: string | null;
     };
   };
   product?: {

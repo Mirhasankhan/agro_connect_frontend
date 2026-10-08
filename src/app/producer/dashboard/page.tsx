@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import {
   Package,
@@ -11,6 +12,7 @@ import {
   ArrowRight,
   Truck,
   Sprout,
+  MapPin,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useGetProducerProductsQuery } from "@/redux/features/product/productApi";
@@ -247,7 +249,30 @@ export default function ProducerDashboardPage() {
                       {item.productName || "Product"}
                     </td>
                     <td className="py-3 px-4 text-slate-600">
-                      {item.order?.customer?.fullName || "Buyer"}
+                      <div className="flex items-center gap-2">
+                        <div className="relative w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-[10px] shrink-0 overflow-hidden border border-emerald-200">
+                          {item.order?.customer?.profileImage ? (
+                            <Image
+                              src={item.order.customer.profileImage}
+                              alt={item.order.customer.fullName || "Buyer"}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            item.order?.customer?.fullName?.charAt(0).toUpperCase() || "B"
+                          )}
+                        </div>
+                        <div>
+                          <span className="font-semibold text-slate-900 block leading-tight">
+                            {item.order?.customer?.fullName || "Buyer"}
+                          </span>
+                          {item.order?.customer?.city && (
+                            <span className="text-[10px] text-slate-400 block">
+                              {item.order.customer.city}
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </td>
                     <td className="py-3 px-4 font-mono">
                       {item.quantity} {item.sellingUnit && formatUnit(item.sellingUnit)}

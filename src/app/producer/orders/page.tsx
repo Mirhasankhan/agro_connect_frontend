@@ -10,6 +10,7 @@ import {
   Truck,
   PackageCheck,
   Search,
+  MapPin,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -158,14 +159,35 @@ export default function ProducerOrdersPage() {
 
                       {/* Customer */}
                       <td className="py-3.5 px-4">
-                        <p className="font-bold text-slate-900">
-                          {item.order?.customer?.fullName || "Buyer"}
-                        </p>
-                        {item.order?.customer?.buyerProfile?.institution && (
-                          <span className="text-[10px] text-emerald-700 font-medium">
-                            {item.order.customer.buyerProfile.institution}
-                          </span>
-                        )}
+                        <div className="flex items-center gap-2.5">
+                          <div className="relative w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 font-bold flex items-center justify-center text-xs shrink-0 overflow-hidden border border-emerald-200">
+                            {item.order?.customer?.profileImage ? (
+                              <Image
+                                src={item.order.customer.profileImage}
+                                alt={item.order.customer.fullName || "Buyer"}
+                                fill
+                                className="object-cover"
+                              />
+                            ) : (
+                              item.order?.customer?.fullName?.charAt(0).toUpperCase() || "B"
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 leading-tight">
+                              {item.order?.customer?.fullName || "Buyer"}
+                            </p>
+                            {(item.order?.customer?.city || item.order?.customer?.address) && (
+                              <p className="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
+                                <MapPin className="w-2.5 h-2.5 text-slate-400 shrink-0" />
+                                <span className="truncate max-w-[150px]">
+                                  {[item.order?.customer?.city, item.order?.customer?.address]
+                                    .filter(Boolean)
+                                    .join(", ")}
+                                </span>
+                              </p>
+                            )}
+                          </div>
+                        </div>
                       </td>
 
                       {/* Quantity */}
