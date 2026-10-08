@@ -46,9 +46,12 @@ export default function ProductDetailsPage() {
 
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
-  const [isWishlisted, setIsWishlisted] = useState<boolean>(false);
-
   const product = data?.data?.product;
+
+  // Directly derive wishlist status from query response
+  const isWishlisted = Boolean(
+    Array.isArray(product?.wishlists) && product.wishlists.length > 0
+  );
 
   const images = product?.imageUrls || [];
   const fallbackImage =
@@ -98,9 +101,8 @@ export default function ProductDetailsPage() {
     if (!product) return;
 
     try {
-      await addToWishlistMutation(product.id).unwrap();
-      setIsWishlisted(!isWishlisted);
-      toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist!");
+      const res = await addToWishlistMutation(product.id).unwrap();
+      toast.success(res?.message || "Wishlist updated");
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to update wishlist");
     }

@@ -161,14 +161,22 @@ export default function Navbar() {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
-            {/* Wishlist Button (Buyer only) */}
-            {isAuthenticated && user?.role === "BUYER" && (
+            {/* Wishlist Button (Buyer / Guest) */}
+            {isBuyerOrGuest && (
               <Link
-                href="/products"
-                title="Wishlist"
-                className="relative p-2.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                href="/wishlist"
+                title="Saved Wishlist"
+                className={`relative p-2.5 rounded-full transition-colors ${
+                  pathname === "/wishlist"
+                    ? "text-emerald-700 bg-emerald-50"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                }`}
               >
-                <Heart className="w-5 h-5" />
+                <Heart
+                  className={`w-5 h-5 ${
+                    wishlistItemCount > 0 ? "fill-rose-500 text-rose-500" : ""
+                  }`}
+                />
                 {wishlistItemCount > 0 && (
                   <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-600 text-[10px] font-bold text-white flex items-center justify-center">
                     {wishlistItemCount}
@@ -284,6 +292,15 @@ export default function Navbar() {
 
                     {displayUser.role === "BUYER" && (
                       <>
+                        <Link
+                          href="/wishlist"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                        >
+                          <Heart className="w-4 h-4 text-rose-500" />
+                          My Wishlist {wishlistItemCount > 0 ? `(${wishlistItemCount})` : ""}
+                        </Link>
+
                         <Link
                           href="/messages"
                           onClick={() => setUserMenuOpen(false)}
@@ -438,6 +455,14 @@ export default function Navbar() {
 
                 {displayUser.role === "BUYER" && (
                   <>
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-medium"
+                    >
+                      <Heart className="w-4 h-4 text-rose-500" />
+                      My Wishlist {wishlistItemCount > 0 ? `(${wishlistItemCount})` : ""}
+                    </Link>
                     <Link
                       href="/messages"
                       onClick={() => setMobileMenuOpen(false)}

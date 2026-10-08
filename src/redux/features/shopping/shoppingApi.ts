@@ -56,15 +56,35 @@ const shoppingApi = baseApi.injectEndpoints({
         url: `/shopping/add-wishlist/${productId}`,
         method: "POST",
       }),
-      invalidatesTags: ["Wishlist", "Product"],
+      invalidatesTags: (result, error, productId) => [
+        "Wishlist",
+        "Product",
+        { type: "Product", id: productId },
+      ],
+    }),
+
+    toggleWishlist: builder.mutation<TApiResponse<null>, string>({
+      query: (productId) => ({
+        url: `/shopping/add-wishlist/${productId}`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, productId) => [
+        "Wishlist",
+        "Product",
+        { type: "Product", id: productId },
+      ],
     }),
 
     removeFromWishlist: builder.mutation<TApiResponse<null>, string>({
-      query: (wishlistId) => ({
-        url: `/shopping/remove-wishlist/${wishlistId}`,
-        method: "DELETE",
+      query: (productId) => ({
+        url: `/shopping/add-wishlist/${productId}`,
+        method: "POST",
       }),
-      invalidatesTags: ["Wishlist", "Product"],
+      invalidatesTags: (result, error, productId) => [
+        "Wishlist",
+        "Product",
+        { type: "Product", id: productId },
+      ],
     }),
   }),
 });
@@ -76,5 +96,6 @@ export const {
   useRemoveFromCartMutation,
   useGetWishlistQuery,
   useAddToWishlistMutation,
+  useToggleWishlistMutation,
   useRemoveFromWishlistMutation,
 } = shoppingApi;

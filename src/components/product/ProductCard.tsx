@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -29,7 +29,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [addToCartMutation, { isLoading: isAddingToCart }] = useAddToCartMutation();
   const [addToWishlistMutation, { isLoading: isAddingWishlist }] = useAddToWishlistMutation();
-  const [isWishlisted, setIsWishlisted] = useState(
+
+  // Directly derive wishlist status from query response
+  const isWishlisted = Boolean(
     Array.isArray(product.wishlists) && product.wishlists.length > 0
   );
 
@@ -92,11 +94,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
 
     try {
-      await addToWishlistMutation(product.id).unwrap();
-      setIsWishlisted(!isWishlisted);
-      toast.success(
-        isWishlisted ? "Removed from wishlist" : "Added to wishlist!"
-      );
+      const res = await addToWishlistMutation(product.id).unwrap();
+      toast.success(res?.message || "Wishlist updated");
     } catch (err: any) {
       toast.error(err?.data?.message || "Wishlist update failed");
     }

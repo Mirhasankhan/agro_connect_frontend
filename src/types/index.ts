@@ -186,13 +186,27 @@ export interface TCartItem {
 
 export interface TWishlistItem {
   id: string;
+  productId?: string;
+  createdAt?: string;
   product: {
     id: string;
     name: string;
+    description?: string;
     pricePerUnit: number;
     imageUrls: string[];
     availableQuantity?: number;
     sellingUnit?: SellingUnit;
+    category?: {
+      id: string;
+      name: string;
+    };
+    producer?: {
+      fullName: string;
+      producerProfile?: {
+        farmName?: string;
+        companyName?: string;
+      };
+    };
   };
 }
 
