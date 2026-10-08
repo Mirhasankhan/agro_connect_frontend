@@ -89,37 +89,37 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#061a10] via-[#092c1d] to-[#04140c] px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Brand Header */}
         <div className="mb-8 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white hover:opacity-90"
+            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-slate-900 hover:opacity-90"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/10">
               <Sprout className="h-5 w-5" />
             </span>
             <span>
-              Agro<span className="text-emerald-400">Connect</span>
+              Agro<span className="text-emerald-600">Connect</span>
             </span>
           </Link>
-          <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+          <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/20">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h1 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
             Verify your email
           </h1>
-          <p className="mt-2 text-sm text-slate-300">
+          <p className="mt-2 text-sm text-slate-600">
             We sent a 6-digit code to{" "}
-            <span className="font-semibold text-emerald-400">
+            <span className="font-semibold text-emerald-600">
               {email || "your email"}
             </span>
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur-md sm:p-8">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {errors.root && (
               <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-700">

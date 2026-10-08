@@ -58,23 +58,23 @@ export default function TierPricingCalculator({
   };
 
   return (
-    <div className="bg-[#082013] border border-forest-700/70 rounded-2xl p-5 space-y-4 shadow-xl">
+    <div className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <TrendingDown className="w-5 h-5 text-emerald-400" />
-          <h4 className="font-serif font-bold text-white text-base">
+          <TrendingDown className="w-5 h-5 text-emerald-600" />
+          <h4 className="font-serif font-bold text-slate-900 text-base">
             Volume & Bulk Pricing Calculator
           </h4>
         </div>
         {savings > 0 && (
-          <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold flex items-center gap-1 animate-pulse">
-            <Sparkles className="w-3.5 h-3.5" />
+          <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center gap-1">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             Save {savingsPercent}% Bulk Discount
           </span>
         )}
       </div>
 
-      <p className="text-xs text-white/60">
+      <p className="text-xs text-slate-500">
         Order higher quantities to unlock discounted producer rates. Select your desired volume
         below to apply savings instantly.
       </p>
@@ -88,20 +88,20 @@ export default function TierPricingCalculator({
             onClick={() => onQuantityChange(1)}
             className={`p-3 rounded-xl border text-left transition-all relative ${
               quantity < sortedTiers[0].quantity
-                ? "bg-emerald-950/60 border-emerald-500 ring-1 ring-emerald-500 shadow-md"
-                : "bg-forest-900/40 border-forest-800 hover:border-forest-700"
+                ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
+                : "bg-slate-50 border-slate-200 hover:border-slate-300"
             }`}
           >
             {quantity < sortedTiers[0].quantity && (
-              <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-emerald-500 text-[#091b10] flex items-center justify-center">
+              <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
                 <Check className="w-3 h-3 stroke-[3]" />
               </span>
             )}
-            <div className="text-[11px] text-white/60 font-medium">Standard</div>
-            <div className="text-xs text-white/90">
+            <div className="text-[11px] text-slate-500 font-medium">Standard</div>
+            <div className="text-xs text-slate-700">
               1 - {sortedTiers[0].quantity - 1} {formatUnit(sellingUnit)}
             </div>
-            <div className="font-mono font-bold text-emerald-400 text-sm mt-1">
+            <div className="font-mono font-bold text-emerald-600 text-sm mt-1">
               {formatCurrency(basePrice)}
             </div>
           </button>
@@ -124,23 +124,23 @@ export default function TierPricingCalculator({
                 onClick={() => onQuantityChange(tier.quantity)}
                 className={`p-3 rounded-xl border text-left transition-all relative ${
                   isCurrentlyActive
-                    ? "bg-emerald-950/60 border-emerald-500 ring-1 ring-emerald-500 shadow-md"
-                    : "bg-forest-900/40 border-forest-800 hover:border-forest-700"
+                    ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
+                    : "bg-slate-50 border-slate-200 hover:border-slate-300"
                 }`}
               >
                 {isCurrentlyActive && (
-                  <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-emerald-500 text-[#091b10] flex items-center justify-center">
+                  <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
                     <Check className="w-3 h-3 stroke-[3]" />
                   </span>
                 )}
-                <div className="text-[11px] text-amber-400 font-bold">
+                <div className="text-[11px] text-amber-700 font-bold">
                   -{tierDiscount}% Off
                 </div>
-                <div className="text-xs text-white/90">
+                <div className="text-xs text-slate-700">
                   {tier.quantity}
                   {isLast ? "+" : ` - ${nextTier.quantity - 1}`} {formatUnit(sellingUnit)}
                 </div>
-                <div className="font-mono font-bold text-emerald-400 text-sm mt-1">
+                <div className="font-mono font-bold text-emerald-600 text-sm mt-1">
                   {formatCurrency(tier.pricePerUnit)}
                 </div>
               </button>
@@ -148,9 +148,9 @@ export default function TierPricingCalculator({
           })}
         </div>
       ) : (
-        <div className="p-3 rounded-xl bg-forest-900/40 border border-forest-800 text-xs text-white/60">
+        <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
           This product is sold at a flat direct producer rate of{" "}
-          <span className="text-emerald-400 font-bold font-mono">
+          <span className="text-emerald-700 font-bold font-mono">
             {formatCurrency(basePrice)} / {formatUnit(sellingUnit)}
           </span>
           .
@@ -158,16 +158,16 @@ export default function TierPricingCalculator({
       )}
 
       {/* Quantity Stepper & Price Summary */}
-      <div className="pt-3 border-t border-forest-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Quantity Controls */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
-          <span className="text-xs text-white/70 font-medium">Quantity:</span>
-          <div className="flex items-center border border-forest-700 rounded-xl overflow-hidden bg-forest-950">
+          <span className="text-xs text-slate-600 font-medium">Quantity:</span>
+          <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
             <button
               type="button"
               onClick={handleDecrement}
               disabled={quantity <= 1}
-              className="px-3.5 py-2 text-white/80 hover:bg-forest-800 disabled:opacity-40 transition-colors text-base font-bold"
+              className="px-3.5 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors text-base font-bold"
             >
               -
             </button>
@@ -177,37 +177,37 @@ export default function TierPricingCalculator({
               max={availableQuantity}
               value={quantity}
               onChange={handleInputChange}
-              className="w-16 bg-transparent text-center font-mono font-bold text-white text-sm focus:outline-none"
+              className="w-16 bg-transparent text-center font-mono font-bold text-slate-900 text-sm focus:outline-none"
             />
             <button
               type="button"
               onClick={handleIncrement}
               disabled={quantity >= availableQuantity}
-              className="px-3.5 py-2 text-white/80 hover:bg-forest-800 disabled:opacity-40 transition-colors text-base font-bold"
+              className="px-3.5 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-colors text-base font-bold"
             >
               +
             </button>
           </div>
-          <span className="text-xs text-white/50">{formatUnit(sellingUnit)}</span>
+          <span className="text-xs text-slate-500">{formatUnit(sellingUnit)}</span>
         </div>
 
         {/* Calculation summary */}
         <div className="text-right w-full sm:w-auto">
-          <div className="text-xs text-white/60">
+          <div className="text-xs text-slate-600">
             Unit Price:{" "}
-            <span className="font-mono font-bold text-emerald-400">
+            <span className="font-mono font-bold text-emerald-600">
               {formatCurrency(activeUnitPrice)}
             </span>{" "}
             / {formatUnit(sellingUnit)}
           </div>
           <div className="flex items-baseline justify-end gap-2 mt-0.5">
-            <span className="text-xs text-white/50">Subtotal:</span>
-            <span className="text-xl font-bold font-mono text-emerald-400">
+            <span className="text-xs text-slate-500">Subtotal:</span>
+            <span className="text-xl font-bold font-mono text-emerald-600">
               {formatCurrency(subtotal)}
             </span>
           </div>
           {savings > 0 && (
-            <div className="text-[11px] text-emerald-300 font-medium">
+            <div className="text-[11px] text-emerald-700 font-medium">
               You save {formatCurrency(savings)} with tiered pricing!
             </div>
           )}

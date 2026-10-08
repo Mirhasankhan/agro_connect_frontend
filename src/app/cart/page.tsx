@@ -65,12 +65,14 @@ export default function CartPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#04160a] text-white flex flex-col">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center py-24 px-4 text-center">
-          <ShoppingBag className="w-16 h-16 text-emerald-400 mb-4 opacity-80" />
-          <h2 className="font-serif text-3xl font-bold">Your Cart Awaits</h2>
-          <p className="text-white/60 text-sm max-w-sm mt-2 mb-6">
+          <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-4">
+            <ShoppingBag className="w-8 h-8" />
+          </div>
+          <h2 className="font-serif text-3xl font-bold text-slate-900">Your Cart Awaits</h2>
+          <p className="text-slate-500 text-sm max-w-sm mt-2 mb-6">
             Please log in to your Agro Connect account to view your shopping cart and complete your
             order.
           </p>
@@ -89,14 +91,14 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#04160a] text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar />
 
       {/* Header */}
-      <div className="bg-gradient-to-b from-[#082314] to-[#04160a] border-b border-forest-800/80 py-8">
+      <div className="bg-white border-b border-slate-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="font-serif text-3xl font-bold text-white">Your Shopping Cart</h1>
-          <p className="text-xs text-white/60 mt-1">
+          <h1 className="font-serif text-3xl font-bold text-slate-900">Your Shopping Cart</h1>
+          <p className="text-xs text-slate-500 mt-1">
             Review your selected harvests and bulk quantities before checkout.
           </p>
         </div>
@@ -106,18 +108,18 @@ export default function CartPage() {
         {isLoading ? (
           <div className="space-y-4 max-w-4xl mx-auto animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 bg-forest-900/40 rounded-2xl border border-forest-800" />
+              <div key={i} className="h-24 bg-white rounded-2xl border border-slate-200" />
             ))}
           </div>
         ) : cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Cart Items List (8 cols) */}
             <div className="lg:col-span-8 space-y-4">
-              <div className="flex items-center justify-between text-xs text-white/60 pb-2 border-b border-forest-800">
+              <div className="flex items-center justify-between text-xs text-slate-500 pb-2 border-b border-slate-200">
                 <span>{cartItems.length} Harvest items in cart</span>
                 <Link
                   href="/products"
-                  className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-medium"
+                  className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 font-medium"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Add more items
@@ -133,11 +135,11 @@ export default function CartPage() {
                 return (
                   <div
                     key={item.id}
-                    className="p-4 sm:p-5 rounded-2xl bg-[#071f12] border border-forest-700/60 hover:border-forest-600 transition-all flex flex-col sm:flex-row items-center justify-between gap-4"
+                    className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4"
                   >
                     {/* Item info */}
                     <div className="flex items-center gap-4 w-full sm:w-auto">
-                      <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-forest-950 shrink-0 border border-forest-800">
+                      <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
                         <Image
                           src={img}
                           alt={item.product?.name || "Harvest"}
@@ -149,13 +151,13 @@ export default function CartPage() {
                       <div className="space-y-1">
                         <Link
                           href={`/products/${item.product?.id}`}
-                          className="font-serif font-bold text-base text-white hover:text-emerald-300 transition-colors"
+                          className="font-serif font-bold text-base text-slate-900 hover:text-emerald-700 transition-colors"
                         >
                           {item.product?.name}
                         </Link>
-                        <div className="text-xs text-white/60">
+                        <div className="text-xs text-slate-500">
                           Unit Price:{" "}
-                          <span className="font-mono text-emerald-400 font-semibold">
+                          <span className="font-mono text-emerald-600 font-semibold">
                             {formatCurrency(item.product?.pricePerUnit || 0)}
                           </span>
                           {item.product?.sellingUnit && (
@@ -168,23 +170,23 @@ export default function CartPage() {
                     {/* Quantity & Actions */}
                     <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
                       {/* Quantity Stepper */}
-                      <div className="flex items-center border border-forest-700 rounded-xl overflow-hidden bg-forest-950">
+                      <div className="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
                         <button
                           type="button"
                           onClick={() => handleUpdateQty(item.id, false)}
                           disabled={isUpdatingQty || item.quantity <= 1}
-                          className="p-2 text-white/80 hover:bg-forest-800 disabled:opacity-30 transition-colors"
+                          className="p-2 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="w-10 text-center font-mono font-bold text-white text-xs">
+                        <span className="w-10 text-center font-mono font-bold text-slate-900 text-xs">
                           {item.quantity}
                         </span>
                         <button
                           type="button"
                           onClick={() => handleUpdateQty(item.id, true)}
                           disabled={isUpdatingQty}
-                          className="p-2 text-white/80 hover:bg-forest-800 disabled:opacity-30 transition-colors"
+                          className="p-2 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -192,7 +194,7 @@ export default function CartPage() {
 
                       {/* Line Subtotal */}
                       <div className="text-right min-w-[90px]">
-                        <span className="font-mono font-bold text-emerald-400 text-base">
+                        <span className="font-mono font-bold text-emerald-600 text-base">
                           {formatCurrency(lineTotal)}
                         </span>
                       </div>
@@ -202,7 +204,7 @@ export default function CartPage() {
                         type="button"
                         onClick={() => handleRemove(item.id, item.product?.name || "Product")}
                         disabled={isRemoving}
-                        className="p-2 text-white/40 hover:text-red-400 transition-colors"
+                        className="p-2 text-slate-400 hover:text-rose-600 transition-colors"
                         title="Remove"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -215,20 +217,20 @@ export default function CartPage() {
 
             {/* Order Summary Sidebar (4 cols) */}
             <div className="lg:col-span-4">
-              <div className="bg-[#071f12] border border-forest-700/70 rounded-2xl p-6 space-y-6 sticky top-24 shadow-xl">
-                <h3 className="font-serif font-bold text-lg text-white">Order Summary</h3>
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-6 sticky top-24 shadow-sm">
+                <h3 className="font-serif font-bold text-lg text-slate-900">Order Summary</h3>
 
-                <div className="space-y-3 text-xs border-b border-forest-800 pb-4">
-                  <div className="flex justify-between text-white/70">
+                <div className="space-y-3 text-xs border-b border-slate-100 pb-4">
+                  <div className="flex justify-between text-slate-600">
                     <span>Items Subtotal</span>
-                    <span className="font-mono font-semibold text-white">
+                    <span className="font-mono font-semibold text-slate-900">
                       {formatCurrency(subtotal)}
                     </span>
                   </div>
 
-                  <div className="flex justify-between text-white/70">
+                  <div className="flex justify-between text-slate-600">
                     <span>Delivery Fee (Fixed)</span>
-                    <span className="font-mono font-semibold text-white">
+                    <span className="font-mono font-semibold text-slate-900">
                       {formatCurrency(DELIVERY_CHARGE)}
                     </span>
                   </div>
@@ -237,10 +239,10 @@ export default function CartPage() {
                 {/* Total */}
                 <div className="flex justify-between items-baseline">
                   <div>
-                    <span className="text-xs text-white/70 block">Estimated Total</span>
-                    <span className="text-[10px] text-white/40">Includes local transport</span>
+                    <span className="text-xs text-slate-600 block">Estimated Total</span>
+                    <span className="text-[10px] text-slate-400">Includes local transport</span>
                   </div>
-                  <span className="font-serif font-bold text-2xl text-emerald-400 font-mono">
+                  <span className="font-serif font-bold text-2xl text-emerald-600 font-mono">
                     {formatCurrency(total)}
                   </span>
                 </div>
@@ -248,20 +250,20 @@ export default function CartPage() {
                 {/* Checkout CTA */}
                 <Link
                   href="/checkout"
-                  className="btn-primary w-full py-3.5 text-xs text-center flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/60"
+                  className="btn-primary w-full py-3.5 text-xs text-center flex items-center justify-center gap-2 shadow-sm"
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
                 {/* Guarantees */}
-                <div className="space-y-2 pt-2 border-t border-forest-800 text-[11px] text-white/60">
+                <div className="space-y-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500">
                   <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Secure payment via Stripe</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>Tracked driver delivery with OTP release</span>
                   </div>
                 </div>
@@ -269,10 +271,10 @@ export default function CartPage() {
             </div>
           </div>
         ) : (
-          <div className="text-center py-20 px-4 bg-[#071f12] border border-forest-800 rounded-3xl max-w-xl mx-auto">
-            <ShoppingBag className="w-16 h-16 text-emerald-400 mx-auto mb-4 opacity-70" />
-            <h2 className="font-serif text-2xl font-bold text-white">Your Cart is Empty</h2>
-            <p className="text-xs text-white/60 mt-2 mb-6">
+          <div className="text-center py-20 px-4 bg-white border border-slate-200 rounded-3xl max-w-xl mx-auto shadow-sm">
+            <ShoppingBag className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h2 className="font-serif text-2xl font-bold text-slate-900">Your Cart is Empty</h2>
+            <p className="text-xs text-slate-500 mt-2 mb-6">
               You haven&apos;t added any harvests or farm goods yet. Explore our marketplace to find
               fresh produce with volume discounts!
             </p>

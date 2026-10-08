@@ -7,15 +7,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  ShieldCheck,
   MapPin,
-  CreditCard,
   Plus,
-  Loader2,
-  ArrowLeft,
-  CheckCircle2,
-  AlertCircle,
+  CreditCard,
+  ShieldCheck,
   Truck,
+  ArrowLeft,
+  AlertCircle,
+  Loader2,
+  CheckCircle2,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Navbar from "@/components/layout/Navbar";
@@ -29,23 +29,20 @@ import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
 import { useAppSelector } from "@/redux/hooks";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 
+const DELIVERY_CHARGE = 50;
+
 const addressSchema = z.object({
-  addressLine: z.string().min(5, "Address line must be at least 5 characters"),
-  city: z.string().min(2, "City is required (e.g. Abidjan, Bouaké)"),
-  postCode: z.string().min(1, "Postal code is required"),
-  instruction: z.string().min(3, "Delivery instructions (e.g. Near supermarket, gate code)"),
+  addressLine: z.string().min(5, "Address must be at least 5 characters"),
+  city: z.string().min(2, "City is required"),
+  postCode: z.string().min(2, "Postal code is required"),
+  instruction: z.string().optional(),
 });
 
 type AddressFormValues = z.infer<typeof addressSchema>;
 
-const DELIVERY_CHARGE = 50;
-
 export default function CheckoutPage() {
   const router = useRouter();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-
-  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
-  const [showNewAddressForm, setShowNewAddressForm] = useState<boolean>(false);
 
   // Queries
   const { data: cartData } = useGetCartQuery(undefined, {
@@ -76,7 +73,10 @@ export default function CheckoutPage() {
     resolver: zodResolver(addressSchema),
   });
 
-  // Automatically select first address if none selected
+  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+
+  // Sync default address if available
   React.useEffect(() => {
     if (firstAddressId && !selectedAddressId) {
       setSelectedAddressId(firstAddressId);
@@ -85,36 +85,36 @@ export default function CheckoutPage() {
 
   const handleCreateAddress = async (values: AddressFormValues) => {
     try {
-      await createAddress(values).unwrap();
-      toast.success("Shipping address saved!");
+      const res = await createAddress(values).unwrap();
+      toast.success("Delivery address added successfully!");
       reset();
       setShowNewAddressForm(false);
+      if (res?.data?.id) {
+        setSelectedAddressId(res.data.id);
+      }
     } catch (err: any) {
-      toast.error(err?.data?.message || "Failed to save address");
+      toast.error(err?.data?.message || "Failed to create address");
     }
   };
 
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
-      toast.error("Please select or add a delivery address");
+      toast.error("Please select or add a shipping address");
       return;
     }
 
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
-      router.push("/cart");
       return;
     }
-
-    const cartIds = cartItems.map((c) => c.id);
 
     try {
       const res = await createOrder({
         shippingAddressId: selectedAddressId,
-        cartIds,
+        cartIds: cartItems.map((item) => item.id),
       }).unwrap();
 
-      toast.success("Order created! Redirecting to secure checkout...");
+      toast.success("Order created! Redirecting to secure Stripe Checkout...");
 
       if (res?.data?.checkOutUrl) {
         // Redirect to Stripe Hosted Checkout
@@ -136,12 +136,12 @@ export default function CheckoutPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#04160a] text-white flex flex-col">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center py-20 px-4 text-center">
-          <AlertCircle className="w-16 h-16 text-emerald-400 mb-4" />
-          <h2 className="font-serif text-3xl font-bold">Please Log In</h2>
-          <p className="text-white/60 text-sm max-w-sm mt-2 mb-6">
+          <AlertCircle className="w-16 h-16 text-emerald-600 mb-4" />
+          <h2 className="font-serif text-3xl font-bold text-slate-900">Please Log In</h2>
+          <p className="text-slate-500 text-sm max-w-sm mt-2 mb-6">
             You must be logged in to proceed to checkout.
           </p>
           <Link href="/login?redirect=/checkout" className="btn-primary text-xs py-2.5 px-6">
@@ -154,21 +154,21 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#04160a] text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Navbar />
 
       {/* Header */}
-      <div className="bg-gradient-to-b from-[#082314] to-[#04160a] border-b border-forest-800/80 py-8">
+      <div className="bg-white border-b border-slate-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div>
-            <h1 className="font-serif text-3xl font-bold text-white">Checkout & Delivery</h1>
-            <p className="text-xs text-white/60 mt-1">
+            <h1 className="font-serif text-3xl font-bold text-slate-900">Checkout & Delivery</h1>
+            <p className="text-xs text-slate-500 mt-1">
               Select shipping destination and pay securely via Stripe.
             </p>
           </div>
           <Link
             href="/cart"
-            className="flex items-center gap-1.5 text-xs text-white/70 hover:text-emerald-400 transition-colors"
+            className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-emerald-700 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Cart
@@ -181,17 +181,17 @@ export default function CheckoutPage() {
           {/* Left Column: Delivery Address & Payment Method (8 cols) */}
           <div className="lg:col-span-8 space-y-8">
             {/* Step 1: Delivery Address */}
-            <div className="bg-[#071f12] border border-forest-700/60 rounded-2xl p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-forest-800 pb-3">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-5 shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5 text-emerald-400" />
-                  <h3 className="font-serif font-bold text-lg text-white">1. Shipping Address</h3>
+                  <MapPin className="w-5 h-5 text-emerald-600" />
+                  <h3 className="font-serif font-bold text-lg text-slate-900">1. Shipping Address</h3>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setShowNewAddressForm(!showNewAddressForm)}
-                  className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-1"
+                  className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   {showNewAddressForm ? "Select Existing" : "Add New Address"}
@@ -202,15 +202,15 @@ export default function CheckoutPage() {
               {!showNewAddressForm && (
                 <div className="space-y-3">
                   {isLoadingAddresses ? (
-                    <div className="h-20 bg-forest-900/50 rounded-xl animate-pulse" />
+                    <div className="h-20 bg-slate-100 rounded-xl animate-pulse" />
                   ) : addresses.length > 0 ? (
                     addresses.map((addr) => (
                       <label
                         key={addr.id}
                         className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
                           selectedAddressId === addr.id
-                            ? "bg-emerald-950/60 border-emerald-500 ring-1 ring-emerald-500"
-                            : "bg-forest-900/40 border-forest-800 hover:border-forest-700"
+                            ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
+                            : "bg-slate-50 border-slate-200 hover:border-slate-300"
                         }`}
                       >
                         <input
@@ -219,15 +219,15 @@ export default function CheckoutPage() {
                           value={addr.id}
                           checked={selectedAddressId === addr.id}
                           onChange={() => setSelectedAddressId(addr.id)}
-                          className="mt-1 accent-emerald-500"
+                          className="mt-1 accent-emerald-600"
                         />
                         <div className="flex-1 text-xs space-y-1">
-                          <p className="font-bold text-white text-sm">{addr.addressLine}</p>
-                          <p className="text-white/70">
+                          <p className="font-bold text-slate-900 text-sm">{addr.addressLine}</p>
+                          <p className="text-slate-600">
                             {addr.city}, Côte d&apos;Ivoire (Postal: {addr.postCode})
                           </p>
                           {addr.instruction && (
-                            <p className="text-emerald-400/90 text-[11px] italic">
+                            <p className="text-emerald-700 text-[11px] italic">
                               Note: {addr.instruction}
                             </p>
                           )}
@@ -235,7 +235,7 @@ export default function CheckoutPage() {
                       </label>
                     ))
                   ) : (
-                    <div className="text-center py-6 text-xs text-white/60">
+                    <div className="text-center py-6 text-xs text-slate-500">
                       No saved addresses found. Please add an address below.
                     </div>
                   )}
@@ -246,9 +246,9 @@ export default function CheckoutPage() {
               {(showNewAddressForm || addresses.length === 0) && (
                 <form
                   onSubmit={handleSubmit(handleCreateAddress)}
-                  className="space-y-4 pt-2 border-t border-forest-800"
+                  className="space-y-4 pt-2 border-t border-slate-100"
                 >
-                  <h4 className="text-xs font-bold text-white uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
                     Add Destination Address
                   </h4>
 
@@ -332,28 +332,28 @@ export default function CheckoutPage() {
             </div>
 
             {/* Step 2: Payment Gateway */}
-            <div className="bg-[#071f12] border border-forest-700/60 rounded-2xl p-6 space-y-4">
-              <div className="flex items-center gap-2 border-b border-forest-800 pb-3">
-                <CreditCard className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-serif font-bold text-lg text-white">2. Payment Method</h3>
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-4 shadow-sm">
+              <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+                <CreditCard className="w-5 h-5 text-emerald-600" />
+                <h3 className="font-serif font-bold text-lg text-slate-900">2. Payment Method</h3>
               </div>
 
-              <div className="p-4 rounded-xl border border-emerald-500 bg-emerald-950/40 flex items-center justify-between">
+              <div className="p-4 rounded-xl border border-emerald-500 bg-emerald-50/60 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-forest-900 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-sm">
                     <CreditCard className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="font-bold text-sm text-white">Stripe Checkout</p>
-                    <p className="text-xs text-white/60">
+                    <p className="font-bold text-sm text-slate-900">Stripe Checkout</p>
+                    <p className="text-xs text-slate-500">
                       Credit card, debit card & international checkout
                     </p>
                   </div>
                 </div>
-                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
               </div>
 
-              <p className="text-xs text-white/50 leading-relaxed">
+              <p className="text-xs text-slate-500 leading-relaxed">
                 Your payment will be securely processed by Stripe. Once payment is confirmed,
                 the producer will be notified to prepare the harvest for driver pickup.
               </p>
@@ -362,21 +362,21 @@ export default function CheckoutPage() {
 
           {/* Right Column: Order Review & Submit (4 cols) */}
           <div className="lg:col-span-4">
-            <div className="bg-[#071f12] border border-forest-700/70 rounded-2xl p-6 space-y-6 sticky top-24 shadow-xl">
-              <h3 className="font-serif font-bold text-lg text-white">Order Review</h3>
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 space-y-6 sticky top-24 shadow-sm">
+              <h3 className="font-serif font-bold text-lg text-slate-900">Order Review</h3>
 
               {/* Items List */}
-              <div className="max-h-60 overflow-y-auto space-y-3 pr-1 border-b border-forest-800 pb-4">
+              <div className="max-h-60 overflow-y-auto space-y-3 pr-1 border-b border-slate-100 pb-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex justify-between items-center text-xs">
                     <div>
-                      <p className="font-bold text-white line-clamp-1">{item.product?.name}</p>
-                      <p className="text-white/50">
+                      <p className="font-bold text-slate-900 line-clamp-1">{item.product?.name}</p>
+                      <p className="text-slate-500">
                         Qty: {item.quantity}{" "}
                         {item.product?.sellingUnit && formatUnit(item.product.sellingUnit)}
                       </p>
                     </div>
-                    <span className="font-mono font-semibold text-emerald-400">
+                    <span className="font-mono font-semibold text-emerald-600">
                       {formatCurrency((item.product?.pricePerUnit || 0) * item.quantity)}
                     </span>
                   </div>
@@ -384,16 +384,16 @@ export default function CheckoutPage() {
               </div>
 
               {/* Calculations */}
-              <div className="space-y-2.5 text-xs border-b border-forest-800 pb-4">
-                <div className="flex justify-between text-white/70">
+              <div className="space-y-2.5 text-xs border-b border-slate-100 pb-4">
+                <div className="flex justify-between text-slate-600">
                   <span>Subtotal</span>
-                  <span className="font-mono font-semibold text-white">
+                  <span className="font-mono font-semibold text-slate-900">
                     {formatCurrency(subtotal)}
                   </span>
                 </div>
-                <div className="flex justify-between text-white/70">
+                <div className="flex justify-between text-slate-600">
                   <span>Delivery Charge</span>
-                  <span className="font-mono font-semibold text-white">
+                  <span className="font-mono font-semibold text-slate-900">
                     {formatCurrency(DELIVERY_CHARGE)}
                   </span>
                 </div>
@@ -401,8 +401,8 @@ export default function CheckoutPage() {
 
               {/* Total */}
               <div className="flex justify-between items-baseline">
-                <span className="text-xs text-white/70 font-semibold">Total to Pay</span>
-                <span className="font-serif font-bold text-2xl text-emerald-400 font-mono">
+                <span className="text-xs text-slate-600 font-semibold">Total to Pay</span>
+                <span className="font-serif font-bold text-2xl text-emerald-600 font-mono">
                   {formatCurrency(total)}
                 </span>
               </div>
@@ -412,7 +412,7 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handlePlaceOrder}
                 disabled={isPlacingOrder || cartItems.length === 0 || !selectedAddressId}
-                className="btn-primary w-full py-3.5 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60"
+                className="btn-primary w-full py-3.5 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-sm"
               >
                 {isPlacingOrder ? (
                   <>
@@ -427,8 +427,8 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              <div className="flex items-center gap-2 text-[11px] text-white/50 justify-center">
-                <Truck className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center gap-2 text-[11px] text-slate-500 justify-center">
+                <Truck className="w-3.5 h-3.5 text-emerald-600" />
                 <span>Protected by 6-digit delivery OTP verification</span>
               </div>
             </div>

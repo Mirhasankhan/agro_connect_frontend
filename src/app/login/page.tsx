@@ -52,24 +52,41 @@ export default function LoginPage() {
 
       toast.success(response.message || "Welcome back to Agro Connect!");
 
-      // Role-based routing
-      if (redirectPath) {
-        router.push(redirectPath);
-      } else if (role === "PRODUCER") {
+      // Strict role-isolated routing
+      let targetPath = "";
+      if (role === "PRODUCER") {
         if (!isSetuCompleted) {
-          router.push("/onboarding/producer");
+          targetPath = "/onboarding/producer";
+        } else if (redirectPath && redirectPath.startsWith("/producer")) {
+          targetPath = redirectPath;
         } else {
-          router.push("/producer/dashboard");
+          targetPath = "/producer/dashboard";
         }
       } else if (role === "DRIVER") {
         if (!isSetuCompleted) {
-          router.push("/onboarding/driver");
+          targetPath = "/onboarding/driver";
+        } else if (redirectPath && redirectPath.startsWith("/driver")) {
+          targetPath = redirectPath;
         } else {
-          router.push("/driver/dashboard");
+          targetPath = "/driver/dashboard";
         }
       } else {
-        router.push("/");
+        // BUYER
+        if (
+          redirectPath &&
+          !redirectPath.startsWith("/producer") &&
+          !redirectPath.startsWith("/driver") &&
+          !redirectPath.startsWith("/admin") &&
+          !redirectPath.startsWith("/login") &&
+          !redirectPath.startsWith("/register")
+        ) {
+          targetPath = redirectPath;
+        } else {
+          targetPath = "/";
+        }
       }
+
+      router.push(targetPath);
     } catch (err: unknown) {
       const errorMessage =
         (err as { data?: { message?: string } })?.data?.message ||
@@ -80,31 +97,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#061a10] via-[#092c1d] to-[#04140c] px-4 py-12">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
         {/* Brand Header */}
         <div className="mb-8 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-white hover:opacity-90"
+            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-slate-900 hover:opacity-90"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/10">
               <Sprout className="h-5 w-5" />
             </span>
             <span>
-              Agro<span className="text-emerald-400">Connect</span>
+              Agro<span className="text-emerald-600">Connect</span>
             </span>
           </Link>
-          <h1 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
+          <h1 className="mt-4 text-2xl font-bold text-slate-900 sm:text-3xl">
             Welcome back
           </h1>
-          <p className="mt-2 text-sm text-slate-300">
+          <p className="mt-2 text-sm text-slate-600">
             Sign in to access your marketplace account
           </p>
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl border border-white/10 bg-white/95 p-6 shadow-2xl backdrop-blur-md sm:p-8">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {errors.root && (
               <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-700">

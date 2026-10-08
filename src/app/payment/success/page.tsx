@@ -12,39 +12,39 @@ export default function PaymentSuccessPage() {
   const orderId = searchParams.get("orderId");
 
   return (
-    <div className="min-h-screen bg-[#04160a] text-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col">
       <Navbar />
 
       <main className="flex-1 flex items-center justify-center py-20 px-4">
-        <div className="max-w-md w-full bg-[#071f12] border border-forest-700/80 rounded-3xl p-8 text-center space-y-6 shadow-2xl">
-          <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400 mx-auto animate-bounce">
+        <div className="max-w-md w-full bg-white border border-slate-200 rounded-3xl p-8 text-center space-y-6 shadow-sm">
+          <div className="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mx-auto animate-bounce">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest text-emerald-400 font-bold">
+            <span className="text-xs uppercase tracking-widest text-emerald-600 font-bold">
               Payment Confirmed
             </span>
-            <h1 className="font-serif text-3xl font-bold text-white">Order Successful!</h1>
-            <p className="text-xs text-white/70 leading-relaxed">
+            <h1 className="font-serif text-3xl font-bold text-slate-900">Order Successful!</h1>
+            <p className="text-xs text-slate-600 leading-relaxed">
               Thank you for supporting certified local Ivorian agriculture. Your payment has been
               verified and the producer has been notified.
             </p>
           </div>
 
           {orderId && (
-            <div className="p-3 bg-forest-950/80 border border-forest-800 rounded-xl text-xs font-mono text-emerald-300">
+            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-emerald-700">
               Reference: <span className="font-bold">{orderId}</span>
             </div>
           )}
 
-          <div className="space-y-2 pt-2 text-left bg-[#05170d] p-4 rounded-xl border border-forest-800 text-[11px] text-white/70">
+          <div className="space-y-2 pt-2 text-left bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-600">
             <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>A verified transporter will be assigned for pickup.</span>
             </div>
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>You will receive an OTP code to confirm delivery arrival.</span>
             </div>
           </div>

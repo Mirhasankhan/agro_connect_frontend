@@ -32,12 +32,14 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Only query cart and wishlist if authenticated
+  const isBuyerOrGuest = !user || user.role === "BUYER";
+
+  // Only query cart and wishlist if authenticated buyer
   const { data: cartData } = useGetCartQuery(undefined, {
-    skip: !isAuthenticated,
+    skip: !isAuthenticated || !isBuyerOrGuest,
   });
   const { data: wishlistData } = useGetWishlistQuery(undefined, {
-    skip: !isAuthenticated,
+    skip: !isAuthenticated || !isBuyerOrGuest,
   });
 
   const cartItemCount = cartData?.data?.length || 0;
@@ -55,25 +57,23 @@ export default function Navbar() {
     dispatch(logout());
     setUserMenuOpen(false);
     setMobileMenuOpen(false);
-    router.push("/login");
+    router.push("/");
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-forest-800/40 bg-[#061a10]/95 backdrop-blur-md text-white transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200/90 bg-white/95 backdrop-blur-md text-slate-800 transition-all shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-4">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-emerald-600 via-primary-500 to-emerald-400 p-0.5 shadow-md shadow-emerald-950/40 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#061a10] rounded-full flex items-center justify-center">
-                <Sprout className="w-6 h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
-              </div>
+            <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
+              <Sprout className="w-5 h-5 text-white" />
             </div>
             <div className="flex flex-col">
-              <span className="font-serif text-2xl font-bold tracking-tight text-white group-hover:text-emerald-200 transition-colors">
-                Agro<span className="text-emerald-400 font-sans font-extrabold ml-0.5">Connect</span>
+              <span className="font-serif text-2xl font-bold tracking-tight text-slate-900">
+                Agro<span className="text-emerald-600 font-sans font-extrabold ml-0.5">Connect</span>
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-emerald-400/80 font-medium">
+              <span className="text-[10px] uppercase tracking-widest text-emerald-700 font-semibold">
                 Côte d&apos;Ivoire
               </span>
             </div>
@@ -83,39 +83,39 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
             <Link
               href="/"
-              className={`transition-colors hover:text-emerald-300 ${
-                pathname === "/" ? "text-emerald-400 font-semibold" : "text-white/80"
+              className={`transition-colors hover:text-emerald-700 ${
+                pathname === "/" ? "text-emerald-600 font-semibold" : "text-slate-600"
               }`}
             >
               Home
             </Link>
             <Link
               href="/products"
-              className={`transition-colors hover:text-emerald-300 ${
+              className={`transition-colors hover:text-emerald-700 ${
                 pathname.startsWith("/products")
-                  ? "text-emerald-400 font-semibold"
-                  : "text-white/80"
+                  ? "text-emerald-600 font-semibold"
+                  : "text-slate-600"
               }`}
             >
               Marketplace
             </Link>
             <Link
               href="/#for-whom"
-              className="text-white/80 hover:text-emerald-300 transition-colors"
+              className="text-slate-600 hover:text-emerald-700 transition-colors"
             >
               For Whom
             </Link>
             <Link
               href="/#benefits"
-              className="text-white/80 hover:text-emerald-300 transition-colors"
+              className="text-slate-600 hover:text-emerald-700 transition-colors"
             >
               Benefits
             </Link>
-            {isAuthenticated && (
+            {isAuthenticated && user?.role === "BUYER" && (
               <Link
                 href="/orders"
-                className={`transition-colors hover:text-emerald-300 ${
-                  pathname === "/orders" ? "text-emerald-400 font-semibold" : "text-white/80"
+                className={`transition-colors hover:text-emerald-700 ${
+                  pathname === "/orders" ? "text-emerald-600 font-semibold" : "text-slate-600"
                 }`}
               >
                 My Orders
@@ -133,53 +133,55 @@ export default function Navbar() {
               placeholder="Search bananas, rice, cassava..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-forest-900/60 border border-forest-700/60 rounded-full py-2 pl-10 pr-4 text-xs text-white placeholder-white/40 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all"
+              className="w-full bg-slate-100/90 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-all"
             />
-            <Search className="w-4 h-4 text-white/40 absolute left-3 pointer-events-none" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
           </form>
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
-            {/* Wishlist Button */}
-            {isAuthenticated && (
+            {/* Wishlist Button (Buyer only) */}
+            {isAuthenticated && user?.role === "BUYER" && (
               <Link
                 href="/products"
                 title="Wishlist"
-                className="relative p-2.5 rounded-full text-white/80 hover:text-white hover:bg-forest-800/60 transition-colors"
+                className="relative p-2.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               >
                 <Heart className="w-5 h-5" />
                 {wishlistItemCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-500 text-[10px] font-bold text-white flex items-center justify-center">
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-600 text-[10px] font-bold text-white flex items-center justify-center">
                     {wishlistItemCount}
                   </span>
                 )}
               </Link>
             )}
 
-            {/* Messages Button */}
-            {isAuthenticated && (
+            {/* Messages Button (Buyer only) */}
+            {isAuthenticated && user?.role === "BUYER" && (
               <Link
                 href="/messages"
                 title="Direct Messages"
-                className="relative p-2.5 rounded-full text-white/80 hover:text-white hover:bg-forest-800/60 transition-colors"
+                className="relative p-2.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
               >
                 <MessageSquare className="w-5 h-5" />
               </Link>
             )}
 
-            {/* Cart Button */}
-            <Link
-              href="/cart"
-              className="relative p-2.5 rounded-full text-white/80 hover:text-white hover:bg-forest-800/60 transition-colors"
-              title="Cart"
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-emerald-500 text-xs font-bold text-white flex items-center justify-center animate-pulse">
-                  {cartItemCount}
-                </span>
-              )}
-            </Link>
+            {/* Cart Button (Buyer / Guest) */}
+            {isBuyerOrGuest && (
+              <Link
+                href="/cart"
+                className="relative p-2.5 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                title="Cart"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                {cartItemCount > 0 && (
+                  <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-emerald-600 text-xs font-bold text-white flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* Auth Dropdown or Login / Register */}
             {isAuthenticated && user ? (
@@ -187,26 +189,26 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-forest-900/80 border border-forest-700/70 hover:border-emerald-500 text-sm transition-all focus:outline-none"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 hover:border-emerald-500 text-sm transition-all focus:outline-none"
                 >
-                  <div className="w-7 h-7 rounded-full bg-emerald-600/30 border border-emerald-500/40 flex items-center justify-center text-xs font-bold text-emerald-300">
+                  <div className="w-7 h-7 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-xs font-bold text-emerald-800">
                     {user.fullName?.charAt(0).toUpperCase() || "U"}
                   </div>
-                  <span className="hidden sm:inline font-medium text-xs text-white max-w-[100px] truncate">
+                  <span className="hidden sm:inline font-medium text-xs text-slate-800 max-w-[100px] truncate">
                     {user.fullName || "User"}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-white/60" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
                 </button>
 
                 {/* Dropdown Menu */}
                 {userMenuOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#092316] border border-forest-700/70 shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
+                    className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-slate-200 shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
                     onMouseLeave={() => setUserMenuOpen(false)}
                   >
-                    <div className="px-4 py-2 border-b border-forest-800">
-                      <p className="text-xs font-semibold text-white truncate">{user.fullName}</p>
-                      <p className="text-[11px] text-emerald-400 font-medium">
+                    <div className="px-4 py-2 border-b border-slate-100">
+                      <p className="text-xs font-semibold text-slate-900 truncate">{user.fullName}</p>
+                      <p className="text-[11px] text-emerald-700 font-medium">
                         Role: {user.role}
                       </p>
                     </div>
@@ -215,9 +217,9 @@ export default function Navbar() {
                       <Link
                         href="/producer/dashboard"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/90 hover:bg-forest-800/80 hover:text-emerald-300 transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
                       >
-                        <LayoutDashboard className="w-4 h-4 text-emerald-400" />
+                        <LayoutDashboard className="w-4 h-4 text-emerald-600" />
                         Producer Dashboard
                       </Link>
                     )}
@@ -226,48 +228,52 @@ export default function Navbar() {
                       <Link
                         href="/driver/dashboard"
                         onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/90 hover:bg-forest-800/80 hover:text-emerald-300 transition-colors"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
                       >
-                        <Truck className="w-4 h-4 text-emerald-400" />
+                        <Truck className="w-4 h-4 text-emerald-600" />
                         Driver Dashboard
                       </Link>
                     )}
 
-                    <Link
-                      href="/messages"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/90 hover:bg-forest-800/80 hover:text-emerald-300 transition-colors"
-                    >
-                      <MessageSquare className="w-4 h-4 text-emerald-400" />
-                      Direct Messages
-                    </Link>
+                    {user.role === "BUYER" && (
+                      <>
+                        <Link
+                          href="/messages"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                        >
+                          <MessageSquare className="w-4 h-4 text-emerald-600" />
+                          Direct Messages
+                        </Link>
 
-                    <Link
-                      href="/orders"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/90 hover:bg-forest-800/80 hover:text-emerald-300 transition-colors"
-                    >
-                      <Package className="w-4 h-4 text-emerald-400" />
-                      My Orders
-                    </Link>
+                        <Link
+                          href="/orders"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                        >
+                          <Package className="w-4 h-4 text-emerald-600" />
+                          My Orders
+                        </Link>
 
-                    <Link
-                      href="/cart"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-white/90 hover:bg-forest-800/80 hover:text-emerald-300 transition-colors"
-                    >
-                      <ShoppingBag className="w-4 h-4 text-emerald-400" />
-                      My Cart ({cartItemCount})
-                    </Link>
+                        <Link
+                          href="/cart"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                        >
+                          <ShoppingBag className="w-4 h-4 text-emerald-600" />
+                          My Cart ({cartItemCount})
+                        </Link>
+                      </>
+                    )}
 
-                    <div className="my-1 border-t border-forest-800" />
+                    <div className="my-1 border-t border-slate-100" />
 
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-red-300 hover:bg-red-950/40 hover:text-red-200 transition-colors text-left"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-rose-600 hover:bg-rose-50 transition-colors text-left"
                     >
-                      <LogOut className="w-4 h-4 text-red-400" />
+                      <LogOut className="w-4 h-4 text-rose-500" />
                       Sign Out
                     </button>
                   </div>
@@ -277,13 +283,13 @@ export default function Navbar() {
               <div className="flex items-center gap-2.5">
                 <Link
                   href="/login"
-                  className="px-4 py-2 text-xs font-semibold text-white/90 hover:text-white transition-colors"
+                  className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 transition-colors"
                 >
                   Log in
                 </Link>
                 <Link
                   href="/register"
-                  className="px-4 py-2 text-xs font-semibold rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-950/40 transition-all hover:scale-105 active:scale-95"
+                  className="btn-primary text-xs py-2 px-5"
                 >
                   Register
                 </Link>
@@ -294,7 +300,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-white/80 hover:text-white focus:outline-none"
+              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -305,60 +311,60 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#061a10] border-b border-forest-800 px-4 pt-3 pb-6 space-y-4">
+        <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-md">
           <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-forest-900 border border-forest-700 rounded-xl py-2 pl-10 pr-4 text-sm text-white placeholder-white/40 focus:outline-none focus:border-emerald-500"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600"
             />
-            <Search className="w-4 h-4 text-white/40 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
           </form>
 
-          <nav className="flex flex-col space-y-2 text-sm font-medium">
+          <nav className="flex flex-col space-y-1 text-sm font-medium">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-white hover:bg-forest-800"
+              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
             >
               Home
             </Link>
             <Link
               href="/products"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-white hover:bg-forest-800"
+              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
             >
               Marketplace
             </Link>
             <Link
               href="/#for-whom"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-white/80 hover:bg-forest-800"
+              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
             >
               For Whom
             </Link>
             <Link
               href="/#benefits"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-white/80 hover:bg-forest-800"
+              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
             >
               Benefits
             </Link>
-            {isAuthenticated && (
+            {isAuthenticated && user?.role === "BUYER" && (
               <>
                 <Link
                   href="/messages"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-lg text-white hover:bg-forest-800"
+                  className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
                 >
                   Messages
                 </Link>
                 <Link
                   href="/orders"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-3 py-2 rounded-lg text-white hover:bg-forest-800"
+                  className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
                 >
                   My Orders
                 </Link>
@@ -368,7 +374,7 @@ export default function Navbar() {
               <Link
                 href="/producer/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-emerald-400 hover:bg-forest-800 font-semibold"
+                className="px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 font-semibold"
               >
                 Producer Dashboard
               </Link>
@@ -377,7 +383,7 @@ export default function Navbar() {
               <Link
                 href="/driver/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-emerald-400 hover:bg-forest-800 font-semibold"
+                className="px-3 py-2 rounded-lg text-emerald-700 hover:bg-emerald-50 font-semibold"
               >
                 Driver Dashboard
               </Link>

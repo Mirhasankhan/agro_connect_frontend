@@ -12,11 +12,11 @@ const shippingApi = baseApi.injectEndpoints({
     }),
 
     createShippingAddress: builder.mutation<
-      TApiResponse<null>,
+      TApiResponse<TShippingAddress | null>,
       {
         addressLine: string;
         city: string;
-        instruction: string;
+        instruction?: string;
         postCode: string;
       }
     >({

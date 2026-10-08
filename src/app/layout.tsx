@@ -7,6 +7,8 @@ import Providers from "@/lib/providers/Providers";
 import { ToastContainer } from "react-toastify";
 import { Toaster } from "sonner";
 
+import AuthRoleGuard from "@/components/auth/AuthRoleGuard";
+
 const sansFont = Plus_Jakarta_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -49,7 +51,9 @@ export default function RootLayout({
             <ToastContainer position="top-right" autoClose={3000} />
             <Toaster richColors position="top-right" />
 
-            {children}
+            <AuthRoleGuard>
+              {children}
+            </AuthRoleGuard>
           </Providers>
         </ThemeProvider>
       </body>

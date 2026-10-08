@@ -85,18 +85,18 @@ export default function AddPricingTierModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md bg-[#0a2315] border-forest-700 text-white p-6 rounded-2xl">
+      <DialogContent className="sm:max-w-md bg-white border border-slate-200 text-slate-900 p-6 rounded-2xl shadow-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2 text-amber-400 mb-1">
+          <div className="flex items-center gap-2 text-amber-600 mb-1">
             <TrendingDown className="w-5 h-5" />
             <span className="text-xs font-bold uppercase tracking-wider">Bulk Incentive</span>
           </div>
-          <DialogTitle className="font-serif text-xl font-bold text-white">
+          <DialogTitle className="font-serif text-xl font-bold text-slate-900">
             Add Bulk Pricing Tier
           </DialogTitle>
-          <DialogDescription className="text-white/60 text-xs">
-            Set volume discounts for <span className="text-emerald-400 font-semibold">{productName}</span>. Standard rate:{" "}
-            <span className="text-emerald-400 font-bold font-mono">
+          <DialogDescription className="text-slate-500 text-xs">
+            Set volume discounts for <span className="text-emerald-700 font-semibold">{productName}</span>. Standard rate:{" "}
+            <span className="text-emerald-700 font-bold font-mono">
               {formatCurrency(basePrice)} / {formatUnit(sellingUnit)}
             </span>
           </DialogDescription>
@@ -105,7 +105,7 @@ export default function AddPricingTierModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Threshold Quantity */}
           <div>
-            <label className="form-label text-white/80">
+            <label className="form-label text-slate-700">
               Minimum Quantity Threshold ({formatUnit(sellingUnit)})
             </label>
             <input
@@ -119,7 +119,7 @@ export default function AddPricingTierModal({
 
           {/* Discounted Unit Price */}
           <div>
-            <label className="form-label text-white/80">
+            <label className="form-label text-slate-700">
               Discounted Price Per Unit (FCFA)
             </label>
             <input
@@ -135,8 +135,8 @@ export default function AddPricingTierModal({
 
           {/* Savings Preview Callout */}
           {discountPercent > 0 && (
-            <div className="p-3 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-xs text-emerald-300 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 shrink-0 text-emerald-400" />
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 shrink-0 text-emerald-600" />
               <span>
                 Buyers ordering <strong>{enteredQty || 0}+ {formatUnit(sellingUnit)}</strong> will receive a{" "}
                 <strong>{discountPercent}% discount</strong>!

@@ -1,13 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { UserRole } from "./types";
 
-const roleHome: Record<UserRole, string> = {
-  PRODUCER: "/producer/dashboard",
-  DRIVER: "/driver/dashboard",
-  BUYER: "/",
-  ADMIN: "/producer/dashboard",
-};
-
 function readRole(token: string): UserRole | null {
   try {
     const payload = token.split(".")[1];
@@ -41,54 +34,56 @@ export function middleware(req: NextRequest) {
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  // If already authenticated and visits auth route, redirect to role home
-  if (token && role && isAuthRoute) {
-    const target = roleHome[role] || "/";
-    return NextResponse.redirect(new URL(target, req.url));
-  }
+  const isProducerRoute =
+    pathname.startsWith("/producer") || pathname.startsWith("/onboarding/producer");
 
-  // Producer routes protection
-  if (pathname.startsWith("/producer")) {
-    if (!token || !role) {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-    if (role !== "PRODUCER" && role !== "ADMIN") {
-      return NextResponse.redirect(new URL(roleHome[role] || "/", req.url));
-    }
-  }
+  const isDriverRoute =
+    pathname.startsWith("/driver") || pathname.startsWith("/onboarding/driver");
 
-  // Driver routes protection
-  if (pathname.startsWith("/driver")) {
-    if (!token || !role) {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-    if (role !== "DRIVER" && role !== "ADMIN") {
-      return NextResponse.redirect(new URL(roleHome[role] || "/", req.url));
-    }
-  }
-
-  // Buyer protected checkout & orders & profile
-  const buyerProtectedRoutes = [
+  const isBuyerProtectedRoute = [
     "/checkout",
     "/orders",
-    "/profile",
-    "/wishlist",
     "/messages",
-  ];
-  const isBuyerProtected = buyerProtectedRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
+    "/payment",
+  ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
-  if (isBuyerProtected) {
-    if (!token || !role) {
+  // 1. Unauthenticated (Guest) User Handling
+  if (!token || !role) {
+    // If guest attempts to access Producer, Driver, or protected Buyer routes, redirect to login
+    if (isProducerRoute || isDriverRoute || isBuyerProtectedRoute) {
       const loginUrl = new URL("/login", req.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
     }
+    // Guest can freely access public storefront (/, /products, /cart) and auth routes
+    return NextResponse.next();
+  }
+
+  // 2. Authenticated PRODUCER: Strictly isolated to Producer Dashboard & Onboarding
+  if (role === "PRODUCER" || role === "ADMIN") {
+    if (!isProducerRoute) {
+      return NextResponse.redirect(new URL("/producer/dashboard", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 3. Authenticated DRIVER: Strictly isolated to Driver Dashboard & Onboarding
+  if (role === "DRIVER") {
+    if (!isDriverRoute) {
+      return NextResponse.redirect(new URL("/driver/dashboard", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // 4. Authenticated BUYER: Storefront & Buyer features only; no Producer/Driver or Auth routes
+  if (role === "BUYER") {
+    if (isAuthRoute) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    if (isProducerRoute || isDriverRoute) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+    return NextResponse.next();
   }
 
   return NextResponse.next();

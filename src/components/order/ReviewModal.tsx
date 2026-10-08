@@ -76,13 +76,13 @@ export default function ReviewModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md bg-[#0a2315] border-forest-700 text-white p-6 rounded-2xl">
+      <DialogContent className="sm:max-w-md bg-white border border-slate-200 text-slate-900 p-6 rounded-2xl shadow-xl">
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl font-bold text-white">
+          <DialogTitle className="font-serif text-xl font-bold text-slate-900">
             Rate & Review Product
           </DialogTitle>
-          <DialogDescription className="text-white/60 text-xs">
-            Share your feedback on <span className="text-emerald-400 font-semibold">{productName}</span> to
+          <DialogDescription className="text-slate-500 text-xs">
+            Share your feedback on <span className="text-emerald-700 font-semibold">{productName}</span> to
             help farmers and future buyers.
           </DialogDescription>
         </DialogHeader>
@@ -90,7 +90,7 @@ export default function ReviewModal({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Star Rating Selector */}
           <div>
-            <label className="form-label text-white/80">Rating (1 to 5 Stars)</label>
+            <label className="form-label text-slate-700">Rating (1 to 5 Stars)</label>
             <div className="flex items-center gap-2 mt-1">
               {[1, 2, 3, 4, 5].map((star) => {
                 const filled =
@@ -108,13 +108,13 @@ export default function ReviewModal({
                       className={`w-7 h-7 ${
                         filled
                           ? "text-amber-400 fill-amber-400"
-                          : "text-forest-700 fill-transparent"
+                          : "text-slate-200 fill-slate-100"
                       } transition-colors`}
                     />
                   </button>
                 );
               })}
-              <span className="text-sm font-bold text-amber-400 ml-2">
+              <span className="text-sm font-bold text-amber-600 ml-2">
                 {hoverRating !== null ? hoverRating : currentRating} / 5
               </span>
             </div>
@@ -125,7 +125,7 @@ export default function ReviewModal({
 
           {/* Comment */}
           <div>
-            <label className="form-label text-white/80">Your Review / Comments</label>
+            <label className="form-label text-slate-700">Your Review / Comments</label>
             <textarea
               {...register("comment")}
               rows={4}
