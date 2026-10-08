@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   ShieldCheck,
@@ -20,6 +21,14 @@ import {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/product/ProductCard";
+import CategoriesSection from "@/components/home/CategoriesSection";
+import HowItWorksSection from "@/components/home/HowItWorksSection";
+import BulkPricingBanner from "@/components/home/BulkPricingBanner";
+import RegionalHubsSection from "@/components/home/RegionalHubsSection";
+import TrustGuaranteesSection from "@/components/home/TrustGuaranteesSection";
+import TestimonialsSection from "@/components/home/TestimonialsSection";
+import FaqSection from "@/components/home/FaqSection";
+import HarvestNewsletterSection from "@/components/home/HarvestNewsletterSection";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
 
@@ -33,7 +42,7 @@ export default function HomePage() {
     order: "desc",
   });
 
-  const { data: categoriesData } = useGetAllCategoriesQuery();
+  const { data: categoriesData, isLoading: isLoadingCategories } = useGetAllCategoriesQuery();
   const categories = categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [];
 
   const products = productsData?.data?.products || [];
@@ -75,31 +84,51 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl space-y-6">
             {/* Pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a3a20]/75 border border-emerald-400/30 backdrop-blur-md shadow-sm">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a3a20]/75 border border-emerald-400/30 backdrop-blur-md shadow-sm"
+            >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-xs font-medium text-emerald-100 tracking-wide">
                 Agricultural platform number 1 in Ivory Coast
               </span>
-            </div>
+            </motion.div>
 
             {/* Headline */}
-            <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white">
+            <motion.h1
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.05 }}
+              className="font-serif text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white"
+            >
               From fields <br />
               to{" "}
               <span className="bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-200 bg-clip-text text-transparent italic">
                 tables
               </span>
-            </h1>
+            </motion.h1>
 
             {/* Subheading */}
-            <p className="text-base sm:text-lg text-white/80 leading-relaxed font-sans max-w-2xl font-normal">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1 }}
+              className="text-base sm:text-lg text-white/80 leading-relaxed font-sans max-w-2xl font-normal"
+            >
               Connect directly with{" "}
-              <strong className="text-white font-bold">certified local producers</strong> , place
+              <strong className="text-white font-bold">certified local producers</strong>, place
               your orders and receive your deliveries quickly anywhere in Ivory Coast.
-            </p>
+            </motion.p>
 
             {/* Call to Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <motion.div
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.15 }}
+              className="flex flex-wrap items-center gap-4 pt-2"
+            >
               <Link
                 href="/register"
                 className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition-all hover:scale-105 active:scale-95"
@@ -120,10 +149,13 @@ export default function HomePage() {
                 Explore marketplace
                 <ChevronRight className="w-4 h-4" />
               </Link>
-            </div>
+            </motion.div>
 
             {/* Hero Quick Search Bar */}
-            <form
+            <motion.form
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.2 }}
               onSubmit={handleHeroSearch}
               className="mt-8 pt-4 flex flex-col sm:flex-row items-center gap-3 max-w-xl"
             >
@@ -143,13 +175,13 @@ export default function HomePage() {
               >
                 Search
               </button>
-            </form>
+            </motion.form>
 
-            {/* Quick Category Pills - Populated dynamically from Backend API */}
+            {/* Quick Category Pills */}
             {categories.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 pt-2">
-                <span className="text-xs text-emerald-200/70 mr-1 font-medium">Categories:</span>
-                {categories.slice(0, 5).map((cat) => (
+                <span className="text-xs text-emerald-200/70 mr-1 font-medium">Quick Jump:</span>
+                {categories.slice(0, 6).map((cat) => (
                   <button
                     key={cat.id}
                     type="button"
@@ -169,27 +201,54 @@ export default function HomePage() {
       <section className="border-b border-slate-200 bg-slate-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div className="space-y-1">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35 }}
+              className="space-y-1"
+            >
               <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">500+</p>
               <p className="text-xs sm:text-sm text-slate-600 font-medium">Certified Local Producers</p>
-            </div>
-            <div className="space-y-1">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.08 }}
+              className="space-y-1"
+            >
               <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">12,500+</p>
               <p className="text-xs sm:text-sm text-slate-600 font-medium">Tons Delivered Safely</p>
-            </div>
-            <div className="space-y-1">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.16 }}
+              className="space-y-1"
+            >
               <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">0%</p>
               <p className="text-xs sm:text-sm text-slate-600 font-medium">Middlemen Exploitation</p>
-            </div>
-            <div className="space-y-1">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.24 }}
+              className="space-y-1"
+            >
               <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">24/48h</p>
               <p className="text-xs sm:text-sm text-slate-600 font-medium">Express Agro-Logistics</p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* FEATURED HARVESTS / MARKETPLACE PREVIEW */}
+      {/* SECTION 1: CATEGORIES SECTION (Icon-size category images with minimal animations) */}
+      <CategoriesSection categories={categories} isLoading={isLoadingCategories} />
+
+      {/* SECTION 2: FEATURED HARVESTS / MARKETPLACE PREVIEW */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
@@ -252,7 +311,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PLATFORM BENEFITS - WHY AGRO CONNECT */}
+      {/* SECTION 3: WHOLESALE BULK TIER PRICING BANNER */}
+      <BulkPricingBanner />
+
+      {/* SECTION 4: HOW AGRO CONNECT WORKS (4-Step process with dual persona toggle) */}
+      <HowItWorksSection />
+
+      {/* SECTION 5: REGIONAL HUBS SPOTLIGHT (Bouaké, Korhogo, Yamoussoukro, San Pédro) */}
+      <RegionalHubsSection />
+
+      {/* SECTION 6: PLATFORM BENEFITS - WHY AGRO CONNECT */}
       <section id="benefits" className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -270,7 +338,14 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Benefit 1 */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35 }}
+              whileHover={{ y: -4 }}
+              className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+            >
               <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                 <ShieldCheck className="w-7 h-7" />
               </div>
@@ -281,10 +356,17 @@ export default function HomePage() {
                 Every producer undergoes rigorous validation of their identity, land certificates,
                 and farm photos. You buy genuine, traceable Ivorian produce straight from the source.
               </p>
-            </div>
+            </motion.div>
 
             {/* Benefit 2 */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.08 }}
+              whileHover={{ y: -4 }}
+              className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+            >
               <div className="w-14 h-14 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
                 <TrendingDown className="w-7 h-7" />
               </div>
@@ -295,10 +377,17 @@ export default function HomePage() {
                 Whether you need 5 kg for your home or 50 tons for a hotel chain, our automatic
                 tiered pricing rewards volume with substantial, instant discounts.
               </p>
-            </div>
+            </motion.div>
 
             {/* Benefit 3 */}
-            <div className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.16 }}
+              whileHover={{ y: -4 }}
+              className="p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all duration-300 space-y-4"
+            >
               <div className="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                 <Truck className="w-7 h-7" />
               </div>
@@ -309,12 +398,15 @@ export default function HomePage() {
                 Dedicated registered drivers pick up products directly from farm hubs. Orders are
                 confirmed upon arrival using an encrypted 6-digit OTP code before funds are released.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* FOR WHOM SECTION */}
+      {/* SECTION 7: TRUST GUARANTEES PILLARS */}
+      <TrustGuaranteesSection />
+
+      {/* SECTION 8: FOR WHOM SECTION */}
       <section id="for-whom" className="py-20 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -332,7 +424,14 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Buyer Card */}
-            <div className="p-7 rounded-3xl bg-slate-50 border border-slate-200/90 space-y-4 flex flex-col justify-between">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35 }}
+              whileHover={{ y: -4 }}
+              className="p-7 rounded-3xl bg-slate-50 border border-slate-200/90 space-y-4 flex flex-col justify-between"
+            >
               <div>
                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emerald-600 mb-4 shadow-sm">
                   <Users className="w-6 h-6" />
@@ -364,10 +463,17 @@ export default function HomePage() {
               >
                 Start Buying Now
               </Link>
-            </div>
+            </motion.div>
 
             {/* Producer Card */}
-            <div className="p-7 rounded-3xl bg-white border-2 border-emerald-600 shadow-md space-y-4 flex flex-col justify-between relative">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.08 }}
+              whileHover={{ y: -4 }}
+              className="p-7 rounded-3xl bg-white border-2 border-emerald-600 shadow-md space-y-4 flex flex-col justify-between relative"
+            >
               <span className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
                 High Demand
               </span>
@@ -404,10 +510,17 @@ export default function HomePage() {
               >
                 Join as a Producer
               </Link>
-            </div>
+            </motion.div>
 
             {/* Driver Card */}
-            <div className="p-7 rounded-3xl bg-slate-50 border border-slate-200/90 space-y-4 flex flex-col justify-between">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.35, delay: 0.16 }}
+              whileHover={{ y: -4 }}
+              className="p-7 rounded-3xl bg-slate-50 border border-slate-200/90 space-y-4 flex flex-col justify-between"
+            >
               <div>
                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emerald-600 mb-4 shadow-sm">
                   <Truck className="w-6 h-6" />
@@ -441,10 +554,19 @@ export default function HomePage() {
               >
                 Register as a Driver
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
+
+      {/* SECTION 9: VERIFIED TESTIMONIALS */}
+      <TestimonialsSection />
+
+      {/* SECTION 10: FREQUENTLY ASKED QUESTIONS */}
+      <FaqSection />
+
+      {/* SECTION 11: WEEKLY HARVEST NEWSLETTER & COMMODITY ALERTS */}
+      <HarvestNewsletterSection />
 
       {/* CALL TO ACTION BANNER */}
       <section className="py-20 bg-slate-900 text-white border-t border-slate-800">
