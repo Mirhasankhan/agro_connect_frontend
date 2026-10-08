@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { TUser, UserRole } from "@/types";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { ExtendedJwtPayload } from "@/utils/jwt";
+import { disconnectSocket } from "@/lib/socket";
 
 interface TAuthState {
   user: TUser | null;
@@ -37,7 +40,26 @@ const authSlice = createSlice({
       state.role = role;
       state.isAuthenticated = Boolean(token);
       state.isSetupCompleted = isSetupCompleted ?? user?.isSetupCompleted ?? false;
-      state.user = user ?? {
+
+      let resolvedUser = user;
+      if (!resolvedUser && token) {
+        try {
+          const decoded = jwtDecode<ExtendedJwtPayload>(token);
+          if (decoded) {
+            resolvedUser = {
+              id: decoded.id || "",
+              fullName: decoded.fullName || "",
+              email: decoded.email || "",
+              role: (decoded.role as UserRole) || role,
+              isSetupCompleted: state.isSetupCompleted,
+            };
+          }
+        } catch {
+          // ignore
+        }
+      }
+
+      state.user = resolvedUser ?? {
         id: "",
         fullName: "",
         email: "",
@@ -46,8 +68,8 @@ const authSlice = createSlice({
       };
 
       if (token) {
-        Cookies.set("token", token, { expires: 7 });
-        Cookies.set("accessToken", token, { expires: 7 });
+        Cookies.set("token", token, { expires: 7, path: "/" });
+        Cookies.set("accessToken", token, { expires: 7, path: "/" });
       }
     },
     updateProfileData: (state, action: PayloadAction<Partial<TUser>>) => {
@@ -65,8 +87,9 @@ const authSlice = createSlice({
       state.isSetupCompleted = false;
       state.isAuthenticated = false;
 
-      Cookies.remove("token");
-      Cookies.remove("accessToken");
+      Cookies.remove("token", { path: "/" });
+      Cookies.remove("accessToken", { path: "/" });
+      disconnectSocket();
     },
   },
 });
@@ -78,5 +101,3 @@ export default authSlice.reducer;
 export const useCurrentUser = (state: RootState) => state.auth.user;
 export const useCurrentToken = (state: RootState) => state.auth.token;
 export const useCurrentRole = (state: RootState) => state.auth.role;
-export const useIsSetupCompleted = (state: RootState) =>
-  state.auth.isSetupCompleted;

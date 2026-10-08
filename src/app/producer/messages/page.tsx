@@ -42,8 +42,10 @@ function ProducerMessagesContent() {
         (c) => c.participant.id === targetUserId
       );
       if (existing) {
-        setActiveParticipant(existing.participant);
-      } else {
+        if (activeParticipant?.id !== existing.participant.id) {
+          setActiveParticipant(existing.participant);
+        }
+      } else if (activeParticipant?.id !== targetUserId) {
         setActiveParticipant({
           id: targetUserId,
           fullName: targetUserName || "Buyer / Transporter",
@@ -54,7 +56,7 @@ function ProducerMessagesContent() {
     } else if (conversations.length > 0 && !activeParticipant) {
       setActiveParticipant(conversations[0].participant);
     }
-  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipant]);
+  }, [targetUserId, targetUserName, targetUserRole, conversations, activeParticipant?.id]);
 
   const filteredConversations = useMemo(() => {
     if (!searchQuery.trim()) return conversations;
@@ -205,7 +207,7 @@ function ProducerMessagesContent() {
         >
           <ChatWindow
             activeParticipant={activeParticipant}
-            currentUserId={user.id}
+            currentUserId={user?.id || ""}
             onBack={() => setActiveParticipant(null)}
           />
         </div>

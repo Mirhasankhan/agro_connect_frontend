@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { Send, Check, CheckCheck, Loader2, ArrowLeft, MessageSquare, ShieldCheck } from "lucide-react";
-import { getSocket } from "@/lib/socket";
+import { getSocket, getAuthToken } from "@/lib/socket";
 import { TChatMessage, TParticipant, TConversationHistory } from "@/types";
 import { toast } from "sonner";
 
@@ -34,22 +34,37 @@ export default function ChatWindow({
   }, [messages]);
 
   useEffect(() => {
-    if (!activeParticipant) {
+    if (!activeParticipant?.id) {
       setMessages([]);
+      setIsLoadingHistory(false);
       return;
     }
 
     setIsLoadingHistory(true);
     const socket = getSocket();
 
+    const doSubscribe = () => {
+      const token = getAuthToken();
+      socket.emit("subscribe", {
+        userId: activeParticipant.id,
+        token,
+      });
+    };
+
     const handleConnect = () => {
       setIsConnected(true);
-      socket.emit("subscribe", { userId: activeParticipant.id });
+      doSubscribe();
     };
 
     const handleAuthenticated = () => {
       setIsConnected(true);
-      socket.emit("subscribe", { userId: activeParticipant.id });
+      doSubscribe();
+    };
+
+    const handleConnectError = (err: any) => {
+      setIsConnected(false);
+      setIsLoadingHistory(false);
+      console.warn("Socket connection error:", err?.message || err);
     };
 
     const handleConversationHistory = (data: TConversationHistory) => {
@@ -70,27 +85,36 @@ export default function ChatWindow({
       toast.error(err?.message || "Failed to process chat action");
     };
 
-    if (socket.connected) {
-      setIsConnected(true);
-      socket.emit("subscribe", { userId: activeParticipant.id });
-    } else {
-      socket.connect();
-    }
-
+    // Attach listeners before connecting / subscribing
     socket.on("connect", handleConnect);
     socket.on("authenticated", handleAuthenticated);
+    socket.on("connect_error", handleConnectError);
     socket.on("conversationHistory", handleConversationHistory);
     socket.on("message", handleNewMessage);
     socket.on("error", handleError);
 
+    if (socket.connected) {
+      setIsConnected(true);
+      doSubscribe();
+    } else {
+      socket.connect();
+    }
+
+    // Safety timeout to ensure spinner doesn't hang indefinitely
+    const safetyTimer = setTimeout(() => {
+      setIsLoadingHistory(false);
+    }, 10000);
+
     return () => {
+      clearTimeout(safetyTimer);
       socket.off("connect", handleConnect);
       socket.off("authenticated", handleAuthenticated);
+      socket.off("connect_error", handleConnectError);
       socket.off("conversationHistory", handleConversationHistory);
       socket.off("message", handleNewMessage);
       socket.off("error", handleError);
     };
-  }, [activeParticipant]);
+  }, [activeParticipant?.id]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,9 +131,11 @@ export default function ChatWindow({
     const messageText = inputValue.trim();
     setInputValue("");
 
+    const token = getAuthToken();
     socket.emit("sendMessage", {
       receiverId: activeParticipant.id,
       message: messageText,
+      token,
     });
   };
 
@@ -192,7 +218,7 @@ export default function ChatWindow({
               isConnected ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
             }`}
           />
-          {isConnected ? "Connected" : "Reconnecting..."}
+          {isConnected ? "Connected" : "Connecting..."}
         </div>
       </div>
 
@@ -212,7 +238,9 @@ export default function ChatWindow({
           </div>
         ) : (
           messages.map((msg, index) => {
-            const isMine = msg.isSendByMe || msg.senderId === currentUserId;
+            const isMine =
+              msg.isSendByMe ||
+              (Boolean(currentUserId) && msg.senderId === currentUserId);
             return (
               <div
                 key={msg.id || index}

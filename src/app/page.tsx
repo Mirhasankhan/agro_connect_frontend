@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -50,28 +51,50 @@ export default function HomePage() {
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-emerald-500 selection:text-white">
       <Navbar />
 
-      {/* HERO SECTION - Clean, light and welcoming */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200/80">
+      {/* HERO SECTION - Lush dark forest emerald gradient with harvest produce background */}
+      <section className="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32 bg-[#041d0f] border-b border-emerald-950/80">
+        {/* Photographic background with dark emerald gradient & radial glow overlays */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <Image
+            src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=2000&q=80"
+            alt="Agricultural produce background"
+            fill
+            priority
+            unoptimized
+            className="object-cover object-center opacity-25 mix-blend-luminosity scale-105"
+          />
+          {/* Deep dark green gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#03190d]/95 via-[#07361b]/80 to-[#021308]/95" />
+          {/* Center-left emerald radial spotlight */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_42%_42%,rgba(20,130,65,0.45)_0%,rgba(6,36,19,0.88)_58%,rgba(2,18,9,0.98)_100%)]" />
+          {/* Subtle ambient glow orbs */}
+          <div className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-emerald-500/15 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-[420px] h-[420px] bg-emerald-400/10 rounded-full blur-3xl" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl space-y-6">
             {/* Pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-semibold text-emerald-800 tracking-wide">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a3a20]/75 border border-emerald-400/30 backdrop-blur-md shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-medium text-emerald-100 tracking-wide">
                 Agricultural platform number 1 in Ivory Coast
               </span>
             </div>
 
             {/* Headline */}
-            <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-slate-900">
+            <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white">
               From fields <br />
-              to <span className="text-emerald-700 italic">tables</span>
+              to{" "}
+              <span className="bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-200 bg-clip-text text-transparent italic">
+                tables
+              </span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-lg sm:text-xl text-slate-600 leading-relaxed font-sans max-w-2xl font-normal">
+            <p className="text-base sm:text-lg text-white/80 leading-relaxed font-sans max-w-2xl font-normal">
               Connect directly with{" "}
-              <strong className="text-slate-900 font-semibold">certified local producers</strong>, place
+              <strong className="text-white font-bold">certified local producers</strong> , place
               your orders and receive your deliveries quickly anywhere in Ivory Coast.
             </p>
 
@@ -79,20 +102,20 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href="/register"
-                className="px-6 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm flex items-center gap-2 shadow-md transition-all hover:scale-105 active:scale-95"
+                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition-all hover:scale-105 active:scale-95"
               >
                 Start for free
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/login"
-                className="px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm border border-slate-300 shadow-sm transition-all hover:border-slate-400"
+                className="px-6 py-3.5 rounded-xl bg-[#09351d]/50 hover:bg-[#0c4425]/60 text-white font-semibold text-sm border border-emerald-400/30 backdrop-blur-md shadow-sm transition-all hover:border-emerald-300/50"
               >
                 Log in
               </Link>
               <Link
                 href="/products"
-                className="px-5 py-3.5 rounded-full text-slate-600 hover:text-emerald-700 font-medium text-sm flex items-center gap-1.5 transition-colors"
+                className="px-5 py-3.5 rounded-xl text-emerald-200/80 hover:text-white font-medium text-sm flex items-center gap-1.5 transition-colors"
               >
                 Explore marketplace
                 <ChevronRight className="w-4 h-4" />
@@ -110,13 +133,13 @@ export default function HomePage() {
                   placeholder="What harvest are you looking for? (e.g. Igname, Banane, Riz)"
                   value={heroSearch}
                   onChange={(e) => setHeroSearch(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 shadow-sm transition-all"
+                  className="w-full bg-white/95 border border-emerald-400/30 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-500 focus:outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/25 shadow-lg shadow-black/20 transition-all"
                 />
-                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5" />
+                <Search className="w-5 h-5 text-slate-500 absolute left-3.5 top-3.5" />
               </div>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm whitespace-nowrap shadow-sm transition-all"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-semibold text-sm whitespace-nowrap shadow-md transition-all"
               >
                 Search
               </button>
@@ -125,13 +148,13 @@ export default function HomePage() {
             {/* Quick Category Pills - Populated dynamically from Backend API */}
             {categories.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 pt-2">
-                <span className="text-xs text-slate-400 mr-1 font-medium">Categories:</span>
+                <span className="text-xs text-emerald-200/70 mr-1 font-medium">Categories:</span>
                 {categories.slice(0, 5).map((cat) => (
                   <button
                     key={cat.id}
                     type="button"
                     onClick={() => router.push(`/products?categoryId=${cat.id}`)}
-                    className="px-3 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 border border-slate-200 text-xs text-slate-700 hover:text-emerald-800 transition-colors"
+                    className="px-3 py-1 rounded-full bg-white/10 hover:bg-emerald-500/25 border border-white/15 text-xs text-white/90 hover:text-white transition-colors backdrop-blur-sm"
                   >
                     {cat.name}
                   </button>
