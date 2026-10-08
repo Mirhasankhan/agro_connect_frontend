@@ -235,7 +235,7 @@ export default function RegisterPage() {
                 </>
               ) : (
                 <>
-                  <span>Continue</span>
+                  <span>Sign Up</span>
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}

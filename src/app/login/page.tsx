@@ -28,6 +28,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [login, { isLoading }] = useLoginMutation();
 
+  const emailParam = searchParams.get("email") || "";
+
   const {
     register,
     handleSubmit,
@@ -35,6 +37,10 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: emailParam,
+      password: "",
+    },
   });
 
   const onSubmit = async (values: LoginFormValues) => {
@@ -56,7 +62,7 @@ export default function LoginPage() {
       let targetPath = "";
       if (role === "PRODUCER") {
         if (!isSetuCompleted) {
-          targetPath = "/onboarding/producer";
+          targetPath = "/producer/dashboard?setup=true";
         } else if (redirectPath && redirectPath.startsWith("/producer")) {
           targetPath = redirectPath;
         } else {
@@ -64,7 +70,7 @@ export default function LoginPage() {
         }
       } else if (role === "DRIVER") {
         if (!isSetuCompleted) {
-          targetPath = "/onboarding/driver";
+          targetPath = "/driver/dashboard?setup=true";
         } else if (redirectPath && redirectPath.startsWith("/driver")) {
           targetPath = redirectPath;
         } else {

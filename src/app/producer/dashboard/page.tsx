@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Package,
   ShoppingBag,
@@ -9,6 +10,7 @@ import {
   Plus,
   ArrowRight,
   Truck,
+  Sprout,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useGetProducerProductsQuery } from "@/redux/features/product/productApi";
@@ -17,9 +19,27 @@ import {
   useMarkOrderItemSentToHubMutation,
 } from "@/redux/features/order/orderApi";
 import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
+import { useAppSelector } from "@/redux/hooks";
+import ProducerProfileSetupModal from "@/components/producer/ProducerProfileSetupModal";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function ProducerDashboardPage() {
+  const searchParams = useSearchParams();
+  const isSetupCompleted = useAppSelector((state) => state.auth.isSetupCompleted);
+  const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
+
+  const { data: profileData } = useGetProfileQuery();
+  const verificationStatus = profileData?.data?.producerProfile?.verificationStatus;
+  const isAccepted = verificationStatus === "Accepted";
+  const isRejected = verificationStatus === "Rejected";
+
+  useEffect(() => {
+    if (searchParams.get("setup") === "true" || !isSetupCompleted) {
+      setIsSetupModalOpen(true);
+    }
+  }, [searchParams, isSetupCompleted]);
+
   const { data: productsData, isLoading: isLoadingProducts } = useGetProducerProductsQuery({
     limit: 5,
   });
@@ -54,6 +74,38 @@ export default function ProducerDashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Profile Setup Pending Notice */}
+      {!isSetupCompleted && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+              <Sprout className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-amber-950">
+                Producer Profile Setup Required
+              </h3>
+              <p className="mt-0.5 text-xs text-amber-800">
+                Complete your farm details and upload your verification documents to start listing produce and receiving payouts.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsSetupModalOpen(true)}
+            className="btn-primary shrink-0 self-start sm:self-auto bg-amber-600 hover:bg-amber-700 text-white border-0 text-xs py-2 px-4 shadow-sm"
+          >
+            Complete Profile Setup
+          </button>
+        </div>
+      )}
+
+      {/* Setup Profile Modal */}
+      <ProducerProfileSetupModal
+        isOpen={isSetupModalOpen}
+        onClose={() => setIsSetupModalOpen(false)}
+      />
+
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
         <div className="space-y-1">
@@ -69,13 +121,29 @@ export default function ProducerDashboardPage() {
           </p>
         </div>
 
-        <Link
-          href="/producer/products/create"
-          className="btn-primary text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Create New Harvest
-        </Link>
+        {isAccepted ? (
+          <Link
+            href="/producer/products/create"
+            className="btn-primary text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Create New Harvest
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled
+            title={
+              isRejected
+                ? "Account verification was rejected. Please contact support."
+                : "Account verification is pending. You can add products once your producer profile is Accepted."
+            }
+            className="btn-primary opacity-50 cursor-not-allowed text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Create New Harvest (Pending Approval)
+          </button>
+        )}
       </div>
 
       {/* Metric Cards Grid */}

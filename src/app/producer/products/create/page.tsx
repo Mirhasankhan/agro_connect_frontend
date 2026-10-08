@@ -22,6 +22,7 @@ import {
   useCreateProductMutation,
 } from "@/redux/features/product/productApi";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { SellingUnit } from "@/types";
 import { formatUnit } from "@/utils/formatters";
 
@@ -59,7 +60,7 @@ const productSchema = z.object({
   pricingTiers: z
     .array(
       z.object({
-        quantity: z.string().min(1, "Quantity required").refine((v) => Number(v) > 1, "Must be > 1"),
+        quantity: z.string().min(1, "Quantity required").refine((v) => Number(v) > 0, "Must be > 0"),
         pricePerUnit: z
           .string()
           .min(1, "Price required")
@@ -74,6 +75,10 @@ type ProductFormValues = z.infer<typeof productSchema>;
 export default function CreateProductPage() {
   const router = useRouter();
   const [createProductMutation, { isLoading }] = useCreateProductMutation();
+
+  const { data: profileData } = useGetProfileQuery();
+  const verificationStatus = profileData?.data?.producerProfile?.verificationStatus;
+  const isAccepted = verificationStatus === "Accepted";
 
   // Query categories dynamically from backend API
   const { data: categoriesData, isLoading: isLoadingCategories } = useGetAllCategoriesQuery();
@@ -101,7 +106,6 @@ export default function CreateProductPage() {
     name: "pricingTiers",
   });
 
-  const currentBasePrice = watch("pricePerUnit");
   const currentSellingUnit = watch("sellingUnit");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -179,6 +183,19 @@ export default function CreateProductPage() {
           </p>
         </div>
       </div>
+
+      {!isAccepted && (
+        <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800">
+          <Leaf className="h-5 w-5 shrink-0 text-amber-600" />
+          <div className="space-y-0.5">
+            <p className="font-semibold text-sm">Producer Verification Pending Approval</p>
+            <p>
+              Your producer profile is currently under review by administrators.
+              Publishing harvests to the marketplace is disabled until your account is Accepted.
+            </p>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information Card */}
@@ -297,13 +314,6 @@ export default function CreateProductPage() {
           {fields.length > 0 ? (
             <div className="space-y-3">
               {fields.map((field, index) => {
-                const tierPrice = watch(`pricingTiers.${index}.pricePerUnit`);
-                const base = Number(currentBasePrice) || 0;
-                const discPercent =
-                  base > 0 && tierPrice && Number(tierPrice) < base
-                    ? Math.round(((base - Number(tierPrice)) / base) * 100)
-                    : 0;
-
                 return (
                   <div
                     key={field.id}
@@ -336,12 +346,6 @@ export default function CreateProductPage() {
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto pt-2 sm:pt-0">
-                      {discPercent > 0 && (
-                        <span className="text-xs font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
-                          -{discPercent}% Off
-                        </span>
-                      )}
-
                       <button
                         type="button"
                         onClick={() => remove(index)}
@@ -418,14 +422,19 @@ export default function CreateProductPage() {
           </Link>
           <button
             type="submit"
-            disabled={isLoading}
-            className="btn-primary text-xs py-3 px-8 flex items-center gap-2 shadow-sm"
+            disabled={isLoading || !isAccepted}
+            title={!isAccepted ? "Account verification is pending. You cannot publish harvests until approved." : ""}
+            className={`btn-primary text-xs py-3 px-8 flex items-center gap-2 shadow-sm ${
+              !isAccepted ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Publishing Harvest...
               </>
+            ) : !isAccepted ? (
+              "Publish Harvest (Pending Approval)"
             ) : (
               "Publish Harvest"
             )}

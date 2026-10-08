@@ -21,7 +21,7 @@ const authApi = baseApi.injectEndpoints({
     }),
 
     verifyRegistration: builder.mutation<
-      TApiResponse<{ id: string; role: UserRole; accessToken: string }>,
+      TApiResponse<{ id: string; role: UserRole; accessToken: string } | null>,
       { email: string; otp: string; fcmToken?: string }
     >({
       query: (data) => ({

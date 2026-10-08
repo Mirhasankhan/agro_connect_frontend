@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   Truck,
   DollarSign,
@@ -10,10 +11,29 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
+import { useAppSelector } from "@/redux/hooks";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
+import DriverProfileSetupModal from "@/components/driver/DriverProfileSetupModal";
 import { formatCurrency, formatDate } from "@/utils/formatters";
+import { Clock, AlertCircle } from "lucide-react";
 
 export default function DriverDashboardPage() {
+  const searchParams = useSearchParams();
+  const isSetupCompleted = useAppSelector((state) => state.auth.isSetupCompleted);
+  const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
+
+  const { data: profileData } = useGetProfileQuery();
+  const verificationStatus = profileData?.data?.driverProfile?.verificationStatus;
+  const isAccepted = verificationStatus === "Accepted";
+  const isRejected = verificationStatus === "Rejected";
+
+  useEffect(() => {
+    if (searchParams.get("setup") === "true" || !isSetupCompleted) {
+      setIsSetupModalOpen(true);
+    }
+  }, [searchParams, isSetupCompleted]);
+
   const { data: paymentsData, isLoading: isLoadingPayments } = useGetDriverWisePaymentsQuery();
 
   const [otpModalData, setOtpModalData] = useState<{
@@ -30,6 +50,66 @@ export default function DriverDashboardPage() {
 
   return (
     <div className="space-y-8">
+      {/* Verification Status Warning for Pending / Rejected */}
+      {isSetupCompleted && !isAccepted && (
+        <div
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
+            isRejected
+              ? "border-rose-200 bg-rose-50 text-rose-800"
+              : "border-amber-200 bg-amber-50 text-amber-800"
+          }`}
+        >
+          {isRejected ? (
+            <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
+          ) : (
+            <Clock className="h-5 w-5 shrink-0 text-amber-600" />
+          )}
+          <div className="space-y-0.5">
+            <p className="font-semibold text-sm">
+              {isRejected
+                ? "Driver Verification Rejected"
+                : "Driver License & Vehicle Verification Pending"}
+            </p>
+            <p>
+              {isRejected
+                ? "Your driver verification was not approved. Please review your profile documents or contact support."
+                : "Your vehicle documents and license are being reviewed by dispatchers. Delivery assignment and fulfillment will be enabled once your account is Accepted."}
+            </p>
+          </div>
+        </div>
+      )}
+      {/* Profile Setup Pending Notice */}
+      {!isSetupCompleted && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+              <Truck className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-amber-950">
+                Driver Profile Setup Required
+              </h3>
+              <p className="mt-0.5 text-xs text-amber-800">
+                Register your vehicle details and upload your verification documents to start accepting delivery orders and earning delivery fees.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsSetupModalOpen(true)}
+            className="btn-primary shrink-0 self-start sm:self-auto bg-amber-600 hover:bg-amber-700 text-white border-0 text-xs py-2 px-4 shadow-sm"
+          >
+            Complete Profile Setup
+          </button>
+        </div>
+      )}
+
+      {/* Driver Profile Setup Modal */}
+      <DriverProfileSetupModal
+        isOpen={isSetupModalOpen}
+        onClose={() => setIsSetupModalOpen(false)}
+      />
+
       {/* Welcome Hero */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
         <div className="space-y-1">

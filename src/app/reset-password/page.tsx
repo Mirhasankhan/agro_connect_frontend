@@ -25,7 +25,7 @@ import {
 const step1Schema = z.object({
   otp: z
     .string()
-    .length(6, "Verification code must be exactly 6 digits")
+    .length(4, "Verification code must be exactly 4 digits")
     .regex(/^\d+$/, "Digits only"),
 });
 
@@ -164,13 +164,13 @@ export default function ResetPasswordPage() {
 
               <div>
                 <label htmlFor="otp" className="form-label text-center">
-                  6-Digit Reset Code
+                  4-Digit Reset Code
                 </label>
                 <input
                   id="otp"
                   type="text"
-                  maxLength={6}
-                  placeholder="123456"
+                  maxLength={4}
+                  placeholder="1234"
                   className="form-input text-center text-2xl font-bold tracking-[0.5em] placeholder:tracking-normal placeholder:font-normal placeholder:text-slate-300"
                   autoComplete="one-time-code"
                   disabled={isVerifying}

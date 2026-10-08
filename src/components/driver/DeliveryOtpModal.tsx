@@ -18,7 +18,7 @@ import { useVerifyDeliveryCompletionOtpMutation } from "@/redux/features/order/o
 const otpSchema = z.object({
   otp: z
     .string()
-    .length(6, "OTP must be exactly 6 digits")
+    .length(4, "OTP must be exactly 4 digits")
     .regex(/^\d+$/, "OTP must contain only numbers"),
 });
 
@@ -78,18 +78,18 @@ export default function DeliveryOtpModal({
           </DialogTitle>
           <DialogDescription className="text-slate-500 text-xs">
             Ask the buyer <strong className="text-slate-900">{customerName || "Customer"}</strong> for
-            their 6-digit confirmation code sent to their phone/email for order{" "}
+            their 4-digit confirmation code sent to their phone/email for order{" "}
             <span className="text-emerald-700 font-mono">#{orderReference || "Reference"}</span>.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-3">
           <div>
-            <label className="form-label text-slate-700">6-Digit Confirmation OTP</label>
+            <label className="form-label text-slate-700">4-Digit Confirmation OTP</label>
             <input
               type="text"
-              maxLength={6}
-              placeholder="123456"
+              maxLength={4}
+              placeholder="1234"
               {...register("otp")}
               className="form-input text-center font-mono text-2xl tracking-[0.3em] font-bold py-3 bg-slate-50 border-slate-200 text-slate-900"
             />

@@ -8,12 +8,15 @@ import {
   Plus,
   Search,
   TrendingDown,
+  AlertCircle,
+  Clock,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
   useGetProducerProductsQuery,
   useUpdateProductMutation,
 } from "@/redux/features/product/productApi";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import AddPricingTierModal from "@/components/producer/AddPricingTierModal";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 import { TProduct, SellingUnit } from "@/types";
@@ -21,6 +24,11 @@ import { TProduct, SellingUnit } from "@/types";
 export default function ProducerProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "outOfStock">("all");
+
+  const { data: profileData } = useGetProfileQuery();
+  const verificationStatus = profileData?.data?.producerProfile?.verificationStatus;
+  const isAccepted = verificationStatus === "Accepted";
+  const isRejected = verificationStatus === "Rejected";
 
   const queryParams: any = {
     limit: 50,
@@ -57,6 +65,35 @@ export default function ProducerProductsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Verification Status Warning for Pending / Rejected */}
+      {!isAccepted && (
+        <div
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
+            isRejected
+              ? "border-rose-200 bg-rose-50 text-rose-800"
+              : "border-amber-200 bg-amber-50 text-amber-800"
+          }`}
+        >
+          {isRejected ? (
+            <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
+          ) : (
+            <Clock className="h-5 w-5 shrink-0 text-amber-600" />
+          )}
+          <div className="space-y-0.5">
+            <p className="font-semibold text-sm">
+              {isRejected
+                ? "Producer Verification Rejected"
+                : "Producer Verification Pending Admin Approval"}
+            </p>
+            <p>
+              {isRejected
+                ? "Your producer verification was not approved. You cannot list new products until your account is approved."
+                : "Your producer account is currently under review by administrators. Adding new harvest produce will remain disabled until your account is Accepted."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
@@ -66,13 +103,29 @@ export default function ProducerProductsPage() {
           </p>
         </div>
 
-        <Link
-          href="/producer/products/create"
-          className="btn-primary text-xs py-2.5 px-4 flex items-center justify-center gap-2 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Add New Harvest
-        </Link>
+        {isAccepted ? (
+          <Link
+            href="/producer/products/create"
+            className="btn-primary text-xs py-2.5 px-4 flex items-center justify-center gap-2 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Add New Harvest
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled
+            title={
+              isRejected
+                ? "Account verification was rejected. Please contact support."
+                : "Account verification is pending. You can add products once your producer profile is Accepted."
+            }
+            className="btn-primary opacity-50 cursor-not-allowed text-xs py-2.5 px-4 flex items-center justify-center gap-2 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Add New Harvest (Pending Approval)
+          </button>
+        )}
       </div>
 
       {/* Filters Bar */}
@@ -223,9 +276,20 @@ export default function ProducerProductsPage() {
               You haven&apos;t added any produce yet. List your vegetables, fruits, or tubers to
               start selling to verified buyers.
             </p>
-            <Link href="/producer/products/create" className="btn-primary text-xs py-2 px-5">
-              Add Your First Harvest
-            </Link>
+            {isAccepted ? (
+              <Link href="/producer/products/create" className="btn-primary text-xs py-2 px-5">
+                Add Your First Harvest
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Account verification is pending. You can add products once your producer profile is Accepted."
+                className="btn-primary opacity-50 cursor-not-allowed text-xs py-2 px-5"
+              >
+                Add Your First Harvest (Pending Approval)
+              </button>
+            )}
           </div>
         )}
       </div>

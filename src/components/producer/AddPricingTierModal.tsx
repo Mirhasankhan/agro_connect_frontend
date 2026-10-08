@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Loader2, TrendingDown, Sparkles } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAddPricingTierMutation } from "@/redux/features/product/productApi";
 import { SellingUnit } from "@/types";
@@ -37,13 +37,13 @@ export default function AddPricingTierModal({
   const [addTierMutation, { isLoading }] = useAddPricingTierMutation();
 
   const tierSchema = z.object({
-    quantity: z.string().min(1, "Threshold quantity is required").refine(
-      (val) => Number(val) > 1,
-      "Bulk quantity must be greater than 1"
+    quantity: z.string().min(1, "Quantity is required").refine(
+      (val) => Number(val) > 0,
+      "Quantity must be greater than 0"
     ),
-    pricePerUnit: z.string().min(1, "Discounted unit price is required").refine(
-      (val) => Number(val) > 0 && Number(val) < basePrice,
-      `Discounted price must be greater than 0 and less than standard price (${formatCurrency(basePrice)})`
+    pricePerUnit: z.string().min(1, "Price is required").refine(
+      (val) => Number(val) > 0,
+      "Price must be greater than 0"
     ),
   });
 
@@ -53,19 +53,10 @@ export default function AddPricingTierModal({
     register,
     handleSubmit,
     reset,
-    watch,
     formState: { errors },
   } = useForm<TierFormValues>({
     resolver: zodResolver(tierSchema),
   });
-
-  const enteredQty = watch("quantity");
-  const enteredPrice = watch("pricePerUnit");
-
-  const discountPercent =
-    enteredPrice && !isNaN(Number(enteredPrice)) && Number(enteredPrice) < basePrice
-      ? Math.round(((basePrice - Number(enteredPrice)) / basePrice) * 100)
-      : 0;
 
   const onSubmit = async (values: TierFormValues) => {
     try {
@@ -75,7 +66,7 @@ export default function AddPricingTierModal({
         pricePerUnit: Number(values.pricePerUnit),
       }).unwrap();
 
-      toast.success("Bulk pricing tier added successfully!");
+      toast.success("Pricing tier added successfully!");
       reset();
       onClose();
     } catch (err: any) {
@@ -87,40 +78,33 @@ export default function AddPricingTierModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md bg-white border border-slate-200 text-slate-900 p-6 rounded-2xl shadow-xl">
         <DialogHeader>
-          <div className="flex items-center gap-2 text-amber-600 mb-1">
-            <TrendingDown className="w-5 h-5" />
-            <span className="text-xs font-bold uppercase tracking-wider">Bulk Incentive</span>
-          </div>
-          <DialogTitle className="font-serif text-xl font-bold text-slate-900">
-            Add Bulk Pricing Tier
+          <DialogTitle className="text-lg font-bold text-slate-900">
+            Add Pricing Tier
           </DialogTitle>
           <DialogDescription className="text-slate-500 text-xs">
-            Set volume discounts for <span className="text-emerald-700 font-semibold">{productName}</span>. Standard rate:{" "}
-            <span className="text-emerald-700 font-bold font-mono">
-              {formatCurrency(basePrice)} / {formatUnit(sellingUnit)}
-            </span>
+            Set bulk pricing for {productName} (Current standard price: {formatCurrency(basePrice)}/{formatUnit(sellingUnit)}).
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
-          {/* Threshold Quantity */}
           <div>
             <label className="form-label text-slate-700">
-              Minimum Quantity Threshold ({formatUnit(sellingUnit)})
+              Minimum Quantity ({formatUnit(sellingUnit)})
             </label>
             <input
               type="number"
-              placeholder="e.g. 10, 50, 100"
+              placeholder="e.g. 10"
               {...register("quantity")}
               className="form-input w-full"
             />
-            {errors.quantity && <p className="form-error mt-1">{errors.quantity.message}</p>}
+            {errors.quantity && (
+              <p className="form-error mt-1">{errors.quantity.message}</p>
+            )}
           </div>
 
-          {/* Discounted Unit Price */}
           <div>
             <label className="form-label text-slate-700">
-              Discounted Price Per Unit (FCFA)
+              Price Per Unit (FCFA)
             </label>
             <input
               type="number"
@@ -133,18 +117,6 @@ export default function AddPricingTierModal({
             )}
           </div>
 
-          {/* Savings Preview Callout */}
-          {discountPercent > 0 && (
-            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 shrink-0 text-emerald-600" />
-              <span>
-                Buyers ordering <strong>{enteredQty || 0}+ {formatUnit(sellingUnit)}</strong> will receive a{" "}
-                <strong>{discountPercent}% discount</strong>!
-              </span>
-            </div>
-          )}
-
-          {/* Action Buttons */}
           <div className="flex items-center justify-end gap-3 pt-3">
             <button
               type="button"
@@ -165,7 +137,7 @@ export default function AddPricingTierModal({
                   Saving...
                 </>
               ) : (
-                "Save Pricing Tier"
+                "Save Tier"
               )}
             </button>
           </div>

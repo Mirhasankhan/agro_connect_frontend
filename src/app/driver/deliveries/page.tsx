@@ -18,6 +18,7 @@ import {
   useMarkDeliveryStatusMutation,
   useSendDeliveryCompletionOtpMutation,
 } from "@/redux/features/order/orderApi";
+import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
@@ -33,6 +34,11 @@ const FILTER_TABS: { label: string; value: string }[] = [
 export default function DriverDeliveriesPage() {
   const [selectedFilter, setSelectedFilter] = useState<string>("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const { data: profileData } = useGetProfileQuery();
+  const verificationStatus = profileData?.data?.driverProfile?.verificationStatus;
+  const isAccepted = verificationStatus === "Accepted";
+  const isRejected = verificationStatus === "Rejected";
 
   const { data: paymentsData, isLoading } = useGetDriverWisePaymentsQuery();
   const [markDeliveryStatus, { isLoading: isUpdatingStatus }] = useMarkDeliveryStatusMutation();
@@ -62,7 +68,7 @@ export default function DriverDeliveriesPage() {
   const handleSendOtp = async (deliveryId: string) => {
     try {
       await sendOtpMutation(deliveryId).unwrap();
-      toast.success("6-Digit OTP sent to customer via email & SMS!");
+      toast.success("4-Digit OTP sent to customer via email & SMS!");
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to send OTP code");
     }
@@ -70,6 +76,35 @@ export default function DriverDeliveriesPage() {
 
   return (
     <div className="space-y-6">
+      {/* Verification Status Warning for Pending / Rejected */}
+      {!isAccepted && (
+        <div
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
+            isRejected
+              ? "border-rose-200 bg-rose-50 text-rose-800"
+              : "border-amber-200 bg-amber-50 text-amber-800"
+          }`}
+        >
+          {isRejected ? (
+            <Clock className="h-5 w-5 shrink-0 text-rose-600" />
+          ) : (
+            <Clock className="h-5 w-5 shrink-0 text-amber-600" />
+          )}
+          <div className="space-y-0.5">
+            <p className="font-semibold text-sm">
+              {isRejected
+                ? "Driver Verification Rejected"
+                : "Driver License & Vehicle Verification Pending"}
+            </p>
+            <p>
+              {isRejected
+                ? "Your driver verification was not approved. You cannot fulfill deliveries until approved."
+                : "Your driver documents are being reviewed by dispatchers. Active deliveries are paused until your account is Accepted."}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="border-b border-slate-200 pb-5">
         <h1 className="font-serif text-2xl font-bold text-slate-900">Assigned Deliveries</h1>

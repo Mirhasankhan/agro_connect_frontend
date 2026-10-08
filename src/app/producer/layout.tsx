@@ -42,6 +42,7 @@ export default function ProducerLayout({
   const producerUser = profileData?.data || user;
   const producerProfile = producerUser?.producerProfile;
   const verificationStatus = producerProfile?.verificationStatus || "Pending";
+  const isAccepted = verificationStatus === "Accepted";
 
   const handleLogout = () => {
     dispatch(logout());
@@ -241,13 +242,25 @@ export default function ProducerLayout({
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              href="/producer/products/create"
-              className="btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Add Harvest</span>
-            </Link>
+            {isAccepted ? (
+              <Link
+                href="/producer/products/create"
+                className="btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Add Harvest</span>
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                title="Adding new harvest is disabled while your producer verification is pending approval."
+                className="btn-primary opacity-50 cursor-not-allowed text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Add Harvest (Pending)</span>
+              </button>
+            )}
 
             <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center font-bold text-xs text-emerald-800">
               {producerUser?.fullName?.charAt(0).toUpperCase() || "P"}
@@ -262,8 +275,7 @@ export default function ProducerLayout({
               <Clock className="w-4 h-4 text-amber-600 shrink-0" />
               <span>
                 <strong>Verification in progress:</strong> Your farm documents are being reviewed
-                by Agro Connect admins. You can create harvests now; they will become publicly
-                visible once your profile is approved.
+                by Agro Connect admins. Adding new harvests is disabled until your account is Accepted.
               </span>
             </div>
             <Link

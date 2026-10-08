@@ -15,7 +15,7 @@ import { setUser } from "@/redux/features/auth/authSlice";
 const otpSchema = z.object({
   otp: z
     .string()
-    .length(6, "Verification code must be exactly 6 digits")
+    .length(4, "Verification code must be exactly 4 digits")
     .regex(/^\d+$/, "Verification code must contain digits only"),
 });
 
@@ -52,24 +52,27 @@ export default function VerifyOtpPage() {
         otp: values.otp,
       }).unwrap();
 
-      const { accessToken, role: userRole } = response.data;
+      toast.success(response.message || "Account verified successfully! You can login now.");
 
-      dispatch(
-        setUser({
-          token: accessToken,
-          role: userRole,
-          isSetupCompleted: false,
-        }),
-      );
+      if (response?.data?.accessToken) {
+        const { accessToken, role: userRole } = response.data;
+        dispatch(
+          setUser({
+            token: accessToken,
+            role: userRole,
+            isSetupCompleted: false,
+          }),
+        );
 
-      toast.success(response.message || "Account verified successfully!");
-
-      if (userRole === "PRODUCER") {
-        router.push("/onboarding/producer");
-      } else if (userRole === "DRIVER") {
-        router.push("/onboarding/driver");
+        if (userRole === "PRODUCER") {
+          router.push("/producer/dashboard?setup=true");
+        } else if (userRole === "DRIVER") {
+          router.push("/driver/dashboard?setup=true");
+        } else {
+          router.push("/");
+        }
       } else {
-        router.push("/");
+        router.push(`/login?email=${encodeURIComponent(email)}`);
       }
     } catch (err: unknown) {
       const errorMessage =
@@ -111,7 +114,7 @@ export default function VerifyOtpPage() {
             Verify your email
           </h1>
           <p className="mt-2 text-sm text-slate-600">
-            We sent a 6-digit code to{" "}
+            We sent a 4-digit code to{" "}
             <span className="font-semibold text-emerald-600">
               {email || "your email"}
             </span>
@@ -129,13 +132,13 @@ export default function VerifyOtpPage() {
 
             <div>
               <label htmlFor="otp" className="form-label text-center">
-                Enter 6-Digit Code
+                Enter 4-Digit Code
               </label>
               <input
                 id="otp"
                 type="text"
-                maxLength={6}
-                placeholder="123456"
+                maxLength={4}
+                placeholder="1234"
                 className="form-input text-center text-2xl font-bold tracking-[0.5em] placeholder:tracking-normal placeholder:font-normal placeholder:text-slate-300"
                 autoComplete="one-time-code"
                 disabled={isLoading}
