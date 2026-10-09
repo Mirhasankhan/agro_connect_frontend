@@ -42,6 +42,10 @@ module.exports = {
           800: "#166534",
           900: "#14532d",
         },
+        bprimary: {
+          DEFAULT: "#16a34a",
+          foreground: "#ffffff",
+        },
         secondary: {
           DEFAULT: "#0c2b1c",
           foreground: "#ffffff",

@@ -8,12 +8,15 @@ import {
 } from "lucide-react";
 import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
+import Pagination from "@/utils/pagination";
 
 export default function ProducerEarningsPage() {
   const [filterTransferred, setFilterTransferred] = useState<string>("ALL");
+  const [page, setPage] = useState(1);
 
   const queryParams: any = {
-    limit: 50,
+    page,
+    limit: 10,
   };
   if (filterTransferred === "PAID") queryParams.isTransferred = true;
   if (filterTransferred === "PENDING") queryParams.isTransferred = false;
@@ -21,6 +24,7 @@ export default function ProducerEarningsPage() {
   const { data, isLoading } = useGetProducerWisePaymentsQuery(queryParams);
 
   const payments = data?.data?.payments || [];
+  const totalPages = data?.data?.pagination?.totalPage || 1;
   const totalAmount =
     data?.data?.earningSummary?.amount ||
     payments.reduce((acc, p) => acc + (p.amount || 0), 0);
@@ -98,7 +102,10 @@ export default function ProducerEarningsPage() {
             <span className="text-xs text-slate-500">Status:</span>
             <select
               value={filterTransferred}
-              onChange={(e) => setFilterTransferred(e.target.value)}
+              onChange={(e) => {
+                setFilterTransferred(e.target.value);
+                setPage(1);
+              }}
               className="bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-3 text-xs text-slate-800 focus:outline-none focus:border-emerald-500"
             >
               <option value="ALL">All Records</option>
@@ -171,6 +178,15 @@ export default function ProducerEarningsPage() {
                 ))}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-slate-200 bg-white">
+                <Pagination
+                  page={page}
+                  setPage={setPage}
+                  totalPage={totalPages}
+                />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-16 px-4">

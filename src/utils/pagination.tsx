@@ -9,6 +9,8 @@ export type paginationProp = {
 };
 
 const Pagination = ({ totalPage, page, setPage }: paginationProp) => {
+  if (!totalPage || totalPage <= 0) return null;
+
   let start = Math.max(1, page - 1);
   let end = Math.min(totalPage, start + 2);
 

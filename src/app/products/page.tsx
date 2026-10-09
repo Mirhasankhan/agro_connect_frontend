@@ -20,6 +20,7 @@ import ProductCard from "@/components/product/ProductCard";
 import { useGetAllProductsQuery, ProductQueryParams } from "@/redux/features/product/productApi";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
 import { SellingUnit } from "@/types";
+import Pagination from "@/utils/pagination";
 
 const SELLING_UNITS: { label: string; value: SellingUnit }[] = [
   { label: "Kilogram (KG)", value: "KG" },
@@ -66,7 +67,7 @@ export default function ProductsPage() {
   // Build API Query Parameters
   const queryParams: ProductQueryParams = {
     page: currentPage,
-    limit: 12,
+    limit: 10,
   };
 
   if (searchTerm.trim()) {
@@ -384,41 +385,12 @@ export default function ProductsPage() {
 
                 {/* Pagination Controls */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 pt-6">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      disabled={currentPage <= 1}
-                      className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40 transition-colors shadow-sm"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                    </button>
-
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                          key={page}
-                          type="button"
-                          onClick={() => setCurrentPage(page)}
-                          className={`w-8 h-8 rounded-xl text-xs font-semibold transition-colors ${
-                            page === currentPage
-                              ? "bg-emerald-600 text-white shadow-sm"
-                              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                      disabled={currentPage >= totalPages}
-                      className="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 disabled:opacity-40 transition-colors shadow-sm"
-                    >
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
+                  <div className="pt-6">
+                    <Pagination
+                      page={currentPage}
+                      setPage={setCurrentPage}
+                      totalPage={totalPages}
+                    />
                   </div>
                 )}
               </>

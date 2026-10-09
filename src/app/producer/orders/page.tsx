@@ -19,6 +19,7 @@ import {
 } from "@/redux/features/order/orderApi";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
 import { ItemStatus } from "@/types";
+import Pagination from "@/utils/pagination";
 
 const STATUS_TABS: { label: string; value: ItemStatus | "ALL" }[] = [
   { label: "All Orders", value: "ALL" },
@@ -30,9 +31,11 @@ const STATUS_TABS: { label: string; value: ItemStatus | "ALL" }[] = [
 export default function ProducerOrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState<ItemStatus | "ALL">("ALL");
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
 
   const queryParams: any = {
-    limit: 50,
+    page,
+    limit: 10,
   };
   if (searchTerm.trim()) queryParams.search = searchTerm.trim();
 
@@ -40,6 +43,7 @@ export default function ProducerOrdersPage() {
   const [markSentToHub, { isLoading: isMarkingHub }] = useMarkOrderItemSentToHubMutation();
 
   const allOrderItems = data?.data?.orderItems || [];
+  const totalPages = data?.data?.meta?.totalPage || 1;
 
   const filteredItems = allOrderItems.filter((item) => {
     if (selectedStatus === "ALL") return true;
@@ -74,7 +78,10 @@ export default function ProducerOrdersPage() {
             <button
               key={tab.value}
               type="button"
-              onClick={() => setSelectedStatus(tab.value)}
+              onClick={() => {
+                setSelectedStatus(tab.value);
+                setPage(1);
+              }}
               className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedStatus === tab.value
                   ? "bg-emerald-600 text-white shadow-sm"
@@ -92,7 +99,10 @@ export default function ProducerOrdersPage() {
             type="text"
             placeholder="Search crop or buyer..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
             className="w-full bg-white border border-slate-200 rounded-xl py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
           />
           <Search className="w-4 h-4 text-emerald-600 absolute left-3 top-2.5" />
@@ -243,6 +253,15 @@ export default function ProducerOrdersPage() {
                 })}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-slate-200 bg-white">
+                <Pagination
+                  page={page}
+                  setPage={setPage}
+                  totalPage={totalPages}
+                />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-16 px-4">

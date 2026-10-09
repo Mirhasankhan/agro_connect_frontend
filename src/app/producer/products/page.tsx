@@ -21,10 +21,12 @@ import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import AddPricingTierModal from "@/components/producer/AddPricingTierModal";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 import { TProduct, SellingUnit } from "@/types";
+import Pagination from "@/utils/pagination";
 
 export default function ProducerProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "outOfStock">("all");
+  const [page, setPage] = useState(1);
 
   const { data: profileData } = useGetProfileQuery();
   const verificationStatus = profileData?.data?.producerProfile?.verificationStatus;
@@ -32,7 +34,8 @@ export default function ProducerProductsPage() {
   const isRejected = verificationStatus === "Rejected";
 
   const queryParams: any = {
-    limit: 10,
+    page,
+    limit: 1,
   };
   if (searchTerm.trim()) queryParams.search = searchTerm.trim();
   if (statusFilter !== "all") queryParams.status = statusFilter;
@@ -41,6 +44,7 @@ export default function ProducerProductsPage() {
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const products = data?.data?.products || [];
+  const totalPages = data?.data?.meta?.totalPage || 1;
 
   // Add Tier Modal State
   const [selectedProductForTier, setSelectedProductForTier] = useState<{
@@ -136,7 +140,10 @@ export default function ProducerProductsPage() {
             type="text"
             placeholder="Search your harvests..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setPage(1);
+            }}
             className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-9 pr-3 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
           />
           <Search className="w-4 h-4 text-emerald-600 absolute left-3 top-2.5" />
@@ -146,7 +153,10 @@ export default function ProducerProductsPage() {
           <span className="text-xs text-slate-500">Stock:</span>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as any)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value as any);
+              setPage(1);
+            }}
             className="bg-slate-50 border border-slate-200 rounded-xl py-1.5 px-3 text-xs text-slate-800 focus:outline-none focus:border-emerald-500 w-full sm:w-auto"
           >
             <option value="all">All Harvests</option>
@@ -293,6 +303,15 @@ export default function ProducerProductsPage() {
                 })}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-slate-200 bg-white">
+                <Pagination
+                  page={page}
+                  setPage={setPage}
+                  totalPage={totalPages}
+                />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-16 px-4">

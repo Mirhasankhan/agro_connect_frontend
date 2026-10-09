@@ -13,6 +13,7 @@ import { useGetUserOrdersQuery, OrderQueryParams } from "@/redux/features/order/
 import { useAppSelector } from "@/redux/hooks";
 import { formatCurrency, formatDate, getOrderStatusColor } from "@/utils/formatters";
 import { OrderStatus } from "@/types";
+import Pagination from "@/utils/pagination";
 
 const STATUS_TABS: { label: string; value: OrderStatus | "ALL" }[] = [
   { label: "All Orders", value: "ALL" },
@@ -26,9 +27,11 @@ const STATUS_TABS: { label: string; value: OrderStatus | "ALL" }[] = [
 export default function BuyerOrdersPage() {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "ALL">("ALL");
+  const [page, setPage] = useState(1);
 
   const queryParams: OrderQueryParams = {
-    limit: 20,
+    page,
+    limit: 10,
   };
 
   if (selectedStatus !== "ALL") {
@@ -40,6 +43,7 @@ export default function BuyerOrdersPage() {
   });
 
   const orders = data?.data?.orders || [];
+  const totalPages = data?.data?.meta?.totalPage || 1;
 
   if (!isAuthenticated) {
     return (
@@ -84,7 +88,10 @@ export default function BuyerOrdersPage() {
             <button
               key={tab.value}
               type="button"
-              onClick={() => setSelectedStatus(tab.value)}
+              onClick={() => {
+                setSelectedStatus(tab.value);
+                setPage(1);
+              }}
               className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
                 selectedStatus === tab.value
                   ? "bg-emerald-600 text-white shadow-sm"
@@ -161,6 +168,15 @@ export default function BuyerOrdersPage() {
                 </div>
               );
             })}
+            {totalPages > 1 && (
+              <div className="pt-4">
+                <Pagination
+                  page={page}
+                  setPage={setPage}
+                  totalPage={totalPages}
+                />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center py-20 px-4 bg-white border border-slate-200 rounded-3xl max-w-lg mx-auto shadow-sm">
