@@ -44,7 +44,7 @@ export default function DriverEarningsPage() {
       <div className="border-b border-slate-200 pb-5">
         <h1 className="font-serif text-2xl font-bold text-slate-900">Driver Earnings & Payouts</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          View earned delivery fees, completed bank or mobile money settlements, and pending
+          View earned delivery fees, completed bank settlements, and pending
           balances.
         </p>
       </div>

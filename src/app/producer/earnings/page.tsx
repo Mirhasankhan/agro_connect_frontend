@@ -43,7 +43,7 @@ export default function ProducerEarningsPage() {
       <div className="border-b border-slate-200 pb-5">
         <h1 className="font-serif text-2xl font-bold text-slate-900">Earnings & Payouts</h1>
         <p className="text-xs text-slate-500 mt-0.5">
-          Track sales revenue, completed bank/mobile money transfers, and escrow balances.
+          Track sales revenue, completed bank transfers, and escrow balances.
         </p>
       </div>
 
@@ -88,10 +88,24 @@ export default function ProducerEarningsPage() {
           <p className="font-mono text-3xl font-bold text-amber-600">
             {isLoading ? "..." : formatCurrency(pendingEscrowAmount)}
           </p>
-          <p className="text-[11px] text-slate-500">Released upon buyer delivery OTP check</p>
+          <p className="text-[11px] text-slate-500">Transferred after 24h if no buyer report is filed</p>
         </div>
       </div>
 
+      {/* 24-Hour Payout Policy & Buyer Dispute Notice */}
+      <div className="bg-amber-50/90 border border-amber-200/90 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 shadow-sm text-xs">
+        <div className="p-2 bg-amber-100 rounded-xl text-amber-700 shrink-0 mt-0.5">
+          <Clock className="w-4 h-4" />
+        </div>
+        <div className="space-y-1">
+          <h4 className="font-bold text-amber-900 text-sm">
+            24-Hour Payout Policy & Escrow Protection
+          </h4>
+          <p className="text-amber-800 leading-relaxed">
+            Producer earnings will be transferred to your account after <strong>24 hours</strong> of delivery completion. If any report is submitted by the buyer within this window, the transfer will be held until the issue is reviewed and resolved.
+          </p>
+        </div>
+      </div>
 
       {/* Transactions Table */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
@@ -130,7 +144,8 @@ export default function ProducerEarningsPage() {
                   <th className="py-3.5 px-4">Quantity</th>
                   <th className="py-3.5 px-4">Amount Credited</th>
                   <th className="py-3.5 px-4">Payout Status</th>
-                  <th className="py-3.5 px-4 text-right">Date</th>
+                  <th className="py-3.5 px-4">Date</th>
+                  <th className="py-3.5 px-4 text-right">Paid At</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -171,8 +186,28 @@ export default function ProducerEarningsPage() {
                       </span>
                     </td>
 
-                    <td className="py-3.5 px-4 text-right text-slate-400 font-mono">
+                    <td className="py-3.5 px-4 text-slate-500 font-mono">
                       {p.createdAt ? formatDate(p.createdAt) : "Recent"}
+                    </td>
+
+                    <td className="py-3.5 px-4 text-right font-mono text-xs">
+                      {p.paidAt ? (
+                        <div className="flex flex-col items-end">
+                          <span className="text-slate-900 font-semibold">
+                            {formatDate(p.paidAt)}
+                          </span>
+                          <span className="text-[10px] text-emerald-600 font-medium">
+                            {new Date(p.paidAt).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-[11px] text-amber-600 italic font-sans font-medium">
+                          Pending 24h Escrow
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}

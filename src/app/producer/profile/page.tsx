@@ -25,9 +25,7 @@ import {
   Save,
   RotateCcw,
   Image as ImageIcon,
-  Info,
-  Calendar,
-  AlertCircle,
+  Info,  
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
@@ -296,18 +294,12 @@ export default function ProducerProfilePage() {
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
       {/* Page Header */}
       <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-1">
-            <Sprout className="w-4 h-4" />
-            <span>Producer Workspace</span>
-            <span className="text-slate-400">/</span>
-            <span className="text-slate-600">Farm & Personal Profile</span>
-          </div>
+        <div>     
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             Farm & Producer Profile
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Review your verified farmland records, update your personal representative information, and manage account security.
+            Review your verified farmland records, update your personal information, and manage account security.
           </p>
         </div>
 
@@ -408,7 +400,7 @@ export default function ProducerProfilePage() {
 
             <div className="space-y-1.5 min-w-0">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                   <Sprout className="w-3 h-3" />
                   Producer
                 </span>
@@ -481,10 +473,7 @@ export default function ProducerProfilePage() {
           }`}
         >
           <Sprout className="w-4 h-4" />
-          <span>Farmland Profile & Legal Docs</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-slate-100 text-slate-600 font-normal">
-            Read-Only
-          </span>
+          <span>Farmland Profile & Legal Docs</span>         
         </button>
 
         <button
@@ -497,10 +486,7 @@ export default function ProducerProfilePage() {
           }`}
         >
           <User className="w-4 h-4" />
-          <span>Personal Representative Details</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-emerald-100 text-emerald-800 font-bold">
-            Updateable
-          </span>
+          <span>Personal Details</span>         
         </button>
 
         <button
@@ -521,19 +507,7 @@ export default function ProducerProfilePage() {
       {/* TAB 1: FARMLAND PROFILE & COMPLIANCE (READ-ONLY)         */}
       {/* ========================================================= */}
       {activeTab === "farm" && (
-        <div className="space-y-8 animate-in fade-in duration-150">
-          {/* Read-Only Notice */}
-          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 text-xs text-slate-600 shadow-sm">
-            <Info className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="font-semibold text-slate-800">
-                Official Agricultural Record & Compliance Lock
-              </p>
-              <p className="leading-relaxed text-slate-600">
-                To guarantee agricultural safety, provenance traceability, and fair trade guarantees across Côte d&apos;Ivoire, your verified farm coordinates, land tenure deeds, and corporate registries are locked for direct editing. To request certified revisions to your farmland size or legal entity, please submit a compliance request to Agro Connect administration.
-              </p>
-            </div>
-          </div>
+        <div className="space-y-8 animate-in fade-in duration-150">    
 
           {/* Farmland Core Specifications */}
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
@@ -693,7 +667,7 @@ export default function ProducerProfilePage() {
                         )}
                       </div>
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 block">
+                        <span className="text-[10px] font-bold tracking-wider text-emerald-700 block">
                           {doc.type}
                         </span>
                         <h4 className="font-bold text-slate-900 text-sm">
@@ -703,17 +677,7 @@ export default function ProducerProfilePage() {
                           {doc.desc}
                         </p>
                       </div>
-                    </div>
-
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
-                        doc.url
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : "bg-slate-100 text-slate-400"
-                      }`}
-                    >
-                      {doc.url ? "On File" : "Missing"}
-                    </span>
+                    </div>               
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
@@ -725,17 +689,13 @@ export default function ProducerProfilePage() {
                         className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Inspect Stored Document</span>
+                        <span>View Document</span>
                       </a>
                     ) : (
                       <span className="text-xs text-slate-400 italic">
                         No digital attachment submitted
                       </span>
-                    )}
-
-                    <span className="text-[10px] text-slate-400">
-                      Encrypted Cloud File
-                    </span>
+                    )}                  
                   </div>
                 </div>
               ))}
@@ -745,7 +705,7 @@ export default function ProducerProfilePage() {
       )}
 
       {/* ========================================================= */}
-      {/* TAB 2: PERSONAL REPRESENTATIVE DETAILS (EDITABLE)         */}
+      {/* TAB 2: PERSONAL DETAILS (EDITABLE)         */}
       {/* ========================================================= */}
       {activeTab === "personal" && (
         <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm animate-in fade-in duration-150">
@@ -756,7 +716,7 @@ export default function ProducerProfilePage() {
               </div>
               <div>
                 <h2 className="font-serif font-bold text-xl text-slate-900">
-                  Update Personal Representative Information
+                  Update Personal Information
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Update your contact details, operational address, and public profile avatar.
@@ -824,7 +784,7 @@ export default function ProducerProfilePage() {
             {/* Full Name & Email */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                   Full Legal Name <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
@@ -841,8 +801,8 @@ export default function ProducerProfilePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                  Registered Email Address
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  Email Address
                 </label>
                 <div className="relative">
                   <input
@@ -852,16 +812,13 @@ export default function ProducerProfilePage() {
                     className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-500 cursor-not-allowed font-medium"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  Primary account login address cannot be changed.
-                </p>
+                </div>            
               </div>
             </div>
 
             {/* Phone Number */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                 Phone Number (For Order & Delivery Coordination)
               </label>
               <div className="relative">
@@ -879,7 +836,7 @@ export default function ProducerProfilePage() {
             {/* City & Region */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                   City / Commune
                 </label>
                 <div className="relative">
@@ -895,7 +852,7 @@ export default function ProducerProfilePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                   Region / District
                 </label>
                 <div className="relative">
@@ -913,7 +870,7 @@ export default function ProducerProfilePage() {
 
             {/* Street Address */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                 Physical / Headquarters Address
               </label>
               <textarea
@@ -991,7 +948,7 @@ export default function ProducerProfilePage() {
           <form onSubmit={handleChangePasswordSubmit} className="space-y-6">
             {/* Current Password */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                 Current Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
@@ -1022,7 +979,7 @@ export default function ProducerProfilePage() {
             {/* New Password & Confirm Password */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                   New Password <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
@@ -1052,7 +1009,7 @@ export default function ProducerProfilePage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                   Confirm New Password <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">

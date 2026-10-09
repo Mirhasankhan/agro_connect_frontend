@@ -89,11 +89,11 @@ export default function ProducerLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
+    <div className="h-screen bg-slate-50 text-slate-900 flex overflow-hidden">
       {/* SIDEBAR - Desktop */}
-      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 shrink-0 select-none">
+      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 shrink-0 select-none h-screen">
         {/* Brand */}
-        <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between shrink-0">
           <Link href="/producer/dashboard" className="flex items-center gap-2.5 group">
             <Image
               src={logo}
@@ -137,7 +137,7 @@ export default function ProducerLayout({
         </nav>
 
         {/* Bottom Actions - Isolated to Producer context */}
-        <div className="p-4 border-t border-slate-200">
+        <div className="p-4 border-t border-slate-200 shrink-0">
           <button
             type="button"
             onClick={handleLogout}
@@ -218,9 +218,9 @@ export default function ProducerLayout({
       )}
 
       {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         {/* Top Header */}
-        <header className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between gap-4 sticky top-0 z-30">
+        <header className="h-16 border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 sm:px-8 flex items-center justify-between gap-4 sticky top-0 z-30 shrink-0">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -274,7 +274,7 @@ export default function ProducerLayout({
 
         {/* Global Verification Status Banner */}
         {verificationStatus === "Pending" && (
-          <div className="bg-amber-50 border-b border-amber-200 px-4 sm:px-8 py-3 text-xs text-amber-800 flex items-center justify-between gap-3">
+          <div className="bg-amber-50 border-b border-amber-200 px-4 sm:px-8 py-3 text-xs text-amber-800 flex items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-amber-600 shrink-0" />
               <span>
@@ -292,7 +292,7 @@ export default function ProducerLayout({
         )}
 
         {verificationStatus === "Rejected" && (
-          <div className="bg-red-50 border-b border-red-200 px-4 sm:px-8 py-3 text-xs text-red-800 flex items-center justify-between gap-3">
+          <div className="bg-red-50 border-b border-red-200 px-4 sm:px-8 py-3 text-xs text-red-800 flex items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
               <span>
