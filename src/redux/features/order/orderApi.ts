@@ -49,7 +49,7 @@ const orderApi = baseApi.injectEndpoints({
         url: `/order/details/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "Order", id }],
+      providesTags: (result, error, id) => [{ type: "Order", id }, "Order"],
     }),
 
     getProducerWiseOrders: builder.query<

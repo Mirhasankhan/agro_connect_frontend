@@ -594,10 +594,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
             <div>
               <h2 className="text-lg font-semibold text-slate-900">
                 Change Password
-              </h2>
-              <p className="text-xs text-slate-500">
-                Ensure your account stays secure by using a strong password.
-              </p>
+              </h2>             
             </div>
           </div>
         </div>

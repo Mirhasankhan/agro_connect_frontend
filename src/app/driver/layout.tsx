@@ -264,25 +264,6 @@ export default function DriverLayout({
           </div>
         </header>
 
-        {/* Global Verification Status Banner */}
-        {verificationStatus === "Pending" && (
-          <div className="bg-amber-50 border-b border-amber-200 px-4 sm:px-8 py-3 text-xs text-amber-800 flex items-center justify-between gap-3 shrink-0">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>
-                <strong>License in review:</strong> Your driver license and vehicle documents are
-                being reviewed by Agro Connect dispatchers. Once approved, you can accept and fulfill deliveries.
-              </span>
-            </div>
-            <Link
-              href="/driver/profile"
-              className="text-amber-800 underline font-semibold hover:text-amber-950 shrink-0 hidden sm:inline"
-            >
-              Check documents
-            </Link>
-          </div>
-        )}
-
         {verificationStatus === "Rejected" && (
           <div className="bg-red-50 border-b border-red-200 px-4 sm:px-8 py-3 text-xs text-red-800 flex items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-2">

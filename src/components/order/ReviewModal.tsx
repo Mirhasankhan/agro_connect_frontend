@@ -30,6 +30,7 @@ interface ReviewModalProps {
   onClose: () => void;
   orderItemId: string;
   productName: string;
+  onSuccess?: () => void;
 }
 
 export default function ReviewModal({
@@ -37,6 +38,7 @@ export default function ReviewModal({
   onClose,
   orderItemId,
   productName,
+  onSuccess,
 }: ReviewModalProps) {
   const [submitReviewMutation, { isLoading }] = useSubmitReviewMutation();
   const [hoverRating, setHoverRating] = useState<number | null>(null);
@@ -68,6 +70,7 @@ export default function ReviewModal({
 
       toast.success("Thank you! Your review has been submitted.");
       reset();
+      onSuccess?.();
       onClose();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to submit review");

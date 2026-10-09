@@ -254,7 +254,7 @@ export default function BuyerProfilePage() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Page Title & Breadcrumb */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 tracking-wider mb-2">
             <Link href="/" className="hover:text-emerald-700 transition-colors">
               Home
             </Link>
@@ -390,7 +390,7 @@ export default function BuyerProfilePage() {
 
             {/* Quick Buyer Links */}
             <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <h3 className="text-xs font-bold tracking-wider text-slate-500">
                 Buyer Shortcuts
               </h3>
               <div className="space-y-1 text-sm">
@@ -444,17 +444,14 @@ export default function BuyerProfilePage() {
                   <h2 className="font-serif text-xl font-bold text-slate-900 flex items-center gap-2">
                     <User className="w-5 h-5 text-emerald-600" />
                     Personal & Delivery Information
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Update your full legal name, phone number, and primary delivery destination for agricultural orders.
-                  </p>
+                  </h2>                 
                 </div>
 
                 <form onSubmit={handleProfileSubmit} className="space-y-6">
                   {/* Full Name & Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                         Full Name <span className="text-rose-500">*</span>
                       </label>
                       <div className="relative">
@@ -471,7 +468,7 @@ export default function BuyerProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                         Email Address
                       </label>
                       <div className="relative">
@@ -482,17 +479,14 @@ export default function BuyerProfilePage() {
                           className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-500 cursor-not-allowed font-medium"
                         />
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                      </div>
-                      <p className="text-[11px] text-slate-400 mt-1">
-                        Login email address cannot be modified directly.
-                      </p>
+                      </div>                      
                     </div>
                   </div>
 
                   {/* Phone Number */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      Phone Number (For Delivery Confirmation)
+                    <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                      Phone Number
                     </label>
                     <div className="relative">
                       <input
@@ -509,8 +503,8 @@ export default function BuyerProfilePage() {
                   {/* City & Region */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        City / Town
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                        City
                       </label>
                       <div className="relative">
                         <input
@@ -525,8 +519,8 @@ export default function BuyerProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Region / District
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                        Region
                       </label>
                       <div className="relative">
                         <input
@@ -543,7 +537,7 @@ export default function BuyerProfilePage() {
 
                   {/* Street Address */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                       Delivery Street Address
                     </label>
                     <textarea
@@ -603,16 +597,13 @@ export default function BuyerProfilePage() {
                   <h2 className="font-serif text-xl font-bold text-slate-900 flex items-center gap-2">
                     <KeyRound className="w-5 h-5 text-emerald-600" />
                     Change Account Password
-                  </h2>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Ensure your account is protected with a robust, confidential password.
-                  </p>
+                  </h2>                 
                 </div>
 
                 <form onSubmit={handleChangePasswordSubmit} className="space-y-6">
                   {/* Current Password */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                       Current Password <span className="text-rose-500">*</span>
                     </label>
                     <div className="relative">
@@ -643,7 +634,7 @@ export default function BuyerProfilePage() {
                   {/* New Password & Confirm Password */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                         New Password <span className="text-rose-500">*</span>
                       </label>
                       <div className="relative">
@@ -673,7 +664,7 @@ export default function BuyerProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
                         Confirm New Password <span className="text-rose-500">*</span>
                       </label>
                       <div className="relative">

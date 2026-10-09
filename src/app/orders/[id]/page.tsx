@@ -35,7 +35,7 @@ export default function OrderDetailsPage() {
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const { data, isLoading, error } = useGetOrderDetailsQuery(orderId, {
+  const { data, isLoading, error, refetch } = useGetOrderDetailsQuery(orderId, {
     skip: !orderId || !isAuthenticated,
   });
 
@@ -48,7 +48,8 @@ export default function OrderDetailsPage() {
     productName: string;
   } | null>(null);
 
-  const handleOpenReview = (orderItemId: string, productName: string) => {
+  const handleOpenReview = (orderItemId: string, productName: string, isReviewed?: boolean) => {
+    if (isReviewed) return;
     setSelectedReviewItem({ orderItemId, productName });
     setReviewModalOpen(true);
   };
@@ -397,16 +398,27 @@ export default function OrderDetailsPage() {
                     {formatCurrency(item.subtotal)}
                   </span>
 
-                  {/* If order is delivered, allow reviewing item! */}
+                  {/* If order is delivered, allow reviewing item or show Reviewed status */}
                   {isDelivered && (
-                    <button
-                      type="button"
-                      onClick={() => handleOpenReview(item.id, item.productName || "Product")}
-                      className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-amber-600 hover:text-amber-700"
-                    >
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      Write Review
-                    </button>
+                    <>
+                      {item.isReviewed ? (
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-xl shadow-xs">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          Reviewed
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleOpenReview(item.id, item.productName || "Product", item.isReviewed)
+                          }
+                          className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 text-amber-600 hover:text-amber-700 hover:border-amber-300"
+                        >
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                          Write Review
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -486,6 +498,9 @@ export default function OrderDetailsPage() {
           onClose={() => {
             setReviewModalOpen(false);
             setSelectedReviewItem(null);
+          }}
+          onSuccess={() => {
+            refetch();
           }}
           orderItemId={selectedReviewItem.orderItemId}
           productName={selectedReviewItem.productName}
