@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
   Calendar,
@@ -11,6 +12,10 @@ import {
   ShieldCheck,
   Star,
   AlertCircle,
+  Truck,
+  MessageSquare,
+  Phone,
+  Clock,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -103,6 +108,13 @@ export default function OrderDetailsPage() {
   const statusColors = getOrderStatusColor(order.status);
   const isDelivered = order.status === "Delivered";
 
+  const activeDelivery =
+    order.deliveries && order.deliveries.length > 0
+      ? order.deliveries[order.deliveries.length - 1]
+      : null;
+  const driver = activeDelivery?.driver;
+  const isDriverAssigned = Boolean(driver?.id);
+
   // Determine timeline progress steps
   const steps = [
     {
@@ -113,17 +125,23 @@ export default function OrderDetailsPage() {
     {
       title: "Sent to Hub",
       desc: "Farmer harvested produce",
-      completed: ["Active", "Shipped", "Delivered"].includes(order.status),
+      completed:
+        ["Active", "Shipped", "Delivered"].includes(order.status) ||
+        Boolean(activeDelivery),
     },
     {
       title: "In Transit",
       desc: "Driver is delivering",
-      completed: ["Shipped", "Delivered"].includes(order.status),
+      completed:
+        ["Shipped", "Delivered"].includes(order.status) ||
+        activeDelivery?.status === "PickedUp" ||
+        activeDelivery?.status === "Delivered",
     },
     {
       title: "Delivered",
       desc: "Confirmed via OTP",
-      completed: order.status === "Delivered",
+      completed:
+        order.status === "Delivered" || activeDelivery?.status === "Delivered",
     },
   ];
 
@@ -201,6 +219,154 @@ export default function OrderDetailsPage() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Logistics & Assigned Driver Information */}
+        <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 space-y-5 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0">
+                <Truck className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-serif text-lg font-bold text-slate-900">
+                  Logistics & Transport
+                </h3>
+                <p className="text-xs text-slate-500">
+                  {isDriverAssigned
+                    ? "Your harvest order is assigned to a certified transport driver"
+                    : "Produce delivery coordination and driver assignment"}
+                </p>
+              </div>
+            </div>
+
+            {isDriverAssigned ? (
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-auto ${
+                  activeDelivery?.status === "Delivered"
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : activeDelivery?.status === "PickedUp"
+                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                    : "bg-amber-50 text-amber-700 border-amber-200"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ${
+                    activeDelivery?.status === "Delivered"
+                      ? "bg-emerald-500"
+                      : activeDelivery?.status === "PickedUp"
+                      ? "bg-blue-500 animate-pulse"
+                      : "bg-amber-500"
+                  }`}
+                />
+                Status: {activeDelivery?.status === "PickedUp" ? "In Transit" : activeDelivery?.status || "Assigned"}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200 self-start sm:self-auto">
+                <Clock className="w-3.5 h-3.5 text-slate-500" />
+                Awaiting Driver Assignment
+              </span>
+            )}
+          </div>
+
+          {isDriverAssigned && driver ? (
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5">
+              {/* Driver Identity & Vehicle Info */}
+              <div className="flex items-center gap-4">
+                <div className="relative w-14 h-14 rounded-full bg-emerald-100 border-2 border-emerald-300 overflow-hidden shrink-0 flex items-center justify-center font-bold text-base text-emerald-800 shadow-xs">
+                  {driver.profileImage ? (
+                    <Image
+                      src={driver.profileImage}
+                      alt={driver.fullName || "Driver"}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span>{driver.fullName?.charAt(0).toUpperCase() || "D"}</span>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-bold text-base text-slate-900 leading-tight">
+                      {driver.fullName}
+                    </h4>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                      Driver
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600">
+                    {driver.driverProfile?.vehicleType && (
+                      <span className="inline-flex items-center gap-1 font-medium">
+                        <Truck className="w-3.5 h-3.5 text-slate-400" />
+                        {driver.driverProfile.vehicleType}
+                      </span>
+                    )}
+                    {driver.driverProfile?.registrationNumber && (
+                      <span className="font-mono text-[11px] font-semibold bg-white px-2 py-0.5 rounded border border-slate-200 text-slate-700">
+                        {driver.driverProfile.registrationNumber}
+                      </span>
+                    )}
+                  </div>
+
+                  {driver.phoneNumber && (
+                    <p className="text-xs text-slate-500 flex items-center gap-1.5 pt-0.5">
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <span>{driver.phoneNumber}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions: Chat & Call */}
+              <div className="flex flex-wrap items-center gap-3 self-stretch sm:self-auto justify-end">
+                {driver.phoneNumber && (
+                  <a
+                    href={`tel:${driver.phoneNumber}`}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 transition-colors shadow-xs"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Call Driver</span>
+                  </a>
+                )}
+
+                <Link
+                  href={`/messages?userId=${driver.id}&userName=${encodeURIComponent(
+                    driver.fullName
+                  )}&userRole=DRIVER`}
+                  className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md shadow-emerald-600/20"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Chat with Driver</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
+              <div className="flex items-start gap-3">
+                <Clock className="w-5 h-5 text-slate-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-slate-800">
+                    No driver assigned to this order yet
+                  </p>
+                  <p className="text-slate-500">
+                    Once the producer dispatches crates to the hub, a certified logistics driver will be assigned. Direct messaging will unlock automatically.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                disabled
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-200 text-slate-400 text-xs font-semibold cursor-not-allowed flex items-center justify-center gap-2 shrink-0"
+              >
+                <MessageSquare className="w-4 h-4" />
+                <span>Chat with Driver</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Ordered Items Table */}

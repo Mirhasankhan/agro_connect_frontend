@@ -285,6 +285,26 @@ export interface TOrderItem {
   };
 }
 
+export interface TOrderDelivery {
+  id: string;
+  orderId?: string;
+  driverId?: string;
+  status: DeliveryStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  driver?: {
+    id: string;
+    fullName: string;
+    phoneNumber?: string | null;
+    profileImage?: string | null;
+    driverProfile?: {
+      vehicleType?: DriverVehicleType;
+      registrationNumber?: string;
+      licensePlate?: string;
+    } | null;
+  } | null;
+}
+
 export interface TOrder {
   id: string;
   orderId: string;
@@ -296,6 +316,7 @@ export interface TOrder {
   cancelReason?: string | null;
   createdAt: string;
   shippingAddress?: TShippingAddress;
+  deliveries?: TOrderDelivery[];
   items: TOrderItem[];
   customer?: {
     id?: string;
