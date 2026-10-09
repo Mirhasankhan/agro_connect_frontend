@@ -60,6 +60,18 @@ const paymentApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Payment"],
     }),
+
+    getDriverEarningChart: builder.query<
+      TApiResponse<TEarningChartPoint[]>,
+      { type: TEarningChartType }
+    >({
+      query: ({ type }) => ({
+        url: "/payment/driver-earning-chart",
+        method: "GET",
+        params: { type },
+      }),
+      providesTags: ["Payment"],
+    }),
   }),
 });
 
@@ -67,5 +79,6 @@ export const {
   useGetProducerWisePaymentsQuery,
   useGetDriverWisePaymentsQuery,
   useGetProducerEarningChartQuery,
+  useGetDriverEarningChartQuery,
 } = paymentApi;
 

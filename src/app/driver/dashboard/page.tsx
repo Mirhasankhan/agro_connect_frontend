@@ -20,6 +20,7 @@ import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useAppSelector } from "@/redux/hooks";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import DriverProfileSetupModal from "@/components/driver/DriverProfileSetupModal";
+import DriverEarningChart from "@/components/driver/DriverEarningChart";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 
 export default function DriverDashboardPage() {
@@ -232,6 +233,9 @@ export default function DriverDashboardPage() {
           <p className="text-[11px] text-slate-500">Côte d&apos;Ivoire Agro-Grid</p>
         </div>
       </div>
+
+      {/* Delivery Revenue Analytics Chart */}
+      <DriverEarningChart />
 
       {/* Active Assigned Deliveries Section */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">

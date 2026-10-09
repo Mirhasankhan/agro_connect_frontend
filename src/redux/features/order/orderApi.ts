@@ -111,6 +111,10 @@ const orderApi = baseApi.injectEndpoints({
         url: `/order/send-completion-otp/${deliveryId}`,
         method: "PATCH",
       }),
+      invalidatesTags: (result, error, id) => [
+        "Order",
+        { type: "Order", id },
+      ],
     }),
 
     verifyDeliveryCompletionOtp: builder.mutation<
@@ -122,7 +126,11 @@ const orderApi = baseApi.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Order", "Payment"],
+      invalidatesTags: (result, error, arg) => [
+        "Order",
+        "Payment",
+        { type: "Order", id: arg.deliveryId },
+      ],
     }),
   }),
 });

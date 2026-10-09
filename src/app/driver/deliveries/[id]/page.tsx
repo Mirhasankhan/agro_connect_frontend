@@ -64,6 +64,7 @@ export default function DriverDeliveryDetailsPage() {
     try {
       await sendOtpMutation(deliveryId).unwrap();
       toast.success("4-Digit completion OTP sent to customer!");
+      refetch();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to send completion OTP");
     }
@@ -162,28 +163,47 @@ export default function DriverDeliveryDetailsPage() {
 
           {delivery.status === "PickedUp" && (
             <>
-              <button
-                type="button"
-                onClick={handleSendOtp}
-                disabled={isSendingOtp}
-                className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800"
-              >
-                {isSendingOtp ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Send className="h-3.5 w-3.5 text-emerald-600" />
-                )}
-                Send Buyer OTP
-              </button>
+              {!delivery.otpHash ? (
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={isSendingOtp}
+                  className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
+                >
+                  {isSendingOtp ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Send className="h-3.5 w-3.5" />
+                  )}
+                  Send Buyer OTP
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsOtpModalOpen(true)}
+                    className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
+                  >
+                    <KeyRound className="h-3.5 w-3.5" />
+                    Verify OTP & Complete
+                  </button>
 
-              <button
-                type="button"
-                onClick={() => setIsOtpModalOpen(true)}
-                className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
-              >
-                <KeyRound className="h-3.5 w-3.5" />
-                Verify OTP & Complete
-              </button>
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    disabled={isSendingOtp}
+                    className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-slate-600 hover:text-emerald-700"
+                    title="Resend OTP code to customer"
+                  >
+                    {isSendingOtp ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <Send className="h-3.5 w-3.5" />
+                    )}
+                    Resend OTP
+                  </button>
+                </>
+              )}
             </>
           )}
 

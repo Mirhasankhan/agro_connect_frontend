@@ -85,12 +85,18 @@ export default function DriverDeliveriesPage() {
     }
   };
 
+  const [sendingDeliveryId, setSendingDeliveryId] = useState<string | null>(null);
+
   const handleSendOtp = async (deliveryId: string) => {
     try {
+      setSendingDeliveryId(deliveryId);
       await sendOtpMutation(deliveryId).unwrap();
       toast.success("4-Digit OTP sent to customer via email!");
+      refetch();
     } catch (err: any) {
       toast.error(err?.data?.message || "Failed to send OTP code");
+    } finally {
+      setSendingDeliveryId(null);
     }
   };
 
@@ -295,34 +301,53 @@ export default function DriverDeliveriesPage() {
 
                     {status === "PickedUp" && (
                       <>
-                        <button
-                          type="button"
-                          onClick={() => handleSendOtp(deliveryId)}
-                          disabled={isSendingOtp}
-                          className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5 text-emerald-700 hover:text-emerald-800"
-                        >
-                          {isSendingOtp ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : (
-                            <Send className="w-3.5 h-3.5 text-emerald-600" />
-                          )}
-                          Send Buyer OTP
-                        </button>
+                        {!item.otpHash ? (
+                          <button
+                            type="button"
+                            onClick={() => handleSendOtp(deliveryId)}
+                            disabled={sendingDeliveryId === deliveryId}
+                            className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
+                          >
+                            {sendingDeliveryId === deliveryId ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Send className="w-3.5 h-3.5" />
+                            )}
+                            Send Buyer OTP
+                          </button>
+                        ) : (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setOtpModalData({
+                                  deliveryId,
+                                  orderReference: orderId,
+                                  customerName,
+                                })
+                              }
+                              className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
+                            >
+                              <KeyRound className="w-3.5 h-3.5" />
+                              Verify OTP
+                            </button>
 
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOtpModalData({
-                              deliveryId,
-                              orderReference: orderId,
-                              customerName,
-                            })
-                          }
-                          className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
-                        >
-                          <KeyRound className="w-3.5 h-3.5" />
-                          Verify OTP
-                        </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSendOtp(deliveryId)}
+                              disabled={sendingDeliveryId === deliveryId}
+                              className="btn-secondary text-xs py-2 px-3 flex items-center gap-1 text-slate-600 hover:text-emerald-700"
+                              title="Resend OTP code to buyer"
+                            >
+                              {sendingDeliveryId === deliveryId ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : (
+                                <Send className="w-3 h-3 text-slate-400" />
+                              )}
+                              Resend OTP
+                            </button>
+                          </>
+                        )}
                       </>
                     )}
 

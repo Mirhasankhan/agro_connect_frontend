@@ -400,6 +400,7 @@ export interface TDelivery {
 export interface TDriverDeliverySummary {
   id: string;
   status: DeliveryStatus;
+  otpHash?: string | null;
   order: {
     orderId: string;
     totalAmount: number;
@@ -418,6 +419,7 @@ export interface TDriverDeliverySummary {
 export interface TDriverDeliveryDetails {
   id: string;
   status: DeliveryStatus;
+  otpHash?: string | null;
   order: {
     orderId: string;
     totalAmount: number;
