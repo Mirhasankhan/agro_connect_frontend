@@ -42,12 +42,16 @@ export default function DriverLayout({
   const verificationStatus = driverProfile?.verificationStatus || "Pending";
 
   const handleLogout = () => {
-    dispatch(logout());
     if (typeof document !== "undefined") {
       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
-    router.push("/");
+    dispatch(logout());
+    if (typeof window !== "undefined") {
+      window.location.replace("/");
+    } else {
+      router.push("/");
+    }
   };
 
   const navItems = [

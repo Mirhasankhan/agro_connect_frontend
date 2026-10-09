@@ -75,10 +75,18 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
+    if (typeof document !== "undefined") {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
     dispatch(logout());
     setUserMenuOpen(false);
     setMobileMenuOpen(false);
-    router.push("/");
+    if (typeof window !== "undefined") {
+      window.location.replace("/");
+    } else {
+      router.push("/");
+    }
   };
 
   return (

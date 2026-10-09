@@ -27,19 +27,37 @@ import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function ProducerDashboardPage() {
   const searchParams = useSearchParams();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isSetupCompleted = useAppSelector((state) => state.auth.isSetupCompleted);
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
 
-  const { data: profileData } = useGetProfileQuery();
+  const { data: profileData, isLoading: isLoadingProfile } = useGetProfileQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const hasProducerProfile = Boolean(
+    profileData?.data?.producerProfile || user?.producerProfile
+  );
   const verificationStatus = profileData?.data?.producerProfile?.verificationStatus;
   const isAccepted = verificationStatus === "Accepted";
   const isRejected = verificationStatus === "Rejected";
 
   useEffect(() => {
-    if (searchParams.get("setup") === "true" || !isSetupCompleted) {
-      setIsSetupModalOpen(true);
+    if (!isAuthenticated || !user) {
+      setIsSetupModalOpen(false);
+      return;
     }
-  }, [searchParams, isSetupCompleted]);
+
+    if (searchParams.get("setup") === "true") {
+      setIsSetupModalOpen(true);
+      return;
+    }
+
+    if (!isSetupCompleted && !hasProducerProfile && !isLoadingProfile) {
+      setIsSetupModalOpen(true);
+    } else {
+      setIsSetupModalOpen(false);
+    }
+  }, [searchParams, isSetupCompleted, isAuthenticated, user, hasProducerProfile, isLoadingProfile]);
 
   const { data: productsData, isLoading: isLoadingProducts } = useGetProducerProductsQuery({
     limit: 5,
@@ -76,7 +94,7 @@ export default function ProducerDashboardPage() {
   return (
     <div className="space-y-8">
       {/* Profile Setup Pending Notice */}
-      {!isSetupCompleted && (
+      {isAuthenticated && user && !hasProducerProfile && !isSetupCompleted && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
@@ -102,10 +120,12 @@ export default function ProducerDashboardPage() {
       )}
 
       {/* Setup Profile Modal */}
-      <ProducerProfileSetupModal
-        isOpen={isSetupModalOpen}
-        onClose={() => setIsSetupModalOpen(false)}
-      />
+      {isAuthenticated && user && !hasProducerProfile && (
+        <ProducerProfileSetupModal
+          isOpen={isSetupModalOpen}
+          onClose={() => setIsSetupModalOpen(false)}
+        />
+      )}
 
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">

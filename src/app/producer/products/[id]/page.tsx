@@ -122,15 +122,7 @@ export default function ProducerProductDetailsPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={() => setIsTierModalOpen(true)}
-            className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            Add Tier
-          </button>
+        <div className="flex items-center gap-2.5">       
           <Link
             href={`/producer/products/${productId}/edit`}
             className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
@@ -216,7 +208,7 @@ export default function ProducerProductDetailsPage() {
           {/* Photos Card */}
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-4">
             <h2 className="font-serif text-base font-bold text-slate-900">
-              Harvest Photography
+              Harvest Photos
             </h2>
 
             <div className="relative aspect-video w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">

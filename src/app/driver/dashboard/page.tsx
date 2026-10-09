@@ -24,19 +24,37 @@ import { formatCurrency, formatDate } from "@/utils/formatters";
 
 export default function DriverDashboardPage() {
   const searchParams = useSearchParams();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
   const isSetupCompleted = useAppSelector((state) => state.auth.isSetupCompleted);
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
 
-  const { data: profileData } = useGetProfileQuery();
+  const { data: profileData, isLoading: isLoadingProfile } = useGetProfileQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const hasDriverProfile = Boolean(
+    profileData?.data?.driverProfile || user?.driverProfile
+  );
   const verificationStatus = profileData?.data?.driverProfile?.verificationStatus;
   const isAccepted = verificationStatus === "Accepted";
   const isRejected = verificationStatus === "Rejected";
 
   useEffect(() => {
-    if (searchParams.get("setup") === "true" || !isSetupCompleted) {
-      setIsSetupModalOpen(true);
+    if (!isAuthenticated || !user) {
+      setIsSetupModalOpen(false);
+      return;
     }
-  }, [searchParams, isSetupCompleted]);
+
+    if (searchParams.get("setup") === "true") {
+      setIsSetupModalOpen(true);
+      return;
+    }
+
+    if (!isSetupCompleted && !hasDriverProfile && !isLoadingProfile) {
+      setIsSetupModalOpen(true);
+    } else {
+      setIsSetupModalOpen(false);
+    }
+  }, [searchParams, isSetupCompleted, isAuthenticated, user, hasDriverProfile, isLoadingProfile]);
 
   const { data: paymentsData, isLoading: isLoadingPayments } =
     useGetDriverWisePaymentsQuery();
@@ -98,7 +116,7 @@ export default function DriverDashboardPage() {
       )}
 
       {/* Profile Setup Pending Notice */}
-      {!isSetupCompleted && (
+      {isAuthenticated && user && !hasDriverProfile && !isSetupCompleted && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-5 shadow-sm">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
@@ -125,10 +143,12 @@ export default function DriverDashboardPage() {
       )}
 
       {/* Setup Profile Modal */}
-      <DriverProfileSetupModal
-        isOpen={isSetupModalOpen}
-        onClose={() => setIsSetupModalOpen(false)}
-      />
+      {isAuthenticated && user && !hasDriverProfile && (
+        <DriverProfileSetupModal
+          isOpen={isSetupModalOpen}
+          onClose={() => setIsSetupModalOpen(false)}
+        />
+      )}
 
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">

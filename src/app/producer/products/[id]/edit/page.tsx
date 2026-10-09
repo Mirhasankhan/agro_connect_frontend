@@ -20,8 +20,7 @@ import {
   Loader2,
   Eye,
   Camera,
-  Trash2,  
-  Info,  
+  Trash2,
   Layers,
 } from "lucide-react";
 import {
@@ -74,7 +73,7 @@ type UpdateProductFormValues = z.infer<typeof updateProductSchema>;
 export default function EditProductPage() {
   const params = useParams();
   const productId = params?.id as string;
- 
+
 
   const [isTierModalOpen, setIsTierModalOpen] = useState(false);
 
@@ -261,8 +260,8 @@ export default function EditProductPage() {
       const error = err as { data?: { message?: string }; message?: string };
       toast.error(
         error?.data?.message ||
-          error?.message ||
-          "Failed to update crop photos"
+        error?.message ||
+        "Failed to update crop photos"
       );
     }
   };
@@ -319,11 +318,10 @@ export default function EditProductPage() {
                 Edit Harvest: {product.name}
               </h1>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
-                  product.isActive
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${product.isActive
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : "bg-slate-100 text-slate-600 border-slate-200"
-                }`}
+                  }`}
               >
                 {product.isActive ? "Active" : "Hidden"}
               </span>
@@ -368,10 +366,7 @@ export default function EditProductPage() {
                 <p className="text-xs text-slate-500">
                   Update product name, category, standard pricing, and storage inventory.
                 </p>
-              </div>
-              <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
-                Endpoint: /product/update
-              </span>
+              </div>             
             </div>
 
             {/* Produce Name */}
@@ -383,11 +378,10 @@ export default function EditProductPage() {
                 type="text"
                 {...register("name")}
                 placeholder="e.g. Organic Roma Tomatoes"
-                className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${
-                  errors.name
+                className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${errors.name
                     ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                     : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                }`}
+                  }`}
               />
               {errors.name && (
                 <p className="text-rose-600 text-[11px] mt-1">{errors.name.message}</p>
@@ -404,11 +398,10 @@ export default function EditProductPage() {
                 <select
                   {...register("categoryId")}
                   disabled={isLoadingCategories}
-                  className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 bg-white focus:outline-none focus:ring-2 ${
-                    errors.categoryId
+                  className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 bg-white focus:outline-none focus:ring-2 ${errors.categoryId
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                  }`}
+                    }`}
                 >
                   <option value="">Select a category</option>
                   {categories.map((cat) => (
@@ -431,11 +424,10 @@ export default function EditProductPage() {
                 </label>
                 <select
                   {...register("sellingUnit")}
-                  className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 bg-white focus:outline-none focus:ring-2 ${
-                    errors.sellingUnit
+                  className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 bg-white focus:outline-none focus:ring-2 ${errors.sellingUnit
                       ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                       : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                  }`}
+                    }`}
                 >
                   {SELLING_UNITS.map((unit) => (
                     <option key={unit.value} value={unit.value}>
@@ -468,11 +460,10 @@ export default function EditProductPage() {
                     min="1"
                     {...register("pricePerUnit")}
                     placeholder="500"
-                    className={`w-full rounded-xl border pl-12 pr-3.5 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 ${
-                      errors.pricePerUnit
+                    className={`w-full rounded-xl border pl-12 pr-3.5 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 ${errors.pricePerUnit
                         ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                         : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                    }`}
+                      }`}
                   />
                 </div>
                 {errors.pricePerUnit && (
@@ -494,11 +485,10 @@ export default function EditProductPage() {
                     min="0"
                     {...register("availableQuantity")}
                     placeholder="100"
-                    className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 ${
-                      errors.availableQuantity
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 font-mono focus:outline-none focus:ring-2 ${errors.availableQuantity
                         ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                         : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                    }`}
+                      }`}
                   />
                   <span className="absolute right-3 top-2.5 text-xs text-slate-400 uppercase">
                     {watch("sellingUnit")}
@@ -522,11 +512,10 @@ export default function EditProductPage() {
                 rows={4}
                 {...register("description")}
                 placeholder="Describe freshness, harvest date, variety, organic practices, handling..."
-                className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${
-                  errors.description
+                className={`w-full rounded-xl border px-3.5 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 ${errors.description
                     ? "border-rose-300 focus:border-rose-500 focus:ring-rose-200"
                     : "border-slate-200 focus:border-emerald-500 focus:ring-emerald-200"
-                }`}
+                  }`}
               />
               {errors.description && (
                 <p className="text-rose-600 text-[11px] mt-1">
@@ -669,15 +658,12 @@ export default function EditProductPage() {
               <div>
                 <h2 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
                   <Camera className="h-4 w-4 text-emerald-600" />
-                  Crop Photography
+                 Harvest Photos
                 </h2>
                 <p className="text-xs text-slate-500">
                   Manage harvest gallery photos, add new images, or remove obsolete ones.
                 </p>
-              </div>
-              <span className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
-                Endpoint: /product/update-images
-              </span>
+              </div>            
             </div>
 
             {/* Currently Kept Saved Photos */}
@@ -798,18 +784,6 @@ export default function EditProductPage() {
               )}
             </div>
 
-            {/* Information Notice */}
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3.5 flex items-start gap-2.5 text-xs text-slate-600">
-              <Info className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-              <p className="text-[11px] leading-relaxed">
-                Images are uploaded to Cloudinary and optimized for fast display across all buyer mobile and web apps. Total photos after saving will be{" "}
-                <strong className="text-slate-900">
-                  {keptImages.length + newFiles.length} photo(s)
-                </strong>
-                .
-              </p>
-            </div>
-
             {/* Save Photos Button */}
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
@@ -829,7 +803,7 @@ export default function EditProductPage() {
                 ) : (
                   <>
                     <Upload className="h-3.5 w-3.5" />
-                    Save Crop Photography
+                    Save Harvest Photography
                   </>
                 )}
               </button>

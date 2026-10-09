@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "@/redux/hooks";
+import Cookies from "js-cookie";
 
 export default function AuthRoleGuard({
   children,
@@ -14,7 +15,13 @@ export default function AuthRoleGuard({
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!isAuthenticated || !user) {
+    const token =
+      Cookies.get("token") ||
+      Cookies.get("accessToken") ||
+      (typeof document !== "undefined" && document.cookie.includes("token"));
+
+    // 1. If not authenticated, or no user, or no token (e.g. after logout)
+    if (!isAuthenticated || !user || !token) {
       // Guest checks
       const isProducerRoute =
         pathname.startsWith("/producer") || pathname.startsWith("/onboarding/producer");
@@ -28,7 +35,7 @@ export default function AuthRoleGuard({
       ].some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
       if (isProducerRoute || isDriverRoute || isBuyerProtectedRoute) {
-        router.replace(`/login?redirect=${encodeURIComponent(pathname)}`);
+        router.replace("/");
       }
       return;
     }
@@ -40,6 +47,10 @@ export default function AuthRoleGuard({
       const isAllowed =
         pathname.startsWith("/producer") || pathname.startsWith("/onboarding/producer");
       if (!isAllowed) {
+        if (!token) {
+          router.replace("/");
+          return;
+        }
         router.replace("/producer/dashboard");
       }
       return;
@@ -50,6 +61,10 @@ export default function AuthRoleGuard({
       const isAllowed =
         pathname.startsWith("/driver") || pathname.startsWith("/onboarding/driver");
       if (!isAllowed) {
+        if (!token) {
+          router.replace("/");
+          return;
+        }
         router.replace("/driver/dashboard");
       }
       return;

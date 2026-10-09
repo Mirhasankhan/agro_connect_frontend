@@ -49,11 +49,9 @@ export function middleware(req: NextRequest) {
 
   // 1. Unauthenticated (Guest) User Handling
   if (!token || !role) {
-    // If guest attempts to access Producer, Driver, or protected Buyer routes, redirect to login
+    // If guest attempts to access Producer, Driver, or protected Buyer routes (or after logout), redirect to home page
     if (isProducerRoute || isDriverRoute || isBuyerProtectedRoute) {
-      const loginUrl = new URL("/login", req.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
+      return NextResponse.redirect(new URL("/", req.url));
     }
     // Guest can freely access public storefront (/, /products, /cart) and auth routes
     return NextResponse.next();

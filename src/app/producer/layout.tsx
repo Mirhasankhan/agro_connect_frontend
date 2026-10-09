@@ -43,12 +43,16 @@ export default function ProducerLayout({
   const verificationStatus = producerProfile?.verificationStatus || "Pending";
 
   const handleLogout = () => {
-    dispatch(logout());
     if (typeof document !== "undefined") {
       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
       document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
-    router.push("/");
+    dispatch(logout());
+    if (typeof window !== "undefined") {
+      window.location.replace("/");
+    } else {
+      router.push("/");
+    }
   };
 
   const navItems = [
@@ -58,12 +62,12 @@ export default function ProducerLayout({
       icon: LayoutDashboard,
     },
     {
-      label: "My Harvests & Products",
+      label: "My Harvests",
       href: "/producer/products",
       icon: Package,
     },
     {
-      label: "Orders to Fulfill",
+      label: "Orders",
       href: "/producer/orders",
       icon: ShoppingBag,
     },
