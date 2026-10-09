@@ -32,7 +32,7 @@ export default function ProducerProductsPage() {
   const isRejected = verificationStatus === "Rejected";
 
   const queryParams: any = {
-    limit: 50,
+    limit: 10,
   };
   if (searchTerm.trim()) queryParams.search = searchTerm.trim();
   if (statusFilter !== "all") queryParams.status = statusFilter;

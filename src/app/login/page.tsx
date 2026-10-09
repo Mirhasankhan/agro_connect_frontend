@@ -159,17 +159,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-xs font-semibold text-emerald-700 hover:text-emerald-800"
-                >
-                  Forgot password?
-                </Link>
-              </div>
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
               <div className="relative">
                 <input
                   id="password"
@@ -191,6 +183,14 @@ export default function LoginPage() {
               {errors.password && (
                 <p className="form-error">{errors.password.message}</p>
               )}
+              <div className="mt-2 flex justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+                >
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             <button

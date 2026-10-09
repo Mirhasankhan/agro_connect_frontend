@@ -148,7 +148,7 @@ export default function ProducerDashboardPage() {
             className="btn-primary text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
           >
             <Plus className="w-4 h-4" />
-            Create New Harvest
+            Add New Harvest
           </Link>
         ) : (
           <button
@@ -157,12 +157,12 @@ export default function ProducerDashboardPage() {
             title={
               isRejected
                 ? "Account verification was rejected. Please contact support."
-                : "Account verification is pending. You can add products once your producer profile is Accepted."
+                : "Account verification is pending, Awaits admin approval"
             }
             className="btn-primary opacity-50 cursor-not-allowed text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
           >
             <Plus className="w-4 h-4" />
-            Create New Harvest (Pending Approval)
+            Add New Harvest (Pending Approval)
           </button>
         )}
       </div>
