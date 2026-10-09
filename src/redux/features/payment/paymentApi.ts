@@ -4,6 +4,8 @@ import {
   TProducerEarning,
   TDriverEarning,
   TPaginationMeta,
+  TEarningChartPoint,
+  TEarningChartType,
 } from "@/types";
 
 export interface PaymentQueryParams {
@@ -46,10 +48,24 @@ const paymentApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Payment"],
     }),
+
+    getProducerEarningChart: builder.query<
+      TApiResponse<TEarningChartPoint[]>,
+      { type: TEarningChartType }
+    >({
+      query: ({ type }) => ({
+        url: "/payment/producer-earning-chart",
+        method: "GET",
+        params: { type },
+      }),
+      providesTags: ["Payment"],
+    }),
   }),
 });
 
 export const {
   useGetProducerWisePaymentsQuery,
   useGetDriverWisePaymentsQuery,
+  useGetProducerEarningChartQuery,
 } = paymentApi;
+

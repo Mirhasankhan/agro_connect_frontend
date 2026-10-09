@@ -23,6 +23,7 @@ import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymen
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useAppSelector } from "@/redux/hooks";
 import ProducerProfileSetupModal from "@/components/producer/ProducerProfileSetupModal";
+import ProducerEarningChart from "@/components/producer/ProducerEarningChart";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function ProducerDashboardPage() {
@@ -223,6 +224,9 @@ export default function ProducerDashboardPage() {
           <p className="text-[11px] text-slate-500">Drivers available for scheduled pickup</p>
         </div>
       </div>
+
+      {/* Harvest Revenue Analytics Chart */}
+      <ProducerEarningChart />
 
       {/* Orders to Fulfill Section */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">

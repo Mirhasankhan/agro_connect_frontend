@@ -299,6 +299,14 @@ export interface TPaginationMeta {
   totalPage: number;
 }
 
+export type TEarningChartType = "monthly" | "weekly";
+
+export interface TEarningChartPoint {
+  month?: string;
+  day?: string;
+  earning: number;
+}
+
 export interface TProducerEarning {
   id: string;
   amount: number;
