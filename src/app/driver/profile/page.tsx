@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Truck,
   User,
@@ -11,166 +12,1061 @@ import {
   MapPin,
   Phone,
   Mail,
+  Lock,
+  KeyRound,
+  Eye,
+  EyeOff,
+  Camera,
+  CheckCircle2,
+  Loader2,
+  FileText,
+  ExternalLink,
+  Save,
+  RotateCcw,
+  Image as ImageIcon,
+  BadgeCheck,
+  Car,
 } from "lucide-react";
-import { useGetProfileQuery } from "@/redux/features/auth/authApi";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { updateProfileData } from "@/redux/features/auth/authSlice";
+import {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+} from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
 
 export default function DriverProfilePage() {
-  const { user } = useAppSelector((state) => state.auth);
-  const { data } = useGetProfileQuery();
+  const dispatch = useAppDispatch();
+  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
-  const profile = data?.data || user;
+  // Fetch real-time profile data (includes user details and driverProfile)
+  const {
+    data: profileResponse,
+    isLoading: isProfileLoading,
+    refetch: refetchProfile,
+  } = useGetProfileQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+
+  const [updateProfile, { isLoading: isUpdatingProfile }] =
+    useUpdateProfileMutation();
+  const [changePassword, { isLoading: isChangingPassword }] =
+    useChangePasswordMutation();
+
+  const profile = profileResponse?.data || user;
   const driver = profile?.driverProfile;
-  const status = driver?.verificationStatus || "Pending";
+  const verificationStatus = driver?.verificationStatus || "Pending";
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="border-b border-slate-200 pb-5">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Driver & Vehicle Profile</h1>
-        <p className="text-xs text-slate-500 mt-0.5">
-          View your registered logistics vehicle, license verification status, and contact
-          information.
+  // Tab State: "vehicle" | "personal" | "security"
+  const [activeTab, setActiveTab] = useState<"vehicle" | "personal" | "security">(
+    "vehicle"
+  );
+
+  // Personal Profile Form State
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [city, setCity] = useState("");
+  const [region, setRegion] = useState("");
+  const [address, setAddress] = useState("");
+
+  // Avatar Upload State
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Change Password Form State
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Sync profile data into personal form state when loaded
+  useEffect(() => {
+    if (profile) {
+      setFullName(profile.fullName || "");
+      setPhoneNumber(profile.phoneNumber || "");
+      setCity(profile.city || "");
+      setRegion(profile.region || "");
+      setAddress(profile.address || "");
+    }
+  }, [profile]);
+
+  // Clean up avatar preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (avatarPreview && avatarPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(avatarPreview);
+      }
+    };
+  }, [avatarPreview]);
+
+  // Handle Photo Picker
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload a valid image file (PNG, JPG, JPEG, WEBP)");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image file must be under 5MB");
+      return;
+    }
+
+    setAvatarFile(file);
+    const objectUrl = URL.createObjectURL(file);
+    setAvatarPreview(objectUrl);
+    toast.info("Profile photo selected! Click 'Save Changes' to apply.");
+  };
+
+  // Submit Personal Profile Update
+  const handleProfileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!fullName.trim()) {
+      toast.error("Full name cannot be empty");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("fullName", fullName.trim());
+
+      if (phoneNumber.trim()) {
+        formData.append("phoneNumber", phoneNumber.trim());
+      }
+      if (city.trim()) {
+        formData.append("city", city.trim());
+      }
+      if (region.trim()) {
+        formData.append("region", region.trim());
+      }
+      if (address.trim()) {
+        formData.append("address", address.trim());
+      }
+      if (avatarFile) {
+        formData.append("profileImage", avatarFile);
+      }
+
+      const res = await updateProfile(formData).unwrap();
+      toast.success(res?.message || "Profile updated successfully!");
+
+      // Update Redux state immediately
+      dispatch(
+        updateProfileData({
+          fullName: fullName.trim(),
+          phoneNumber: phoneNumber.trim(),
+          city: city.trim(),
+          region: region.trim(),
+          address: address.trim(),
+        })
+      );
+
+      // Refetch profile data from server
+      await refetchProfile();
+      setAvatarFile(null);
+      setAvatarPreview(null);
+    } catch (err: any) {
+      const errorMsg =
+        err?.data?.message || err?.message || "Failed to update profile";
+      toast.error(errorMsg);
+    }
+  };
+
+  // Submit Change Password
+  const handleChangePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!oldPassword) {
+      toast.error("Please enter your current password");
+      return;
+    }
+
+    if (!newPassword) {
+      toast.error("Please enter your new password");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast.error("New password must be at least 6 characters long");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("New password and confirmation do not match");
+      return;
+    }
+
+    if (oldPassword === newPassword) {
+      toast.error("New password cannot be the same as your current password");
+      return;
+    }
+
+    try {
+      const res = await changePassword({
+        oldPassword,
+        newPassword,
+      }).unwrap();
+
+      toast.success(
+        res?.message || "Password changed successfully! Keep it secure."
+      );
+
+      // Clear password inputs
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      const errorMsg =
+        err?.data?.message ||
+        err?.message ||
+        "Failed to change password. Please check your current password.";
+      toast.error(errorMsg);
+    }
+  };
+
+  const currentDisplayImage =
+    avatarPreview || profile?.profileImage || null;
+  const currentDisplayName =
+    fullName.trim() || profile?.fullName || "Logistics Driver";
+
+
+
+  // Compliance Documents List
+  const documents = [
+    {
+      title: "National Identity / Passport",
+      url: driver?.nidUrl,
+      type: "Identification",
+      desc: "Driver personal identification card used for legal identity validation.",
+    },
+    {
+      title: "Commercial Driving License",
+      url: driver?.drivingLicenseUrl,
+      type: "Driver License",
+      desc: "Official transport permit authorizing commercial produce deliveries.",
+    },
+    {
+      title: "Vehicle Registration Certificate",
+      url: driver?.vehicleRegistrationUrl,
+      type: "Vehicle Registration",
+      desc: "Official vehicle carte grise and transport ownership registration.",
+    },
+    {
+      title: "Commercial Vehicle Insurance",
+      url: driver?.insuranceUrl,
+      type: "Insurance Policy",
+      desc: "Valid transit insurance policy covering vehicles, cargo, and third-party liabilities.",
+    },
+    {
+      title: "Police Clearance / Judicial Record",
+      url: driver?.policeClearanceUrl,
+      type: "Background Check",
+      desc: "Official criminal record clearance and road safety compliance certificate.",
+    },
+  ];
+
+  if (isProfileLoading && !profile) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
+        <Loader2 className="w-9 h-9 animate-spin text-emerald-600" />
+        <p className="text-sm font-medium text-slate-500">
+          Loading driver profile & vehicle credentials...
         </p>
       </div>
+    );
+  }
 
-      {/* Verification Status Card */}
-      <div
-        className={`p-6 rounded-2xl border ${
-          status === "Accepted"
-            ? "bg-emerald-50 border-emerald-200"
-            : status === "Rejected"
-            ? "bg-red-50 border-red-200"
-            : "bg-amber-50 border-amber-200"
-        } space-y-3 shadow-sm`}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {status === "Accepted" && (
-              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-            )}
-            {status === "Pending" && (
-              <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                <Clock className="w-6 h-6" />
-              </div>
-            )}
-            {status === "Rejected" && (
-              <div className="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
-                <AlertTriangle className="w-6 h-6" />
-              </div>
-            )}
+  return (
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      {/* Page Header */}
+      <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            Driver & Vehicle Profile
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Review your verified vehicle credentials, update your personal information, and manage account security.
+          </p>
+        </div>
 
-            <div>
-              <h3 className="font-serif font-bold text-lg text-slate-900">
-                Verification Status: {status}
-              </h3>
-              <p className="text-xs text-slate-600">
-                {status === "Accepted" && "Your driving credentials and vehicle are fully certified."}
-                {status === "Pending" && "Our safety compliance team is inspecting your driving license and registration."}
-                {status === "Rejected" && `Application rejected: ${driver?.rejectionReason || "Incomplete documentation"}`}
-              </p>
-            </div>
-          </div>
-
+        <div className="flex items-center gap-2">
           <span
-            className={`px-3 py-1 rounded-full text-xs font-bold ${
-              status === "Accepted"
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+              verificationStatus === "Accepted"
                 ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                : status === "Rejected"
+                : verificationStatus === "Rejected"
                 ? "bg-red-100 text-red-800 border border-red-200"
                 : "bg-amber-100 text-amber-800 border border-amber-200"
             }`}
           >
-            {status}
+            {verificationStatus === "Accepted" && (
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            )}
+            {verificationStatus === "Pending" && (
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+            )}
+            {verificationStatus === "Rejected" && (
+              <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
+            )}
+            Verification: {verificationStatus}
           </span>
         </div>
+      </div>
 
-        {status === "Rejected" && (
-          <div className="pt-2">
-            <Link
-              href="/onboarding/driver"
-              className="btn-primary text-xs py-2 px-4 inline-flex items-center gap-2"
+      {/* Global Status Banner (Pending or Rejected) */}
+      {verificationStatus === "Pending" && (
+        <div className="p-4 sm:p-5 rounded-2xl border border-amber-200 bg-amber-50/90 text-amber-900 shadow-sm flex items-start gap-3.5">
+          <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <h3 className="font-bold text-sm">Driver & Vehicle Verification In Review</h3>
+            <p className="text-xs text-amber-800 leading-relaxed">
+              Your registered vehicle registration, driver license, and legal compliance records are currently being verified by our logistics dispatchers. You can view all submitted documents below. Accepting and fulfilling deliveries will be enabled once your credentials are Accepted.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {verificationStatus === "Rejected" && (
+        <div className="p-4 sm:p-5 rounded-2xl border border-red-200 bg-red-50/90 text-red-900 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <h3 className="font-bold text-sm">Driver Verification Requires Revision</h3>
+              <p className="text-xs text-red-800 leading-relaxed">
+                Reason: &ldquo;{driver?.rejectionReason || "Incomplete or unverifiable vehicle documents"}&rdquo;.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/onboarding/driver"
+            className="btn-primary text-xs py-2 px-4 shrink-0 shadow-sm"
+          >
+            Re-upload Documents
+          </Link>
+        </div>
+      )}
+
+      {/* Hero Driver Identity Card */}
+      <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800" />
+
+        <div className="relative pt-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
+            {/* Avatar with Camera Trigger */}
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full ring-4 ring-white shadow-md overflow-hidden bg-emerald-100 flex items-center justify-center shrink-0 group">
+              {currentDisplayImage ? (
+                <Image
+                  src={currentDisplayImage}
+                  alt={currentDisplayName}
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="text-3xl sm:text-4xl font-serif font-bold text-emerald-800">
+                  {currentDisplayName.charAt(0).toUpperCase()}
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("personal");
+                  fileInputRef.current?.click();
+                }}
+                className="absolute inset-0 bg-slate-900/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-[2px]"
+                title="Change Profile Picture"
+              >
+                <Camera className="w-5 h-5 mb-0.5" />
+                <span className="text-[10px] font-bold">Change</span>
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/webp"
+              onChange={handlePhotoSelect}
+              className="hidden"
+            />
+
+            <div className="space-y-1.5 min-w-0">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <Truck className="w-3 h-3" />
+                  Driver
+                </span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                  {driver?.vehicleType}
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
+                    driver?.isAvailable
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-slate-100 text-slate-600"
+                  }`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      driver?.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
+                    }`}
+                  />
+                  {driver?.isAvailable ? "Available for Dispatch" : "Off Duty"}
+                </span>
+              </div>
+
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-slate-900 truncate">
+                {currentDisplayName}
+              </h2>
+
+              <p className="text-xs sm:text-sm font-semibold text-emerald-700 flex items-center justify-center sm:justify-start gap-1.5 truncate">
+                <Car className="w-4 h-4 shrink-0" />
+                <span className="font-mono">
+                  {driver?.registrationNumber || driver?.licensePlate || "Registration Pending"}
+                </span>
+                {(profile?.city || profile?.region) && (
+                  <>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-500 font-normal flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400" />
+                      {profile?.city || profile?.region}
+                    </span>
+                  </>
+                )}
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-slate-500 pt-1">
+                <span className="flex items-center gap-1">
+                  <Mail className="w-3.5 h-3.5 text-slate-400" />
+                  {profile?.email}
+                </span>
+                {profile?.phoneNumber && (
+                  <span className="flex items-center gap-1">
+                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    {profile.phoneNumber}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Metrics / Action */}
+          <div className="flex sm:flex-row md:flex-col items-center md:items-end justify-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
+            <button
+              type="button"
+              onClick={() => setActiveTab("personal")}
+              className="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center gap-1.5"
             >
-              Re-upload Vehicle Documents
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* Vehicle Details Card */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
-        <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-          <Truck className="w-5 h-5 text-emerald-600" />
-          <h2 className="font-serif font-bold text-lg text-slate-900">Vehicle Specifications</h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-          <div>
-            <span className="text-slate-500 block mb-1">Vehicle Classification</span>
-            <p className="font-bold text-slate-900 text-sm">
-              {driver?.vehicleType || "Not Specified"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-slate-500 block mb-1">License Plate Number</span>
-            <p className="font-mono font-bold text-emerald-700 text-sm">
-              {driver?.licensePlate || "Pending Assignment"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-slate-500 block mb-1">Base of Operations</span>
-            <p className="font-bold text-slate-900 text-sm flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-              {profile?.city || "Abidjan, Côte d'Ivoire"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-slate-500 block mb-1">Dispatch Capability</span>
-            <p className="font-bold text-emerald-700 text-sm">Active on Agro-Logistics Grid</p>
+              <User className="w-3.5 h-3.5 text-slate-500" />
+              Edit Personal Info
+            </button>
+            {avatarFile && (
+              <span className="text-[11px] text-amber-700 font-bold bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full animate-pulse">
+                New photo ready to save
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Driver Contact Card */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
-        <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-          <User className="w-5 h-5 text-emerald-600" />
-          <h2 className="font-serif font-bold text-lg text-slate-900">Driver Identity</h2>
-        </div>
+      {/* Navigation Tabs */}
+      <div className="flex border-b border-slate-200 gap-2 sm:gap-4 overflow-x-auto select-none">
+        <button
+          type="button"
+          onClick={() => setActiveTab("vehicle")}
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
+            activeTab === "vehicle"
+              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+          }`}
+        >
+          <Truck className="w-4 h-4" />
+          <span>Vehicle & Compliance Records</span>
+        </button>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-          <div>
-            <span className="text-slate-500 block mb-1">Full Name</span>
-            <p className="font-bold text-slate-900 text-sm">{profile?.fullName || "Driver"}</p>
-          </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab("personal")}
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
+            activeTab === "personal"
+              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+          }`}
+        >
+          <User className="w-4 h-4" />
+          <span>Personal Details</span>
+        </button>
 
-          <div>
-            <span className="text-slate-500 block mb-1">Registered Email</span>
-            <p className="font-bold text-slate-900 text-sm flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5 text-emerald-600" />
-              {profile?.email}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-slate-500 block mb-1">Phone Number</span>
-            <p className="font-bold text-slate-900 text-sm flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5 text-emerald-600" />
-              {profile?.phoneNumber || "Not provided"}
-            </p>
-          </div>
-
-          <div>
-            <span className="text-slate-500 block mb-1">Platform Role</span>
-            <p className="font-bold text-emerald-700 text-sm">DRIVER</p>
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={() => setActiveTab("security")}
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
+            activeTab === "security"
+              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+          }`}
+        >
+          <Lock className="w-4 h-4" />
+          <span>Change Password</span>
+        </button>
       </div>
+
+      {/* ========================================================= */}
+      {/* TAB 1: VEHICLE PROFILE & COMPLIANCE (READ-ONLY)            */}
+      {/* ========================================================= */}
+      {activeTab === "vehicle" && (
+        <div className="space-y-8 animate-in fade-in duration-150">
+          {/* Vehicle Specifications Card */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                  <Truck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-serif font-bold text-lg text-slate-900">
+                    Logistics Vehicle Specifications
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Officially recorded vehicle details and transport capabilities
+                  </p>
+                </div>
+              </div>
+
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700">
+                Status: {verificationStatus}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-xs">
+              <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+                <span className="text-slate-500 font-medium block mb-1">
+                  Vehicle Type
+                </span>
+                <p className="font-bold text-slate-900 text-sm">
+                  {driver?.vehicleType}
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+                <span className="text-slate-500 font-medium block mb-1">
+                  Registration Number
+                </span>
+                <p className="font-mono font-bold text-emerald-700 text-sm">
+                  {driver?.registrationNumber || driver?.licensePlate || "Not specified"}
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+                <span className="text-slate-500 font-medium block mb-1">
+                  Readiness
+                </span>
+                <p className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                  <BadgeCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>
+                    {driver?.isAvailable ? "Online & Ready for Pickup" : "Offline / Off Duty"}
+                  </span>
+                </p>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+                <span className="text-slate-500 font-medium block mb-1">
+                  Base Region of Operations
+                </span>
+                <p className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>
+                    {profile?.city || profile?.region
+                      ? `${profile.city || ""}${profile.city && profile.region ? ", " : ""}${profile.region || ""}`
+                      : "Not specified"}
+                  </span>
+                </p>
+              </div>          
+
+              <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
+                <span className="text-slate-500 font-medium block mb-1">
+                  Stripe Payout Capability
+                </span>
+                <p className="font-bold text-slate-900 text-sm truncate">
+                  {driver?.stripeAccountId ? (
+                    <span className="text-emerald-700 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      Connected Account
+                    </span>
+                  ) : (
+                    <span className="text-slate-500">AgroConnect Platform Managed</span>
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Submitted Legal & Vehicle Documents Gallery */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="font-serif font-bold text-lg text-slate-900">
+                    Certified License & Vehicle Documents
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    Official files registered during driver onboarding & verification
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {documents.map((doc, idx) => (
+                <div
+                  key={idx}
+                  className="p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col justify-between gap-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emerald-600 shrink-0 shadow-xs">
+                        {doc.url?.match(/\.(jpeg|jpg|png|webp)/i) ? (
+                          <ImageIcon className="w-4 h-4" />
+                        ) : (
+                          <FileText className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold tracking-wider text-emerald-700 block">
+                          {doc.type}
+                        </span>
+                        <h4 className="font-bold text-slate-900 text-sm">
+                          {doc.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {doc.desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    {doc.url ? (
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>View Document</span>
+                      </a>
+                    ) : (
+                      <span className="text-xs text-slate-400 italic">
+                        No digital attachment submitted
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* TAB 2: PERSONAL DETAILS (EDITABLE)                         */}
+      {/* ========================================================= */}
+      {activeTab === "personal" && (
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm animate-in fade-in duration-150">
+          <div className="border-b border-slate-100 pb-5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                <User className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="font-serif font-bold text-xl text-slate-900">
+                  Update Personal Information
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Update your contact details, operational base, and public profile avatar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleProfileSubmit} className="space-y-6">
+            {/* Avatar Row */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50/70 border border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="relative w-16 h-16 rounded-full bg-emerald-100 border-2 border-emerald-300 overflow-hidden shrink-0 flex items-center justify-center font-bold text-lg text-emerald-800 shadow-xs">
+                  {currentDisplayImage ? (
+                    <Image
+                      src={currentDisplayImage}
+                      alt={currentDisplayName}
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span>{currentDisplayName.charAt(0).toUpperCase()}</span>
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    Profile Avatar / Photo
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    Appears in the driver hub navbar, delivery tracking cards, and customer chats.
+                  </p>
+                  {avatarFile && (
+                    <p className="text-xs text-emerald-700 font-semibold mt-1">
+                      Selected: {avatarFile.name} ({(avatarFile.size / 1024).toFixed(0)} KB)
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {avatarFile && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAvatarFile(null);
+                      setAvatarPreview(null);
+                    }}
+                    className="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-xl border border-slate-200 bg-white"
+                  >
+                    Remove Selection
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-xs"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                  <span>Choose Photo</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Full Name & Email */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  Full Legal Name <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="e.g. Jean-Baptiste Koffi"
+                    required
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                  />
+                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    value={profile?.email || ""}
+                    disabled
+                    className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-500 cursor-not-allowed font-medium"
+                  />
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                </div>
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                Phone Number (For Real-time Delivery Coordination)
+              </label>
+              <div className="relative">
+                <input
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  placeholder="+225 05 12 34 56 78"
+                  className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+              </div>
+            </div>
+
+            {/* City & Region */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  City
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="e.g. Abidjan, Bouaké, San Pédro"
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                  />
+                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  Region / District
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={region}
+                    onChange={(e) => setRegion(e.target.value)}
+                    placeholder="e.g. Lagunes, Vallée du Bandama"
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                  />
+                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                </div>
+              </div>
+            </div>
+
+            {/* Operational Address */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                Operational / Garage Address
+              </label>
+              <textarea
+                rows={3}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="e.g. Zone Industrielle de Yopougon, Rue des Transporteurs"
+                className="w-full bg-slate-50/70 border border-slate-200 rounded-xl p-3.5 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+              />
+            </div>
+
+            {/* Form Actions */}
+            <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setFullName(profile?.fullName || "");
+                  setPhoneNumber(profile?.phoneNumber || "");
+                  setCity(profile?.city || "");
+                  setRegion(profile?.region || "");
+                  setAddress(profile?.address || "");
+                  setAvatarFile(null);
+                  setAvatarPreview(null);
+                }}
+                disabled={isUpdatingProfile}
+                className="w-full sm:w-auto px-5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                Discard Changes
+              </button>
+
+              <button
+                type="submit"
+                disabled={isUpdatingProfile}
+                className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                {isUpdatingProfile ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Saving Changes...</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    <span>Save Profile Changes</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* TAB 3: CHANGE PASSWORD                                    */}
+      {/* ========================================================= */}
+      {activeTab === "security" && (
+        <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm animate-in fade-in duration-150">
+          <div className="border-b border-slate-100 pb-5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
+                <KeyRound className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="font-serif font-bold text-xl text-slate-900">
+                  Change Account Password
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Keep your driver account secure by using a strong, unique password.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleChangePasswordSubmit} className="space-y-6">
+            {/* Current Password */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                Current Password <span className="text-rose-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type={showOldPassword ? "text" : "password"}
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  required
+                  className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-11 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <button
+                  type="button"
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
+                  tabIndex={-1}
+                >
+                  {showOldPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* New Password & Confirm Password */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  New Password <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Min 6 characters"
+                    required
+                    minLength={6}
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-11 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                  />
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
+                    tabIndex={-1}
+                  >
+                    {showNewPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
+                  Confirm New Password <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-type new password"
+                    required
+                    minLength={6}
+                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-11 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
+                  />
+                  <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                    className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Checklist */}
+            <div className="rounded-2xl bg-slate-50 border border-slate-200/60 p-4 space-y-2">
+              <p className="text-xs font-bold text-slate-700">
+                Security Recommendations:
+              </p>
+              <ul className="text-xs text-slate-600 space-y-1.5">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={`w-3.5 h-3.5 ${
+                      newPassword.length >= 6
+                        ? "text-emerald-600"
+                        : "text-slate-400"
+                    }`}
+                  />
+                  <span>At least 6 characters in length</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={`w-3.5 h-3.5 ${
+                      confirmPassword && newPassword === confirmPassword
+                        ? "text-emerald-600"
+                        : "text-slate-400"
+                    }`}
+                  />
+                  <span>Both password fields match exactly</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Submit Action */}
+            <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
+              <button
+                type="submit"
+                disabled={isChangingPassword}
+                className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+              >
+                {isChangingPassword ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Updating Password...</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-4 h-4" />
+                    <span>Update Password</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

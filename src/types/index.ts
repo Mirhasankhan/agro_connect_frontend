@@ -71,6 +71,25 @@ export interface TProducerProfile {
   updatedAt?: string;
 }
 
+export interface TDriverProfile {
+  id?: string;
+  userId?: string;
+  vehicleType?: DriverVehicleType;
+  registrationNumber?: string;
+  licensePlate?: string;
+  nidUrl?: string;
+  drivingLicenseUrl?: string;
+  vehicleRegistrationUrl?: string;
+  insuranceUrl?: string;
+  policeClearanceUrl?: string;
+  verificationStatus?: VerificationStatus;
+  rejectionReason?: string | null;
+  isAvailable?: boolean;
+  stripeAccountId?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface TUser {
   id: string;
   fullName: string;
@@ -85,13 +104,7 @@ export interface TUser {
   address?: string | null;
   createdAt?: string;
   producerProfile?: TProducerProfile | null;
-  driverProfile?: {
-    id?: string;
-    vehicleType?: DriverVehicleType;
-    licensePlate?: string;
-    verificationStatus?: VerificationStatus;
-    rejectionReason?: string | null;
-  } | null;
+  driverProfile?: TDriverProfile | null;
 }
 
 export interface TPricingTier {
