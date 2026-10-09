@@ -100,15 +100,15 @@ function DriverMessagesContent() {
       </div>
 
       {/* Messaging Layout Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[720px]">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[calc(100vh-13rem)] min-h-[560px]">
         {/* Conversation List Sidebar */}
         <div
-          className={`md:col-span-4 lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden ${
+          className={`md:col-span-4 lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full min-h-0 overflow-hidden ${
             activeParticipant ? "hidden md:flex" : "flex"
           }`}
         >
           {/* Search Input */}
-          <div className="p-4 border-b border-slate-100">
+          <div className="p-4 border-b border-slate-100 flex-shrink-0">
             <div className="relative">
               <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
               <input
@@ -122,7 +122,7 @@ function DriverMessagesContent() {
           </div>
 
           {/* List */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          <div className="flex-1 min-h-0 overflow-y-auto divide-y divide-slate-100">
             {isLoading ? (
               <div className="flex h-48 items-center justify-center">
                 <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
@@ -202,7 +202,7 @@ function DriverMessagesContent() {
 
         {/* Active Chat Window */}
         <div
-          className={`md:col-span-8 lg:col-span-8 h-full ${
+          className={`md:col-span-8 lg:col-span-8 h-full min-h-0 ${
             !activeParticipant ? "hidden md:block" : "block"
           }`}
         >

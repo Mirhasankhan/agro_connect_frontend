@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import {
   DollarSign,
   CheckCircle2,
-  Clock,
-  ShieldCheck,
+  Clock,  
 } from "lucide-react";
 import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
@@ -89,18 +88,6 @@ export default function ProducerEarningsPage() {
         </div>
       </div>
 
-      {/* Escrow Security Callout */}
-      <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-slate-700 flex items-start gap-3">
-        <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-        <div className="space-y-1">
-          <h4 className="font-bold text-slate-900 text-sm">Escrow Protection & Payout Guarantee</h4>
-          <p className="text-slate-600 leading-relaxed text-xs">
-            Agro Connect holds buyer payments securely in escrow when orders are placed. As soon as
-            the transport driver hands over your harvest and verifies the 6-digit OTP with the
-            buyer, funds are automatically unlocked and queued for direct transfer.
-          </p>
-        </div>
-      </div>
 
       {/* Transactions Table */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">

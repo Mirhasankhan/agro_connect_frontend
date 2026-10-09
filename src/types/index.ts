@@ -48,6 +48,29 @@ export type DriverVehicleType =
 
 export type VerificationStatus = "Pending" | "Accepted" | "Rejected";
 
+export interface TProducerProfile {
+  id?: string;
+  userId?: string;
+  farmName?: string;
+  farmSize?: number;
+  producerType?: ProducerType;
+  farmLocation?: string;
+  nidUrl?: string;
+  companyName?: string | null;
+  rccmNo?: string | null;
+  sirenNo?: string | null;
+  landCertificate?: string | null;
+  farmPhotoUrl?: string | null;
+  companyCertificate?: string | null;
+  rcmUrl?: string | null;
+  taxUrl?: string | null;
+  verificationStatus?: VerificationStatus;
+  rejectionReason?: string | null;
+  stripeAccountId?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface TUser {
   id: string;
   fullName: string;
@@ -61,18 +84,7 @@ export interface TUser {
   region?: string | null;
   address?: string | null;
   createdAt?: string;
-  producerProfile?: {
-    id?: string;
-    farmName?: string;
-    farmSize?: number;
-    producerType?: ProducerType;
-    companyName?: string;
-    rccmNo?: string;
-    sirenNo?: string;
-    city?: string;
-    verificationStatus?: VerificationStatus;
-    rejectionReason?: string | null;
-  } | null;
+  producerProfile?: TProducerProfile | null;
   driverProfile?: {
     id?: string;
     vehicleType?: DriverVehicleType;

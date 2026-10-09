@@ -141,7 +141,7 @@ export default function ChatWindow({
 
   if (!activeParticipant) {
     return (
-      <div className="flex h-full min-h-[480px] flex-col items-center justify-center bg-white p-8 text-center rounded-2xl border border-slate-200">
+      <div className="flex h-full min-h-0 flex-col items-center justify-center bg-white p-8 text-center rounded-2xl border border-slate-200 shadow-sm">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 mb-4 shadow-sm">
           <MessageSquare className="h-8 w-8" />
         </div>
@@ -158,9 +158,9 @@ export default function ChatWindow({
   }
 
   return (
-    <div className="flex h-full min-h-[560px] flex-col rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+    <div className="flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       {/* Chat Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-5 py-3.5">
+      <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-5 py-3.5">
         <div className="flex items-center gap-3">
           {onBack && (
             <button
@@ -223,7 +223,7 @@ export default function ChatWindow({
       </div>
 
       {/* Messages Thread */}
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 bg-[#f8faf9]">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3 bg-[#f8faf9]">
         {isLoadingHistory ? (
           <div className="flex h-full min-h-[300px] items-center justify-center">
             <Loader2 className="h-7 w-7 animate-spin text-emerald-600" />
@@ -284,7 +284,7 @@ export default function ChatWindow({
       {/* Message Input Box */}
       <form
         onSubmit={handleSendMessage}
-        className="border-t border-slate-200 bg-white p-3 sm:p-4 flex items-center gap-3"
+        className="flex-shrink-0 border-t border-slate-200 bg-white p-3 sm:p-4 flex items-center gap-3"
       >
         <input
           type="text"

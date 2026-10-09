@@ -259,14 +259,25 @@ export default function Navbar() {
                       </p>
                     </div>
 
-                    <Link
-                      href="/profile"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
-                    >
-                      <User className="w-4 h-4 text-emerald-600" />
-                      My Profile & Password
-                    </Link>
+                    {displayUser.role === "PRODUCER" ? (
+                      <Link
+                        href="/producer/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                      >
+                        <User className="w-4 h-4 text-emerald-600" />
+                        Farm & Personal Profile
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
+                      >
+                        <User className="w-4 h-4 text-emerald-600" />
+                        My Profile & Password
+                      </Link>
+                    )}
 
                     {displayUser.role === "PRODUCER" && (
                       <Link
@@ -445,12 +456,12 @@ export default function Navbar() {
                 </div>
 
                 <Link
-                  href="/profile"
+                  href={displayUser.role === "PRODUCER" ? "/producer/profile" : "/profile"}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50 text-xs font-medium"
                 >
                   <User className="w-4 h-4 text-emerald-600" />
-                  My Profile & Password
+                  {displayUser.role === "PRODUCER" ? "Farm & Personal Profile" : "My Profile & Password"}
                 </Link>
 
                 {displayUser.role === "BUYER" && (

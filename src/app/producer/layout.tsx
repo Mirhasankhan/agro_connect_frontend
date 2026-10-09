@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Sprout,
@@ -12,9 +13,7 @@ import {
   User,
   LogOut,
   Menu,
-  X,
-  Plus,
-  ShieldCheck,
+  X,  
   AlertTriangle,
   Clock,
   MessageSquare,
@@ -42,7 +41,6 @@ export default function ProducerLayout({
   const producerUser = profileData?.data || user;
   const producerProfile = producerUser?.producerProfile;
   const verificationStatus = producerProfile?.verificationStatus || "Pending";
-  const isAccepted = verificationStatus === "Accepted";
 
   const handleLogout = () => {
     dispatch(logout());
@@ -105,35 +103,7 @@ export default function ProducerLayout({
           </Link>
         </div>
 
-        {/* Farm Preview */}
-        <div className="px-5 py-4 border-b border-slate-100 bg-slate-50/70">
-          <p className="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">
-            Active Farm
-          </p>
-          <p className="font-bold text-sm text-slate-900 truncate mt-0.5">
-            {producerProfile?.farmName || producerProfile?.companyName || "My Farm"}
-          </p>
-          <div className="flex items-center gap-1.5 mt-1.5">
-            {verificationStatus === "Accepted" && (
-              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-bold px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200">
-                <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                Verified Producer
-              </span>
-            )}
-            {verificationStatus === "Pending" && (
-              <span className="inline-flex items-center gap-1 text-[10px] text-amber-700 font-bold px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200">
-                <Clock className="w-3 h-3 text-amber-600" />
-                Review Pending
-              </span>
-            )}
-            {verificationStatus === "Rejected" && (
-              <span className="inline-flex items-center gap-1 text-[10px] text-red-700 font-bold px-2 py-0.5 rounded-full bg-red-50 border border-red-200">
-                <AlertTriangle className="w-3 h-3 text-red-600" />
-                Action Required
-              </span>
-            )}
-          </div>
-        </div>
+  
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
@@ -242,29 +212,33 @@ export default function ProducerLayout({
           </div>
 
           <div className="flex items-center gap-3">
-            {isAccepted ? (
-              <Link
-                href="/producer/products/create"
-                className="btn-primary text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Add Harvest</span>
-              </Link>
-            ) : (
-              <button
-                type="button"
-                disabled
-                title="Adding new harvest is disabled while your producer verification is pending approval."
-                className="btn-primary opacity-50 cursor-not-allowed text-xs py-2 px-3.5 flex items-center gap-1.5 shadow-sm"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Add Harvest (Pending)</span>
-              </button>
-            )}
-
-            <div className="w-8 h-8 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center font-bold text-xs text-emerald-800">
-              {producerUser?.fullName?.charAt(0).toUpperCase() || "P"}
-            </div>
+            <Link
+              href="/producer/profile"
+              title="View Farm & Personal Profile"
+              className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 transition-all border border-transparent hover:border-slate-200 group"
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-100 border border-emerald-300 overflow-hidden flex items-center justify-center font-bold text-xs text-emerald-800 shadow-sm relative group-hover:ring-2 group-hover:ring-emerald-500/40 transition-all shrink-0">
+                {producerUser?.profileImage ? (
+                  <Image
+                    src={producerUser.profileImage}
+                    alt={producerUser.fullName || "Producer"}
+                    fill
+                    sizes="36px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span>{producerUser?.fullName?.charAt(0).toUpperCase() || "P"}</span>
+                )}
+              </div>
+              <div className="hidden sm:flex flex-col text-left pr-1">
+                <span className="text-xs font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors max-w-[130px] truncate leading-tight">
+                  {producerUser?.fullName || "Producer"}
+                </span>
+                <span className="text-[10px] text-slate-500 font-medium leading-tight">
+                  Farm Profile
+                </span>
+              </div>
+            </Link>
           </div>
         </header>
 

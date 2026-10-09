@@ -13,8 +13,7 @@ import {
   Search,
   Users,
   Loader2,
-  Clock,
-  Sparkles,
+  Clock,  
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -102,26 +101,19 @@ function MessagesContent() {
             <p className="mt-1 text-sm text-slate-600">
               Real-time negotiation, harvest inquiries, and delivery logistics coordination.
             </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-3 py-1 text-xs font-semibold text-emerald-800">
-              <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-              Verified Escrow Protection Active
-            </span>
-          </div>
+          </div>        
         </div>
 
         {/* Messaging Layout Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[720px]">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-[calc(100vh-14rem)] min-h-[560px]">
           {/* Conversation List Sidebar */}
           <div
-            className={`md:col-span-4 lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col overflow-hidden ${
+            className={`md:col-span-4 lg:col-span-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm flex flex-col h-full min-h-0 overflow-hidden ${
               activeParticipant ? "hidden md:flex" : "flex"
             }`}
           >
             {/* Search Input */}
-            <div className="p-4 border-b border-slate-100">
+            <div className="p-4 border-b border-slate-100 flex-shrink-0">
               <div className="relative">
                 <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                 <input
@@ -135,7 +127,7 @@ function MessagesContent() {
             </div>
 
             {/* List */}
-            <div className="flex-1 overflow-y-auto divide-y divide-slate-100/80">
+            <div className="flex-1 min-h-0 overflow-y-auto divide-y divide-slate-100/80">
               {isLoading ? (
                 <div className="flex h-48 items-center justify-center">
                   <Loader2 className="h-6 w-6 animate-spin text-emerald-600" />
@@ -215,7 +207,7 @@ function MessagesContent() {
 
           {/* Active Chat Window */}
           <div
-            className={`md:col-span-8 lg:col-span-8 h-full ${
+            className={`md:col-span-8 lg:col-span-8 h-full min-h-0 ${
               !activeParticipant ? "hidden md:block" : "block"
             }`}
           >
