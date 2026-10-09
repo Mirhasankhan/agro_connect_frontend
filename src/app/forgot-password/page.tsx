@@ -2,7 +2,9 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -52,14 +54,16 @@ export default function ForgotPasswordPage() {
         <div className="mb-8 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-slate-900 hover:opacity-90"
+            className="inline-flex items-center justify-center group transition-transform hover:scale-105"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/10">
-              <Sprout className="h-5 w-5" />
-            </span>
-            <span>
-              Agro<span className="text-emerald-600">Connect</span>
-            </span>
+            <Image
+              src={logo}
+              alt="AgroConnect"
+              width={181}
+              height={164}
+              priority
+              className="h-16 w-auto object-contain"
+            />
           </Link>
           <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/20">
             <Mail className="h-6 w-6" />

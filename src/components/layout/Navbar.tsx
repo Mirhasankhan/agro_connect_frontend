@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
+import logo from "@/assets/logo.png";
 import {
-  Sprout,
   ShoppingCart,
   Heart,
   Search,
@@ -94,18 +94,15 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0 group">
-            <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-              <Sprout className="w-5 h-5 text-white" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif text-2xl font-bold tracking-tight text-slate-900">
-                Agro<span className="text-emerald-600 font-sans font-extrabold ml-0.5">Connect</span>
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-emerald-700 font-semibold">
-                Côte d&apos;Ivoire
-              </span>
-            </div>
+          <Link href="/" className="flex items-center shrink-0 group">
+            <Image
+              src={logo}
+              alt="AgroConnect"
+              width={181}
+              height={164}
+              priority
+              className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform"
+            />
           </Link>
 
           {/* Center Navigation Links - Desktop */}

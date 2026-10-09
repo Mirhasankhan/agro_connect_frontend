@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -212,14 +214,16 @@ export default function ProducerOnboardingPage() {
         <div className="mb-8 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5 text-2xl font-bold tracking-tight text-slate-900"
+            className="inline-flex items-center justify-center group transition-transform hover:scale-105"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-              <Sprout className="h-5 w-5" />
-            </span>
-            <span>
-              Agro<span className="text-emerald-700">Connect</span>
-            </span>
+            <Image
+              src={logo}
+              alt="AgroConnect"
+              width={181}
+              height={164}
+              priority
+              className="h-16 w-auto object-contain"
+            />
           </Link>
           <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100/80 px-3 py-1 text-xs font-semibold text-emerald-800">
             <Tractor className="h-3.5 w-3.5" />

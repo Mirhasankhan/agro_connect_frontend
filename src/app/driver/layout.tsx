@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import logo from "@/assets/logo.png";
 import {
   Truck,
   LayoutDashboard,
@@ -87,17 +89,19 @@ export default function DriverLayout({
       {/* SIDEBAR - Desktop */}
       <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 shrink-0 select-none">
         {/* Brand */}
-        <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-          <Link href="/driver/dashboard" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-              <Truck className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
-            </div>
-            <div>
-              <span className="font-serif font-bold text-lg text-slate-900">AgroConnect</span>
-              <span className="block text-[10px] uppercase tracking-widest text-emerald-600 font-bold">
-                Driver Hub
-              </span>
-            </div>
+        <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
+          <Link href="/driver/dashboard" className="flex items-center gap-2.5 group">
+            <Image
+              src={logo}
+              alt="AgroConnect"
+              width={181}
+              height={164}
+              priority
+              className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+            />
+            <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+              Driver Hub
+            </span>
           </Link>
         </div>
 
@@ -184,8 +188,23 @@ export default function DriverLayout({
             onClick={() => setMobileSidebarOpen(false)}
           />
           <div className="relative w-72 bg-white border-r border-slate-200 p-6 flex flex-col z-10 shadow-xl">
-            <div className="flex items-center justify-between pb-6 border-b border-slate-200">
-              <span className="font-serif font-bold text-lg text-slate-900">AgroConnect</span>
+            <div className="flex items-center justify-between pb-5 border-b border-slate-200">
+              <Link
+                href="/driver/dashboard"
+                onClick={() => setMobileSidebarOpen(false)}
+                className="flex items-center gap-2"
+              >
+                <Image
+                  src={logo}
+                  alt="AgroConnect"
+                  width={181}
+                  height={164}
+                  className="h-9 w-auto object-contain"
+                />
+                <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                  Driver Hub
+                </span>
+              </Link>
               <button
                 type="button"
                 onClick={() => setMobileSidebarOpen(false)}
@@ -241,6 +260,15 @@ export default function DriverLayout({
             >
               <Menu className="w-6 h-6" />
             </button>
+            <Link href="/driver/dashboard" className="lg:hidden flex items-center">
+              <Image
+                src={logo}
+                alt="AgroConnect"
+                width={181}
+                height={164}
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
             <h2 className="font-serif font-bold text-lg text-slate-900 truncate">Driver Logistics Hub</h2>
           </div>
 
