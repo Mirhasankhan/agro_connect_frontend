@@ -57,6 +57,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/about" className="hover:text-emerald-400 transition-colors">
+                  About Us & Mission
+                </Link>
+              </li>
+              <li>
                 <Link href="/#benefits" className="hover:text-emerald-400 transition-colors">
                   Quality Standards
                 </Link>

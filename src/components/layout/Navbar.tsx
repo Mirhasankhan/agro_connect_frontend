@@ -8,7 +8,6 @@ import logo from "@/assets/logo.png";
 import {
   ShoppingCart,
   Heart,
-  Search,
   LogOut,
   Menu,
   X,
@@ -51,7 +50,6 @@ export default function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const isBuyerOrGuest = !displayUser || displayUser.role === "BUYER";
 
@@ -66,13 +64,7 @@ export default function Navbar() {
   const cartItemCount = cartData?.data?.length || 0;
   const wishlistItemCount = wishlistData?.data?.length || 0;
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setMobileMenuOpen(false);
-    }
-  };
+
 
   const handleLogout = () => {
     if (typeof document !== "undefined") {
@@ -126,16 +118,14 @@ export default function Navbar() {
               Marketplace
             </Link>
             <Link
-              href="/#for-whom"
-              className="text-slate-600 hover:text-emerald-700 transition-colors"
+              href="/about"
+              className={`transition-colors hover:text-emerald-700 ${
+                pathname === "/about"
+                  ? "text-emerald-600 font-semibold"
+                  : "text-slate-600"
+              }`}
             >
-              For Whom
-            </Link>
-            <Link
-              href="/#benefits"
-              className="text-slate-600 hover:text-emerald-700 transition-colors"
-            >
-              Benefits
+              About Us
             </Link>
             {isAuthenticated && user?.role === "BUYER" && (
               <Link
@@ -148,21 +138,6 @@ export default function Navbar() {
               </Link>
             )}
           </nav>
-
-          {/* Search Bar - Desktop */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="hidden md:flex items-center relative flex-1 max-w-xs xl:max-w-sm"
-          >
-            <input
-              type="text"
-              placeholder="Search bananas, rice, cassava..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-100/90 border border-slate-200 rounded-full py-2 pl-10 pr-4 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition-all"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
-          </form>
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-3">
@@ -392,45 +367,39 @@ export default function Navbar() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-4 shadow-md">
-          <form onSubmit={handleSearchSubmit} className="relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-10 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-emerald-600"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-          </form>
-
           <nav className="flex flex-col space-y-1 text-sm font-medium">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                pathname === "/"
+                  ? "text-emerald-700 font-semibold bg-emerald-50"
+                  : "text-slate-700 hover:bg-slate-50"
+              }`}
             >
               Home
             </Link>
             <Link
               href="/products"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                pathname.startsWith("/products")
+                  ? "text-emerald-700 font-semibold bg-emerald-50"
+                  : "text-slate-700 hover:bg-slate-50"
+              }`}
             >
               Marketplace
             </Link>
             <Link
-              href="/#for-whom"
+              href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
+              className={`px-3 py-2 rounded-lg transition-colors ${
+                pathname === "/about"
+                  ? "text-emerald-700 font-semibold bg-emerald-50"
+                  : "text-slate-700 hover:bg-slate-50"
+              }`}
             >
-              For Whom
-            </Link>
-            <Link
-              href="/#benefits"
-              onClick={() => setMobileMenuOpen(false)}
-              className="px-3 py-2 rounded-lg text-slate-700 hover:bg-slate-50"
-            >
-              Benefits
+              About Us
             </Link>
             {isAuthenticated && displayUser && (
               <div className="pt-2 border-t border-slate-100 space-y-1">

@@ -140,10 +140,7 @@ export default function ProductsPage() {
       {/* Header Banner */}
       <div className="bg-white border-b border-slate-200 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl space-y-2">
-            <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-emerald-800 font-bold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-              Direct Farmer Marketplace
-            </span>
+          <div className="max-w-2xl space-y-2">           
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
               Fresh Harvests & Farm Goods
             </h1>
@@ -349,19 +346,7 @@ export default function ProductsPage() {
                   className="form-input text-xs"
                 />
               </div>
-            </div>
-
-            {/* Bulk Discounts Note */}
-            <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-100 space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900">
-                <TrendingDown className="w-3.5 h-3.5 text-emerald-600" />
-                Tiered Wholesale
-              </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
-                Click into any product to access the interactive Volume Calculator and unlock lower
-                unit prices for bulk orders.
-              </p>
-            </div>
+            </div>           
           </aside>
 
           {/* Products Grid */}

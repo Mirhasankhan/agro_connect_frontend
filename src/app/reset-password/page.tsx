@@ -11,11 +11,9 @@ import { z } from "zod";
 import {
   ArrowLeft,
   Eye,
-  EyeOff,
-  KeyRound,
+  EyeOff,  
   Loader2,
-  ShieldCheck,
-  Sprout,
+  ShieldCheck,  
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -139,12 +137,10 @@ export default function ResetPasswordPage() {
               width={181}
               height={164}
               priority
-              className="h-16 w-auto object-contain"
+              className="h-24 w-auto object-contain"
             />
           </Link>
-          <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/20">
-            <KeyRound className="h-6 w-6" />
-          </div>
+         
           <h1 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
             {resetToken ? "Create new password" : "Enter verification code"}
           </h1>
