@@ -241,7 +241,7 @@ export default function ProductsPage() {
             {/* PRODUCT CATEGORIES FILTER - Dynamic from Backend API */}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 tracking-wider flex items-center gap-1.5">
                   <Layers className="w-3.5 h-3.5 text-emerald-600" />
                   Category
                 </label>
@@ -299,7 +299,7 @@ export default function ProductsPage() {
 
             {/* Selling Unit Filter */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
-              <label className="text-xs font-semibold text-slate-700 block uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-700 block tracking-wider">
                 Selling Unit
               </label>
               <select
@@ -321,7 +321,7 @@ export default function ProductsPage() {
 
             {/* Price Range Filter */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
-              <label className="text-xs font-semibold text-slate-700 block uppercase tracking-wider">
+              <label className="text-xs font-semibold text-slate-700 block tracking-wider">
                 Price Range (CFA)
               </label>
               <div className="grid grid-cols-2 gap-2">

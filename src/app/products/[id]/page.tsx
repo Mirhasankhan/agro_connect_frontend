@@ -16,6 +16,7 @@ import {
   AlertCircle,
   Loader2,
   MessageSquare,
+  Store,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import Navbar from "@/components/layout/Navbar";
@@ -229,7 +230,7 @@ export default function ProductDetailsPage() {
             )}
 
             {/* Certified Producer Card */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3 mt-6 shadow-sm">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 mt-6 shadow-sm">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
                   Farm Source
@@ -240,29 +241,58 @@ export default function ProductDetailsPage() {
                 </span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-lg font-serif font-bold text-emerald-800 shrink-0">
-                  {farmName.charAt(0).toUpperCase()}
+              {product.producer?.id ? (
+                <Link
+                  href={`/farms/${product.producer.id}`}
+                  className="flex items-center gap-3 group/farm hover:opacity-90 transition-opacity"
+                >
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-lg font-serif font-bold text-emerald-800 shrink-0 group-hover/farm:scale-105 transition-transform">
+                    {farmName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-serif font-bold text-slate-900 text-base leading-snug group-hover/farm:text-emerald-700 transition-colors truncate">
+                      {farmName}
+                    </h4>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      {city}
+                    </p>
+                  </div>
+                </Link>
+              ) : (
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center text-lg font-serif font-bold text-emerald-800 shrink-0">
+                    {farmName.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <h4 className="font-serif font-bold text-slate-900 text-base leading-snug">
+                      {farmName}
+                    </h4>
+                    <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                      {city}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-serif font-bold text-slate-900 text-base leading-snug">
-                    {farmName}
-                  </h4>
-                  <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                    {city}
-                  </p>
-                </div>
-              </div>
+              )}
 
               {product.producer?.id && (
-                <Link
-                  href={`/messages?userId=${product.producer.id}&userName=${encodeURIComponent(farmName)}&userRole=PRODUCER`}
-                  className="mt-3 w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-xs font-semibold text-emerald-700 border border-emerald-200 transition-colors shadow-sm"
-                >
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  Chat with Farmer / Inquire
-                </Link>
+                <div className="space-y-2 pt-1">
+                  <Link
+                    href={`/farms/${product.producer.id}`}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-semibold text-white transition-colors shadow-sm"
+                  >
+                    <Store className="w-3.5 h-3.5" />
+                    View Full Farm Profile & All Harvests
+                  </Link>
+                  <Link
+                    href={`/messages?userId=${product.producer.id}&userName=${encodeURIComponent(farmName)}&userRole=PRODUCER`}
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-xs font-semibold text-emerald-700 border border-emerald-200 transition-colors shadow-sm"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                    Chat with Farmer / Inquire
+                  </Link>
+                </div>
               )}
             </div>
           </div>

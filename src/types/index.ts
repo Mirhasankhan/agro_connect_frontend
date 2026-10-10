@@ -493,3 +493,53 @@ export interface TApiResponse<T> {
   pagination?: TPaginationMeta;
 }
 
+export interface TFarmReview {
+  rating: number;
+  comment: string;
+  buyer?: {
+    fullName: string;
+    profileImage?: string | null;
+    createdAt: string;
+  } | null;
+}
+
+export interface TFarmProduct {
+  id: string;
+  name: string;
+  imageUrls: string[];
+  pricePerUnit: number;
+  sellingUnit: SellingUnit;
+  avgRating?: number;
+  totalReviews?: number;
+  _count?: {
+    orderItems?: number;
+  };
+  reviews?: TFarmReview[];
+}
+
+export interface TProducerFarmData {
+  id: string;
+  city?: string | null;
+  region?: string | null;
+  profileImage?: string | null;
+  fullName: string;
+  address?: string | null;
+  phoneNumber?: string | null;
+  _count?: {
+    products?: number;
+  };
+  producerProfile?: {
+    farmName?: string | null;
+    companyName?: string | null;
+    farmLocation?: string | null;
+    farmPhotoUrl?: string | null;
+    farmSize?: number | null;
+    producerType?: ProducerType | null;
+  } | null;
+  products?: TFarmProduct[];
+}
+
+export interface TProducerFarmInfo {
+  producer: TProducerFarmData;
+}
+

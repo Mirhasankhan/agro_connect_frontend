@@ -1,5 +1,11 @@
 import { baseApi } from "../../api/baseApi";
-import { TApiResponse, TProduct, TPaginationMeta, SellingUnit } from "@/types";
+import {
+  TApiResponse,
+  TProduct,
+  TPaginationMeta,
+  SellingUnit,
+  TProducerFarmInfo,
+} from "@/types";
 
 export interface ProductQueryParams {
   search?: string;
@@ -102,6 +108,14 @@ const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Product"],
     }),
+
+    getFarmInfo: builder.query<TApiResponse<TProducerFarmInfo>, string>({
+      query: (id) => ({
+        url: `/product/producer-info/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Product", id: `farm-${id}` }],
+    }),
   }),
 });
 
@@ -113,4 +127,5 @@ export const {
   useUpdateProductMutation,
   useUpdateProductImagesMutation,
   useAddPricingTierMutation,
+  useGetFarmInfoQuery,
 } = productApi;

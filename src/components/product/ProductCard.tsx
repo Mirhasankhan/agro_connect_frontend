@@ -8,8 +8,7 @@ import {
   Heart,
   Star,
   MapPin,
-  CheckCircle2,
-  TrendingDown,
+  CheckCircle2,  
   Loader2,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -47,22 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const city = product.producer?.producerProfile?.city || "Ivory Coast";
 
-  const hasTiers =
-    (product.pricingTiers && product.pricingTiers.length > 0) ||
-    Boolean(product._count?.pricingTiers && product._count.pricingTiers > 0);
 
-  // Compute best bulk discount percentage if tiers are loaded
-  let maxDiscountPercent = 0;
-  if (product.pricingTiers && product.pricingTiers.length > 0) {
-    const minTierPrice = Math.min(
-      ...product.pricingTiers.map((t) => Number(t.pricePerUnit))
-    );
-    if (minTierPrice < product.pricePerUnit) {
-      maxDiscountPercent = Math.round(
-        ((product.pricePerUnit - minTierPrice) / product.pricePerUnit) * 100
-      );
-    }
-  }
 
   const handleQuickAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -122,15 +106,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.category.name}
             </span>
           )}
-
-          {hasTiers && (
-            <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-bold flex items-center gap-1 shadow-sm">
-              <TrendingDown className="w-3 h-3 text-amber-600" />
-              {maxDiscountPercent > 0
-                ? `Bulk: Up to -${maxDiscountPercent}%`
-                : "Tier Discounts"}
-            </span>
-          )}
+          
         </div>
 
         {/* Wishlist Button */}
@@ -154,10 +130,22 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div>
           {/* Producer & Location */}
           <div className="flex items-center justify-between text-[11px] text-slate-500 mb-1.5">
-            <span className="flex items-center gap-1 text-emerald-700 font-medium truncate max-w-[140px]">
-              <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
-              {farmName}
-            </span>
+            {product.producer?.id ? (
+              <Link
+                href={`/farms/${product.producer.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-1 text-emerald-700 hover:text-emerald-800 hover:underline font-medium truncate max-w-[140px] transition-colors"
+                title={`View farm info: ${farmName}`}
+              >
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                {farmName}
+              </Link>
+            ) : (
+              <span className="flex items-center gap-1 text-emerald-700 font-medium truncate max-w-[140px]">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                {farmName}
+              </span>
+            )}
             <span className="flex items-center gap-0.5 shrink-0 text-slate-400">
               <MapPin className="w-3 h-3" />
               {city}
