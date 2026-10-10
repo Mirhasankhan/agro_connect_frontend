@@ -9,6 +9,7 @@ import {
 import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
 import Pagination from "@/utils/pagination";
+import StripeConnectCard from "@/components/payment/StripeConnectCard";
 
 export default function ProducerEarningsPage() {
   const [filterTransferred, setFilterTransferred] = useState<string>("ALL");
@@ -46,6 +47,9 @@ export default function ProducerEarningsPage() {
           Track sales revenue, completed bank transfers, and escrow balances.
         </p>
       </div>
+
+      {/* Stripe Connect Account Status */}
+      <StripeConnectCard userRole="PRODUCER" />
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

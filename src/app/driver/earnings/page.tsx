@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import {
   DollarSign,
   CheckCircle2,
-  Clock,
-  Truck,
+  Clock,  
 } from "lucide-react";
 import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 import Pagination from "@/utils/pagination";
+import StripeConnectCard from "@/components/payment/StripeConnectCard";
 
 export default function DriverEarningsPage() {
   const [filterTransferred, setFilterTransferred] = useState<string>("ALL");
@@ -48,6 +48,9 @@ export default function DriverEarningsPage() {
           balances.
         </p>
       </div>
+
+      {/* Stripe Connect Account Status */}
+      <StripeConnectCard userRole="DRIVER" />
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -92,20 +95,7 @@ export default function DriverEarningsPage() {
           </p>
           <p className="text-[11px] text-slate-500">Released automatically upon buyer OTP</p>
         </div>
-      </div>
-
-      {/* Driver Security Callout */}
-      <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-slate-700 flex items-start gap-3">
-        <Truck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-        <div className="space-y-1">
-          <h4 className="font-bold text-slate-900 text-sm">Automated Trip Compensation</h4>
-          <p className="text-slate-600 leading-relaxed text-xs">
-            Every delivery assignment includes a dedicated delivery charge. When you verify the
-            buyer&apos;s 6-digit OTP code at handover, the fee is instantly credited to your driver
-            earnings and scheduled for disbursement.
-          </p>
-        </div>
-      </div>
+      </div>   
 
       {/* Records Table */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">

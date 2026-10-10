@@ -6,6 +6,7 @@ import {
   TPaginationMeta,
   TEarningChartPoint,
   TEarningChartType,
+  TStripeAccountStatus,
 } from "@/types";
 
 export interface PaymentQueryParams {
@@ -72,6 +73,33 @@ const paymentApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Payment"],
     }),
+
+    getStripeAccountStatus: builder.query<
+      TApiResponse<TStripeAccountStatus>,
+      void
+    >({
+      query: () => ({
+        url: "/payment/stripe-account-status",
+        method: "GET",
+      }),
+      providesTags: ["Payment"],
+    }),
+
+    connectStripe: builder.mutation<
+      TApiResponse<{
+        url: string;
+        stripeAccountId: string;
+        alreadyEnabled?: boolean;
+      }>,
+      { returnUrl?: string } | void
+    >({
+      query: (body) => ({
+        url: "/payment/connect-stripe",
+        method: "POST",
+        body: body || {},
+      }),
+      invalidatesTags: ["Payment"],
+    }),
   }),
 });
 
@@ -80,5 +108,7 @@ export const {
   useGetDriverWisePaymentsQuery,
   useGetProducerEarningChartQuery,
   useGetDriverEarningChartQuery,
+  useGetStripeAccountStatusQuery,
+  useConnectStripeMutation,
 } = paymentApi;
 

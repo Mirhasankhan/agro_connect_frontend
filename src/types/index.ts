@@ -420,6 +420,16 @@ export interface TDriverEarning {
   };
 }
 
+export interface TStripeAccountStatus {
+  hasStripeAccount: boolean;
+  stripeAccountId: string | null;
+  accountId?: string | null;
+  detailsSubmitted: boolean;
+  payoutsEnabled: boolean;
+  chargesEnabled: boolean;
+  isEnabled: boolean;
+}
+
 export interface TDelivery {
   id: string;
   orderId: string;
