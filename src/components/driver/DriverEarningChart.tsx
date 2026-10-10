@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -103,7 +103,7 @@ export default function DriverEarningChart() {
     return chartPoints.map((item) => item.earning || 0);
   }, [chartPoints]);
 
-  const formatPointLabel = (index: number) => {
+  const formatPointLabel = useCallback((index: number) => {
     const raw = chartPoints[index];
     if (!raw) return "";
     if (timeframe === "weekly" && raw.day) {
@@ -113,7 +113,7 @@ export default function DriverEarningChart() {
       return `${MONTH_FULL_NAMES[raw.month] || raw.month} ${new Date().getFullYear()}`;
     }
     return labels[index] || "";
-  };
+  }, [chartPoints, timeframe, labels]);
 
   const lineData: ChartData<"line"> = useMemo(() => {
     return {
@@ -247,7 +247,7 @@ export default function DriverEarningChart() {
         },
       },
     };
-  }, [timeframe, chartPoints]);
+  }, [formatPointLabel]);
 
   const lineOptions: ChartOptions<"line"> = commonOptions as ChartOptions<"line">;
   const barOptions: ChartOptions<"bar"> = commonOptions as ChartOptions<"bar">;

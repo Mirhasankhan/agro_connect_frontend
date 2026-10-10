@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
 import {
   TrendingUp,
@@ -89,18 +89,6 @@ export default function ProducerEarningChart() {
     return chartPoints.reduce((acc, curr) => acc + (curr.earning || 0), 0);
   }, [chartPoints]);
 
-  const peakPoint = useMemo(() => {
-    if (!chartPoints.length) return null;
-    let max = chartPoints[0];
-    for (const point of chartPoints) {
-      if ((point.earning || 0) > (max.earning || 0)) {
-        max = point;
-      }
-    }
-    return max;
-  }, [chartPoints]);
-
-
   // Prepare labels and values
   const labels = useMemo(() => {
     return chartPoints.map((item) => {
@@ -115,7 +103,7 @@ export default function ProducerEarningChart() {
     return chartPoints.map((item) => item.earning || 0);
   }, [chartPoints]);
 
-  const formatPointLabel = (index: number) => {
+  const formatPointLabel = useCallback((index: number) => {
     const raw = chartPoints[index];
     if (!raw) return "";
     if (timeframe === "weekly" && raw.day) {
@@ -125,7 +113,7 @@ export default function ProducerEarningChart() {
       return `${MONTH_FULL_NAMES[raw.month] || raw.month} ${new Date().getFullYear()}`;
     }
     return labels[index] || "";
-  };
+  }, [chartPoints, timeframe, labels]);
 
   const lineData: ChartData<"line"> = useMemo(() => {
     return {
@@ -259,21 +247,10 @@ export default function ProducerEarningChart() {
         },
       },
     };
-  }, [timeframe, chartPoints]);
+  }, [formatPointLabel]);
 
   const lineOptions: ChartOptions<"line"> = commonOptions as ChartOptions<"line">;
   const barOptions: ChartOptions<"bar"> = commonOptions as ChartOptions<"bar">;
-
-  const peakLabel = useMemo(() => {
-    if (!peakPoint || (peakPoint.earning || 0) <= 0) return "No sales yet";
-    if (timeframe === "weekly" && peakPoint.day) {
-      return DAY_FULL_NAMES[peakPoint.day.toLowerCase()] || peakPoint.day;
-    }
-    if (timeframe === "monthly" && peakPoint.month) {
-      return MONTH_FULL_NAMES[peakPoint.month] || peakPoint.month;
-    }
-    return "";
-  }, [peakPoint, timeframe]);
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-6 shadow-sm">
