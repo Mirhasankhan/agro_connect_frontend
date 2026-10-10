@@ -8,9 +8,6 @@ import {
   SlidersHorizontal,
   RotateCcw,
   Package,
-  ChevronLeft,
-  ChevronRight,
-  TrendingDown,
   Layers,
   X,
 } from "lucide-react";

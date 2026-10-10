@@ -49,7 +49,7 @@ export default function DriverDeliveriesPage() {
   } = useGetDriverWiseDeliveriesQuery();
   const [markDeliveryStatus, { isLoading: isUpdatingStatus }] =
     useMarkDeliveryStatusMutation();
-  const [sendOtpMutation, { isLoading: isSendingOtp }] =
+  const [sendOtpMutation] =
     useSendDeliveryCompletionOtpMutation();
 
   const [otpModalData, setOtpModalData] = useState<{

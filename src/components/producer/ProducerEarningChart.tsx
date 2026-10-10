@@ -5,12 +5,8 @@ import Link from "next/link";
 import {
   TrendingUp,
   BarChart3,
-  LineChart,
-  Calendar,
-  DollarSign,
+  LineChart,  
   ArrowUpRight,
-  ShieldAlert,
-  Sparkles,
   Info,
 } from "lucide-react";
 import {
@@ -104,10 +100,6 @@ export default function ProducerEarningChart() {
     return max;
   }, [chartPoints]);
 
-  const avgEarning = useMemo(() => {
-    if (!chartPoints.length) return 0;
-    return Math.round(totalEarning / chartPoints.length);
-  }, [chartPoints, totalEarning]);
 
   // Prepare labels and values
   const labels = useMemo(() => {

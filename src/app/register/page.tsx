@@ -11,8 +11,7 @@ import { z } from "zod";
 import {
   Eye,
   EyeOff,
-  Loader2,
-  Sprout,
+  Loader2,  
   ShoppingBag,
   Tractor,
   Truck,

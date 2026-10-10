@@ -24,8 +24,7 @@ import {
   ExternalLink,
   Save,
   RotateCcw,
-  Image as ImageIcon,
-  Info,  
+  Image as ImageIcon,    
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";

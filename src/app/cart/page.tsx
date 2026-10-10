@@ -22,7 +22,7 @@ import {
   useRemoveFromCartMutation,
 } from "@/redux/features/shopping/shoppingApi";
 import { useAppSelector } from "@/redux/hooks";
-import { formatCurrency, formatUnit } from "@/utils/formatters";
+import { formatCurrency, formatUnit, getApplicableTierPrice } from "@/utils/formatters";
 
 const DELIVERY_CHARGE = 50; // Fixed delivery charge in XOF / FCFA
 
@@ -55,9 +55,14 @@ export default function CartPage() {
     }
   };
 
-  // Subtotal calculation
+  // Subtotal calculation based on pricing tiers
   const subtotal = cartItems.reduce((acc, item) => {
-    const unitPrice = item.product?.pricePerUnit || 0;
+    const basePrice = item.product?.pricePerUnit || 0;
+    const { unitPrice } = getApplicableTierPrice(
+      basePrice,
+      item.quantity,
+      item.product?.pricingTiers
+    );
     return acc + unitPrice * item.quantity;
   }, 0);
 
@@ -130,7 +135,14 @@ export default function CartPage() {
                 const img =
                   item.product?.imageUrls?.[0] ||
                   "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&q=80";
-                const lineTotal = (item.product?.pricePerUnit || 0) * item.quantity;
+
+                const basePrice = item.product?.pricePerUnit || 0;
+                const { unitPrice: effectiveUnitPrice, appliedTier } = getApplicableTierPrice(
+                  basePrice,
+                  item.quantity,
+                  item.product?.pricingTiers
+                );
+                const lineTotal = effectiveUnitPrice * item.quantity;
 
                 return (
                   <div
@@ -155,13 +167,32 @@ export default function CartPage() {
                         >
                           {item.product?.name}
                         </Link>
-                        <div className="text-xs text-slate-500">
-                          Unit Price:{" "}
-                          <span className="font-mono text-emerald-600 font-semibold">
-                            {formatCurrency(item.product?.pricePerUnit || 0)}
-                          </span>
-                          {item.product?.sellingUnit && (
-                            <span> / {formatUnit(item.product.sellingUnit)}</span>
+                        <div className="text-xs text-slate-500 flex flex-wrap items-center gap-1.5">
+                          <span>Unit Price:</span>
+                          {appliedTier ? (
+                            <>
+                              <span className="line-through text-slate-400 font-mono">
+                                {formatCurrency(basePrice)}
+                              </span>
+                              <span className="font-mono text-emerald-700 font-bold">
+                                {formatCurrency(effectiveUnitPrice)}
+                              </span>
+                              {item.product?.sellingUnit && (
+                                <span>/ {formatUnit(item.product.sellingUnit)}</span>
+                              )}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-semibold">
+                                Tier (≥ {appliedTier.quantity} {formatUnit(item.product?.sellingUnit)})
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="font-mono text-emerald-600 font-semibold">
+                                {formatCurrency(basePrice)}
+                              </span>
+                              {item.product?.sellingUnit && (
+                                <span>/ {formatUnit(item.product.sellingUnit)}</span>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
@@ -194,9 +225,14 @@ export default function CartPage() {
 
                       {/* Line Subtotal */}
                       <div className="text-right min-w-[90px]">
-                        <span className="font-mono font-bold text-emerald-600 text-base">
+                        <span className="font-mono font-bold text-emerald-600 text-base block">
                           {formatCurrency(lineTotal)}
                         </span>
+                        {appliedTier && (
+                          <span className="text-[10px] text-slate-400 line-through block font-mono">
+                            {formatCurrency(basePrice * item.quantity)}
+                          </span>
+                        )}
                       </div>
 
                       {/* Remove Button */}

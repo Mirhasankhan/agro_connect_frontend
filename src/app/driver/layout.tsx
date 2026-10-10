@@ -13,8 +13,7 @@ import {
   LogOut,
   Menu,
   X,  
-  AlertTriangle,
-  Clock,
+  AlertTriangle,  
   MessageSquare,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";

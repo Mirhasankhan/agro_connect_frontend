@@ -27,7 +27,7 @@ import {
 } from "@/redux/features/shipping/shippingApi";
 import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
 import { useAppSelector } from "@/redux/hooks";
-import { formatCurrency, formatUnit } from "@/utils/formatters";
+import { formatCurrency, formatUnit, getApplicableTierPrice } from "@/utils/formatters";
 
 const DELIVERY_CHARGE = 50;
 
@@ -128,7 +128,12 @@ export default function CheckoutPage() {
   };
 
   const subtotal = cartItems.reduce((acc, item) => {
-    const unitPrice = item.product?.pricePerUnit || 0;
+    const basePrice = item.product?.pricePerUnit || 0;
+    const { unitPrice } = getApplicableTierPrice(
+      basePrice,
+      item.quantity,
+      item.product?.pricingTiers
+    );
     return acc + unitPrice * item.quantity;
   }, 0);
 
@@ -367,20 +372,42 @@ export default function CheckoutPage() {
 
               {/* Items List */}
               <div className="max-h-60 overflow-y-auto space-y-3 pr-1 border-b border-slate-100 pb-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center text-xs">
-                    <div>
-                      <p className="font-bold text-slate-900 line-clamp-1">{item.product?.name}</p>
-                      <p className="text-slate-500">
-                        Qty: {item.quantity}{" "}
-                        {item.product?.sellingUnit && formatUnit(item.product.sellingUnit)}
-                      </p>
+                {cartItems.map((item) => {
+                  const basePrice = item.product?.pricePerUnit || 0;
+                  const { unitPrice, appliedTier } = getApplicableTierPrice(
+                    basePrice,
+                    item.quantity,
+                    item.product?.pricingTiers
+                  );
+                  const lineTotal = unitPrice * item.quantity;
+
+                  return (
+                    <div key={item.id} className="flex justify-between items-start text-xs">
+                      <div className="space-y-0.5">
+                        <p className="font-bold text-slate-900 line-clamp-1">{item.product?.name}</p>
+                        <p className="text-slate-500">
+                          Qty: {item.quantity}{" "}
+                          {item.product?.sellingUnit && formatUnit(item.product.sellingUnit)}
+                          {appliedTier && (
+                            <span className="ml-1.5 text-emerald-700 font-semibold">
+                              (Tier: {appliedTier.quantity}+ @ {formatCurrency(unitPrice)})
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-mono font-semibold text-emerald-600 block">
+                          {formatCurrency(lineTotal)}
+                        </span>
+                        {appliedTier && (
+                          <span className="text-[10px] text-slate-400 line-through block font-mono">
+                            {formatCurrency(basePrice * item.quantity)}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <span className="font-mono font-semibold text-emerald-600">
-                      {formatCurrency((item.product?.pricePerUnit || 0) * item.quantity)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Calculations */}

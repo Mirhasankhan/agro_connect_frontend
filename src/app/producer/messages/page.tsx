@@ -13,8 +13,7 @@ import {
   Search,
   Users,
   Loader2,
-  Clock,
-  Sparkles,
+  Clock,  
 } from "lucide-react";
 
 function ProducerMessagesContent() {

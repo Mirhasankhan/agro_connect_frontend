@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Sprout, ShieldCheck, ArrowRight } from "lucide-react";
+import { Loader2, ShieldCheck, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { useVerifyRegistrationMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";

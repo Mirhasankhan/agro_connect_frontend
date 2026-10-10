@@ -8,8 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Sprout,
+import {  
   Truck,
   UploadCloud,
   FileCheck,
