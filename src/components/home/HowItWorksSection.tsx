@@ -11,8 +11,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Sprout,
-  KeyRound,
-  Sparkles,
+  KeyRound,  
 } from "lucide-react";
 
 export default function HowItWorksSection() {
@@ -105,11 +104,7 @@ export default function HowItWorksSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Simple, Fair & Protected</span>
-          </div>
+        <div className="text-center max-w-2xl mx-auto mb-12">     
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
             How Agro Connect Works
           </h2>

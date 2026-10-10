@@ -16,8 +16,7 @@ import { OrderStatus } from "@/types";
 import Pagination from "@/utils/pagination";
 
 const STATUS_TABS: { label: string; value: OrderStatus | "ALL" }[] = [
-  { label: "All Orders", value: "ALL" },
-  { label: "Pending", value: "Pending" },
+  { label: "All Orders", value: "ALL" }, 
   { label: "Processing", value: "Active" },
   { label: "In Transit", value: "Shipped" },
   { label: "Delivered", value: "Delivered" },
@@ -71,7 +70,7 @@ export default function BuyerOrdersPage() {
       {/* Header */}
       <div className="bg-white border-b border-slate-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+          <span className="text-xs tracking-widest text-emerald-700 font-bold">
             Account Management
           </span>
           <h1 className="font-serif text-3xl font-bold text-slate-900 mt-1">My Orders & Deliveries</h1>
