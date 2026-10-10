@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ShoppingBag,
   Calendar,
@@ -11,6 +12,7 @@ import {
   PackageCheck,
   Search,
   MapPin,
+  Eye,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -128,7 +130,7 @@ export default function ProducerOrdersPage() {
                   <th className="py-3.5 px-4">Quantity</th>
                   <th className="py-3.5 px-4">Total Amount</th>
                   <th className="py-3.5 px-4">Status</th>
-                  <th className="py-3.5 px-4 text-right">Dispatch Action</th>
+                  <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -141,9 +143,12 @@ export default function ProducerOrdersPage() {
                     <tr key={item.id} className="hover:bg-slate-50/80 transition-colors">
                       {/* Order ref + Date */}
                       <td className="py-3.5 px-4">
-                        <span className="font-mono font-bold text-slate-900 text-xs block">
+                        <Link
+                          href={`/producer/orders/${item.id}`}
+                          className="font-mono font-bold text-slate-900 hover:text-emerald-700 hover:underline text-xs block transition-colors"
+                        >
                           #{item.order?.orderId || item.id.slice(-6).toUpperCase()}
-                        </span>
+                        </Link>
                         <span className="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
                           <Calendar className="w-3 h-3" />
                           {item.createdAt ? formatDate(item.createdAt) : "Recent"}
@@ -152,8 +157,11 @@ export default function ProducerOrdersPage() {
 
                       {/* Harvest image + name */}
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                        <Link
+                          href={`/producer/orders/${item.id}`}
+                          className="flex items-center gap-3 group"
+                        >
+                          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 group-hover:border-emerald-500 transition-colors">
                             <Image
                               src={img}
                               alt={item.productName || "Produce"}
@@ -161,10 +169,10 @@ export default function ProducerOrdersPage() {
                               className="object-cover"
                             />
                           </div>
-                          <span className="font-serif font-bold text-slate-900 text-sm">
+                          <span className="font-serif font-bold text-slate-900 text-sm group-hover:text-emerald-700 transition-colors">
                             {item.productName || "Harvest Produce"}
                           </span>
-                        </div>
+                        </Link>
                       </td>
 
                       {/* Customer */}
@@ -228,25 +236,28 @@ export default function ProducerOrdersPage() {
                         </span>
                       </td>
 
-                      {/* Action */}
+                      {/* Actions */}
                       <td className="py-3.5 px-4 text-right">
-                        {item.status === "Pending" ? (
-                          <button
-                            type="button"
-                            onClick={() => handleMarkSentToHub(item.id, item.productName || "Product")}
-                            disabled={isMarkingHub}
-                            className="btn-primary text-xs py-1.5 px-3.5 inline-flex items-center gap-1.5 shadow-sm"
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/producer/orders/${item.id}`}
+                            className="text-xs py-1.5 px-3 rounded-xl border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300 hover:bg-emerald-50/50 transition-all font-semibold inline-flex items-center gap-1.5 shrink-0"
                           >
-                            <PackageCheck className="w-3.5 h-3.5" />
-                            Mark Sent to Hub
-                          </button>
-                        ) : (
-                          <span className="text-[11px] text-slate-400 italic">
-                            {item.status === "SentToHub"
-                              ? "Awaiting driver pickup"
-                              : "Delivered to buyer"}
-                          </span>
-                        )}
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Details</span>
+                          </Link>
+                          {item.status === "Pending" && (
+                            <button
+                              type="button"
+                              onClick={() => handleMarkSentToHub(item.id, item.productName || "Product")}
+                              disabled={isMarkingHub}
+                              className="btn-primary text-xs py-1.5 px-3.5 inline-flex items-center gap-1.5 shadow-sm shrink-0"
+                            >
+                              <PackageCheck className="w-3.5 h-3.5" />
+                              <span>Mark Sent to Hub</span>
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

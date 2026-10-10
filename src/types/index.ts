@@ -285,6 +285,51 @@ export interface TOrderItem {
   };
 }
 
+export interface TProducerOrderItemDetails {
+  id: string;
+  productName: string;
+  createdAt: string;
+  sellingUnit: SellingUnit;
+  quantity: number;
+  subtotal: number;
+  unitPrice: number;
+  isReviewed: boolean;
+  status: ItemStatus;
+  product?: {
+    imageUrls: string[];
+  } | null;
+  review?: {
+    id: string;
+    rating: number;
+    comment: string;
+    createdAt: string;
+  } | null;
+  order: {
+    orderId: string;
+    customer: {
+      fullName: string;
+      profileImage?: string | null;
+      city?: string | null;
+      address?: string | null;
+    };
+    deliveries?: Array<{
+      status: DeliveryStatus;
+      createdAt: string;
+      updatedAt: string;
+      driver?: {
+        fullName: string;
+        address?: string | null;
+        profileImage?: string | null;
+        driverProfile?: {
+          id: string;
+          vehicleType: string;
+          registrationNumber?: string | null;
+        } | null;
+      } | null;
+    }>;
+  };
+}
+
 export interface TOrderDelivery {
   id: string;
   orderId?: string;

@@ -8,6 +8,7 @@ import {
   PaymentStatus,
   TDriverDeliverySummary,
   TDriverDeliveryDetails,
+  TProducerOrderItemDetails,
 } from "@/types";
 
 export interface OrderQueryParams {
@@ -62,6 +63,17 @@ const orderApi = baseApi.injectEndpoints({
         params: params || {},
       }),
       providesTags: ["Order"],
+    }),
+
+    getOrderItemDetailsForProducer: builder.query<
+      TApiResponse<TProducerOrderItemDetails>,
+      string
+    >({
+      query: (id) => ({
+        url: `/order/item/details/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Order", id: `item-${id}` }, "Order"],
     }),
 
     getDriverWiseDeliveries: builder.query<
@@ -140,6 +152,7 @@ export const {
   useGetUserOrdersQuery,
   useGetOrderDetailsQuery,
   useGetProducerWiseOrdersQuery,
+  useGetOrderItemDetailsForProducerQuery,
   useGetDriverWiseDeliveriesQuery,
   useGetDriverDeliveryDetailsQuery,
   useMarkOrderItemSentToHubMutation,
