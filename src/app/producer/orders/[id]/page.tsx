@@ -12,15 +12,13 @@ import {
   Clock,
   Truck,
   PackageCheck,
-  Star,
-  MessageSquare,
+  Star, 
   AlertCircle,
   User,
   Car,
   ShieldCheck,
   ShoppingBag,
   Boxes,
-  FileText,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -100,10 +98,6 @@ export default function ProducerOrderItemDetailsPage() {
       : null;
   const driver = latestDelivery?.driver;
   const driverProfile = driver?.driverProfile;
-
-  const imageUrl =
-    item.product?.imageUrls?.[0] ||
-    "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80";
 
   // Timeline stage calculation
   const isPending = item.status === "Pending";
@@ -238,68 +232,7 @@ export default function ProducerOrderItemDetailsPage() {
         {/* Left Column (2 Cols) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Produce & Harvest Details Card */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
-            <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-emerald-600" />
-              <span>Harvest Produce Information</span>
-            </h2>
-
-            <div className="flex flex-col sm:flex-row items-start gap-5">
-              <div className="relative w-full sm:w-36 h-36 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0">
-                <Image
-                  src={imageUrl}
-                  alt={item.productName || "Produce"}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-
-              <div className="flex-1 space-y-3">
-                <div>
-                  <h3 className="font-serif text-xl font-bold text-slate-900">
-                    {item.productName}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Selling Unit:{" "}
-                    <span className="font-semibold text-slate-700">
-                      {item.sellingUnit ? formatUnit(item.sellingUnit) : "Standard"}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 grid grid-cols-3 gap-2 text-center text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">
-                      Quantity
-                    </span>
-                    <span className="font-mono font-bold text-slate-800 text-sm">
-                      {item.quantity} {item.sellingUnit && formatUnit(item.sellingUnit)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">
-                      Unit Rate
-                    </span>
-                    <span className="font-mono font-bold text-slate-800 text-sm">
-                      {formatCurrency(item.unitPrice)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">
-                      Gross Total
-                    </span>
-                    <span className="font-mono font-bold text-emerald-700 text-sm">
-                      {formatCurrency(item.subtotal)}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-slate-400 italic">
-                  * Pricing calculation based on verified harvest weights and selected pricing tiers.
-                </p>
-              </div>
-            </div>
-          </div>
+      
 
           {/* Fulfillment & Delivery Logistics Card */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
@@ -453,56 +386,7 @@ export default function ProducerOrderItemDetailsPage() {
               </div>
             )}
           </div>
-
-          {/* Customer Feedback & Review Card */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
-              <Star className="w-5 h-5 text-amber-500" />
-              <span>Buyer Review & Feedback</span>
-            </h2>
-
-            {item.review ? (
-              <div className="bg-amber-50/40 border border-amber-200 rounded-xl p-4 space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`w-4 h-4 ${
-                          star <= (item.review?.rating || 0)
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-slate-300"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-xs font-bold text-amber-800 ml-1.5">
-                      {item.review.rating} / 5
-                    </span>
-                  </div>
-                  {item.review.createdAt && (
-                    <span className="text-[10px] text-slate-400">
-                      {formatDate(item.review.createdAt)}
-                    </span>
-                  )}
-                </div>
-                {item.review.comment ? (
-                  <p className="text-xs text-slate-700 italic mt-2">
-                    &ldquo;{item.review.comment}&rdquo;
-                  </p>
-                ) : (
-                  <p className="text-xs text-slate-400 italic">No written comment provided.</p>
-                )}
-              </div>
-            ) : (
-              <div className="p-4 border border-slate-200 border-dashed rounded-xl text-center text-xs text-slate-400">
-                <Star className="w-6 h-6 text-slate-300 mx-auto mb-1.5" />
-                <p className="font-semibold text-slate-600">No Review Submitted Yet</p>
-                <p className="text-[11px] mt-0.5">
-                  The buyer has not reviewed this order item yet. Reviews are unlocked once harvest crates are delivered.
-                </p>
-              </div>
-            )}
-          </div>
+         
         </div>
 
         {/* Right Sidebar (1 Col) */}
@@ -551,66 +435,58 @@ export default function ProducerOrderItemDetailsPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </div>         
+          </div> 
 
-            <Link
-              href="/producer/messages"
-              className="w-full mt-2 btn-secondary text-xs py-2 px-3 inline-flex items-center justify-center gap-2"
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              <span>Contact Buyer via Chat</span>
-            </Link>
-          </div>
-
-          {/* Order Details & Summary Card */}
+           {/* Customer Feedback & Review Card */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-            <h2 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-              <FileText className="w-4 h-4 text-emerald-600" />
-              <span>Order Summary</span>
+            <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Star className="w-5 h-5 text-amber-500" />
+              <span>Buyer Review & Feedback</span>
             </h2>
 
-            <div className="space-y-2.5 text-xs">
-              <div className="flex items-center justify-between text-slate-600">
-                <span>Order Reference:</span>
-                <span className="font-mono font-bold text-slate-900">
-                  #{item.order?.orderId || item.id.slice(-6).toUpperCase()}
-                </span>
+            {item.review ? (
+              <div className="bg-amber-50/40 border border-amber-200 rounded-xl p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-4 h-4 ${
+                          star <= (item.review?.rating || 0)
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-slate-300"
+                        }`}
+                      />
+                    ))}
+                    <span className="text-xs font-bold text-amber-800 ml-1.5">
+                      {item.review.rating} / 5
+                    </span>
+                  </div>
+                  {item.review.createdAt && (
+                    <span className="text-[10px] text-slate-400">
+                      {formatDate(item.review.createdAt)}
+                    </span>
+                  )}
+                </div>
+                {item.review.comment ? (
+                  <p className="text-xs text-slate-700 italic mt-2">
+                    &ldquo;{item.review.comment}&rdquo;
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-400 italic">No written comment provided.</p>
+                )}
               </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span>Order Item ID:</span>
-                <span className="font-mono text-[11px] text-slate-500 truncate max-w-[130px]" title={item.id}>
-                  {item.id}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span>Placed Date:</span>
-                <span className="font-medium text-slate-800">
-                  {item.createdAt ? formatDate(item.createdAt) : "Recent"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span>Fulfillment Status:</span>
-                <span className="font-semibold text-slate-800">{item.status}</span>
-              </div>
-
-              <div className="pt-3 border-t border-slate-200 flex items-center justify-between">
-                <span className="font-bold text-slate-900 text-sm">Producer Subtotal:</span>
-                <span className="font-mono font-bold text-emerald-700 text-base">
-                  {formatCurrency(item.subtotal)}
-                </span>
-              </div>
-            </div>
-
-            <div className="p-3 bg-emerald-50/70 border border-emerald-200/60 rounded-xl flex items-start gap-2.5 text-[11px] text-emerald-800">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-              <div>
-                <p className="font-semibold">Guaranteed Payout</p>
-                <p className="text-emerald-700/80 mt-0.5">
-                  Funds for this order are held in escrow and released directly to your Producer Payout Balance once delivered.
+            ) : (
+              <div className="p-4 border border-slate-200 border-dashed rounded-xl text-center text-xs text-slate-400">
+                <Star className="w-6 h-6 text-slate-300 mx-auto mb-1.5" />
+                <p className="font-semibold text-slate-600">No Review Submitted Yet</p>
+                <p className="text-[11px] mt-0.5">
+                  The buyer has not reviewed this order item yet. Reviews are unlocked once harvest crates are delivered.
                 </p>
               </div>
-            </div>
-          </div>
+            )}
+          </div>      
         </div>
       </div>
     </div>

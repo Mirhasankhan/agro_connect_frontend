@@ -14,8 +14,7 @@ import {
   LogOut,
   Menu,
   X,  
-  AlertTriangle,
-  Clock,
+  AlertTriangle,  
   MessageSquare,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -271,25 +270,7 @@ export default function ProducerLayout({
             </Link>
           </div>
         </header>
-
-        {/* Global Verification Status Banner */}
-        {verificationStatus === "Pending" && (
-          <div className="bg-amber-50 border-b border-amber-200 px-4 sm:px-8 py-3 text-xs text-amber-800 flex items-center justify-between gap-3 shrink-0">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>
-                <strong>Verification in progress:</strong> Your farm documents are being reviewed
-                by Agro Connect admins. Adding new harvests is disabled until your account is Accepted.
-              </span>
-            </div>
-            <Link
-              href="/producer/profile"
-              className="text-amber-800 underline font-semibold hover:text-amber-950 shrink-0 hidden sm:inline"
-            >
-              Check documents
-            </Link>
-          </div>
-        )}
+ 
 
         {verificationStatus === "Rejected" && (
           <div className="bg-red-50 border-b border-red-200 px-4 sm:px-8 py-3 text-xs text-red-800 flex items-center justify-between gap-3 shrink-0">

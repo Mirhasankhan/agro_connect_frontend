@@ -320,18 +320,7 @@ export default function ProducerProfilePage() {
         </div>
       </div>
 
-      {/* Global Status Banner (Pending or Rejected) */}
-      {verificationStatus === "Pending" && (
-        <div className="p-4 sm:p-5 rounded-2xl border border-amber-200 bg-amber-50/90 text-amber-900 shadow-sm flex items-start gap-3.5">
-          <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <h3 className="font-bold text-sm">Farmland Verification In Review</h3>
-            <p className="text-xs text-amber-800 leading-relaxed">
-              Your registered agricultural parcels and legal documentation are currently being verified by our regional compliance team. You can view all submitted documents below. Adding new public harvests is enabled once approval is complete.
-            </p>
-          </div>
-        </div>
-      )}
+
 
       {verificationStatus === "Rejected" && (
         <div className="p-4 sm:p-5 rounded-2xl border border-red-200 bg-red-50/90 text-red-900 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
