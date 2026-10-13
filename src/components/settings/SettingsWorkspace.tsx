@@ -270,7 +270,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-600">
+            <span className="text-xs font-semibold  tracking-[0.2em] text-amber-600">
               Account & Preferences
             </span>
             <span
@@ -470,7 +470,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
           {role === "WORKER" && (
             <div className="pt-6 border-t border-slate-100 space-y-6">
               <div>
-                <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-slate-900  tracking-wider">
                   Worker Address Details
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -513,7 +513,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
               {/* Worker Financial & Profile Overview */}
               {workerInfo && (
                 <div className="pt-4">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">
+                  <h4 className="text-xs font-semibold  tracking-wider text-slate-500 mb-3">
                     Worker Summary
                   </h4>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -594,7 +594,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
             <div>
               <h2 className="text-lg font-semibold text-slate-900">
                 Change Password
-              </h2>             
+              </h2>
             </div>
           </div>
         </div>

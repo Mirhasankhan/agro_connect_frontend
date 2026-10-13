@@ -217,11 +217,10 @@ export default function ProductDetailsPage() {
                     key={idx}
                     type="button"
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
-                      selectedImageIndex === idx
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${selectedImageIndex === idx
                         ? "border-emerald-600 scale-105 shadow-sm"
                         : "border-slate-200 opacity-70 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-cover" />
                   </button>
@@ -232,7 +231,7 @@ export default function ProductDetailsPage() {
             {/* Certified Producer Card */}
             <div className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 mt-6 shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                <span className="text-[11px]  tracking-wider text-slate-400 font-semibold">
                   Farm Source
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold flex items-center gap-1">
@@ -457,11 +456,10 @@ export default function ProductDetailsPage() {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-3.5 h-3.5 ${
-                            i < rev.rating
+                          className={`w-3.5 h-3.5 ${i < rev.rating
                               ? "fill-amber-400 text-amber-400"
                               : "text-slate-200"
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>

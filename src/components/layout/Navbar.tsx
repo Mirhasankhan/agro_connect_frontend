@@ -101,38 +101,34 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-8 text-sm font-medium">
             <Link
               href="/"
-              className={`transition-colors hover:text-emerald-700 ${
-                pathname === "/" ? "text-emerald-600 font-semibold" : "text-slate-600"
-              }`}
+              className={`transition-colors hover:text-emerald-700 ${pathname === "/" ? "text-emerald-600 font-semibold" : "text-slate-600"
+                }`}
             >
               Home
             </Link>
             <Link
               href="/products"
-              className={`transition-colors hover:text-emerald-700 ${
-                pathname.startsWith("/products")
+              className={`transition-colors hover:text-emerald-700 ${pathname.startsWith("/products")
                   ? "text-emerald-600 font-semibold"
                   : "text-slate-600"
-              }`}
+                }`}
             >
               Marketplace
             </Link>
             <Link
               href="/about"
-              className={`transition-colors hover:text-emerald-700 ${
-                pathname === "/about"
+              className={`transition-colors hover:text-emerald-700 ${pathname === "/about"
                   ? "text-emerald-600 font-semibold"
                   : "text-slate-600"
-              }`}
+                }`}
             >
               About Us
             </Link>
             {isAuthenticated && user?.role === "BUYER" && (
               <Link
                 href="/orders"
-                className={`transition-colors hover:text-emerald-700 ${
-                  pathname === "/orders" ? "text-emerald-600 font-semibold" : "text-slate-600"
-                }`}
+                className={`transition-colors hover:text-emerald-700 ${pathname === "/orders" ? "text-emerald-600 font-semibold" : "text-slate-600"
+                  }`}
               >
                 My Orders
               </Link>
@@ -146,16 +142,14 @@ export default function Navbar() {
               <Link
                 href="/wishlist"
                 title="Saved Wishlist"
-                className={`relative p-2.5 rounded-full transition-colors ${
-                  pathname === "/wishlist"
+                className={`relative p-2.5 rounded-full transition-colors ${pathname === "/wishlist"
                     ? "text-emerald-700 bg-emerald-50"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                  }`}
               >
                 <Heart
-                  className={`w-5 h-5 ${
-                    wishlistItemCount > 0 ? "fill-rose-500 text-rose-500" : ""
-                  }`}
+                  className={`w-5 h-5 ${wishlistItemCount > 0 ? "fill-rose-500 text-rose-500" : ""
+                    }`}
                 />
                 {wishlistItemCount > 0 && (
                   <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-emerald-600 text-[10px] font-bold text-white flex items-center justify-center">
@@ -234,7 +228,7 @@ export default function Navbar() {
                           {displayUser.email}
                         </p>
                       )}
-                      <p className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider mt-1">
+                      <p className="text-[10px]  font-bold text-emerald-700 tracking-wider mt-1">
                         Role: {displayUser.role}
                       </p>
                     </div>
@@ -371,33 +365,30 @@ export default function Navbar() {
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={`px-3 py-2 rounded-lg transition-colors ${
-                pathname === "/"
+              className={`px-3 py-2 rounded-lg transition-colors ${pathname === "/"
                   ? "text-emerald-700 font-semibold bg-emerald-50"
                   : "text-slate-700 hover:bg-slate-50"
-              }`}
+                }`}
             >
               Home
             </Link>
             <Link
               href="/products"
               onClick={() => setMobileMenuOpen(false)}
-              className={`px-3 py-2 rounded-lg transition-colors ${
-                pathname.startsWith("/products")
+              className={`px-3 py-2 rounded-lg transition-colors ${pathname.startsWith("/products")
                   ? "text-emerald-700 font-semibold bg-emerald-50"
                   : "text-slate-700 hover:bg-slate-50"
-              }`}
+                }`}
             >
               Marketplace
             </Link>
             <Link
               href="/about"
               onClick={() => setMobileMenuOpen(false)}
-              className={`px-3 py-2 rounded-lg transition-colors ${
-                pathname === "/about"
+              className={`px-3 py-2 rounded-lg transition-colors ${pathname === "/about"
                   ? "text-emerald-700 font-semibold bg-emerald-50"
                   : "text-slate-700 hover:bg-slate-50"
-              }`}
+                }`}
             >
               About Us
             </Link>

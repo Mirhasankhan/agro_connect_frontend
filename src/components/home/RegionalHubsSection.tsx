@@ -56,7 +56,7 @@ export default function RegionalHubsSection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold  tracking-wider mb-3">
               <Compass className="w-3.5 h-3.5 text-emerald-600" />
               <span>Traceable Provenance</span>
             </div>
@@ -96,7 +96,7 @@ export default function RegionalHubsSection() {
               <div>
                 {/* Header of card */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-full border border-emerald-200/60">
+                  <span className="text-[10px] font-bold  tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-full border border-emerald-200/60">
                     {hub.tag}
                   </span>
                   <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-600">
@@ -123,7 +123,7 @@ export default function RegionalHubsSection() {
 
                 {/* Specialties Pills */}
                 <div className="mt-4 pt-3 border-t border-slate-200/60">
-                  <span className="block text-[10px] uppercase font-bold text-slate-600 tracking-wider mb-2">
+                  <span className="block text-[10px]  font-bold text-slate-600 tracking-wider mb-2">
                     Key Harvests:
                   </span>
                   <div className="flex flex-wrap gap-1.5">

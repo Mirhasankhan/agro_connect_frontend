@@ -164,7 +164,7 @@ export default function OrderDetailsPage() {
         <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
             <div>
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                 Order Tracking
               </span>
               <h1 className="font-mono text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
@@ -191,26 +191,24 @@ export default function OrderDetailsPage() {
 
           {/* Timeline Progress */}
           <div className="py-2">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-6">
+            <h3 className="text-xs font-bold text-slate-700  tracking-wider mb-6">
               Delivery Progression
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative">
               {steps.map((step, idx) => (
                 <div key={idx} className="flex flex-col items-center text-center space-y-2">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
-                      step.completed
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${step.completed
                         ? "bg-emerald-600 border-emerald-600 text-white"
                         : "bg-slate-100 border-slate-300 text-slate-400"
-                    }`}
+                      }`}
                   >
                     {step.completed ? <CheckCircle2 className="w-5 h-5 stroke-[2.5]" /> : idx + 1}
                   </div>
                   <div>
                     <p
-                      className={`text-xs font-bold ${
-                        step.completed ? "text-slate-900" : "text-slate-400"
-                      }`}
+                      className={`text-xs font-bold ${step.completed ? "text-slate-900" : "text-slate-400"
+                        }`}
                     >
                       {step.title}
                     </p>
@@ -243,22 +241,20 @@ export default function OrderDetailsPage() {
 
             {isDriverAssigned ? (
               <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-auto ${
-                  activeDelivery?.status === "Delivered"
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-auto ${activeDelivery?.status === "Delivered"
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : activeDelivery?.status === "PickedUp"
-                    ? "bg-blue-50 text-blue-700 border-blue-200"
-                    : "bg-amber-50 text-amber-700 border-amber-200"
-                }`}
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-amber-50 text-amber-700 border-amber-200"
+                  }`}
               >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full ${
-                    activeDelivery?.status === "Delivered"
+                  className={`w-1.5 h-1.5 rounded-full ${activeDelivery?.status === "Delivered"
                       ? "bg-emerald-500"
                       : activeDelivery?.status === "PickedUp"
-                      ? "bg-blue-500 animate-pulse"
-                      : "bg-amber-500"
-                  }`}
+                        ? "bg-blue-500 animate-pulse"
+                        : "bg-amber-500"
+                    }`}
                 />
                 Status: {activeDelivery?.status === "PickedUp" ? "In Transit" : activeDelivery?.status || "Assigned"}
               </span>
@@ -293,7 +289,7 @@ export default function OrderDetailsPage() {
                     <h4 className="font-bold text-base text-slate-900 leading-tight">
                       {driver.fullName}
                     </h4>
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+                    <span className="text-[10px]  font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
                       Driver
                     </span>
                   </div>
@@ -452,7 +448,7 @@ export default function OrderDetailsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Shipping Address */}
           <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3 shadow-sm">
-            <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs  tracking-wider">
               <MapPin className="w-4 h-4 text-emerald-600" />
               Delivery Destination
             </div>
@@ -478,7 +474,7 @@ export default function OrderDetailsPage() {
 
           {/* Security Notice */}
           <div className="bg-white border border-slate-200/90 rounded-3xl p-6 space-y-3 shadow-sm">
-            <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-emerald-700 font-bold text-xs  tracking-wider">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               Delivery Handover Verification
             </div>

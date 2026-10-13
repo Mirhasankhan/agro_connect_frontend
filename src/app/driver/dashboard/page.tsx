@@ -11,8 +11,8 @@ import {
   ShieldCheck,
   Clock,
   AlertCircle,
-  MapPin, 
-  Eye,  
+  MapPin,
+  Eye,
 } from "lucide-react";
 import { useGetDriverWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { useGetDriverWiseDeliveriesQuery } from "@/redux/features/order/orderApi";
@@ -90,11 +90,10 @@ export default function DriverDashboardPage() {
       {/* Verification Status Warning for Pending / Rejected */}
       {isSetupCompleted && !isAccepted && (
         <div
-          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
-            isRejected
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${isRejected
               ? "border-rose-200 bg-rose-50 text-rose-800"
               : "border-amber-200 bg-amber-50 text-amber-800"
-          }`}
+            }`}
         >
           {isRejected ? (
             <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
@@ -154,7 +153,7 @@ export default function DriverDashboardPage() {
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
         <div className="space-y-1">
-          <span className="text-xs uppercase tracking-widest text-emerald-600 font-bold">
+          <span className="text-xs  tracking-widest text-emerald-600 font-bold">
             Logistics Console
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
@@ -266,7 +265,7 @@ export default function DriverDashboardPage() {
         ) : activeDeliveries.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px]">
+              <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Order Ref</th>
                   <th className="py-3 px-4">Destination City</th>
@@ -298,11 +297,10 @@ export default function DriverDashboardPage() {
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
-                          d.status === "PickedUp"
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${d.status === "PickedUp"
                             ? "bg-blue-50 text-blue-700 border-blue-200"
                             : "bg-amber-50 text-amber-700 border-amber-200"
-                        }`}
+                          }`}
                       >
                         {d.status === "PickedUp" ? "In Transit" : "Assigned"}
                       </span>
@@ -382,7 +380,7 @@ export default function DriverDashboardPage() {
         ) : payments.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px]">
+              <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Order Ref</th>
                   <th className="py-3 px-4">Delivery Fee</th>
@@ -401,11 +399,10 @@ export default function DriverDashboardPage() {
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          p.isTransferred
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${p.isTransferred
                             ? "bg-blue-50 text-blue-700 border border-blue-200"
                             : "bg-amber-50 text-amber-700 border border-amber-200"
-                        }`}
+                          }`}
                       >
                         {p.isTransferred ? "Settled & Paid" : "Escrow Pending"}
                       </span>

@@ -22,7 +22,7 @@ export default function PaymentFailedPage() {
           </div>
 
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest text-red-600 font-bold">
+            <span className="text-xs  tracking-widest text-red-600 font-bold">
               Payment Incomplete
             </span>
             <h1 className="font-serif text-3xl font-bold text-slate-900">Payment Unsuccessful</h1>

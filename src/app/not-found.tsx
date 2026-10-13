@@ -9,7 +9,7 @@ export default function NotFound() {
           <Sprout className="h-8 w-8" />
         </div>
 
-        <span className="inline-block text-xs font-semibold tracking-wider text-emerald-600 uppercase mb-2">
+        <span className="inline-block text-xs font-semibold tracking-wider text-emerald-600  mb-2">
           Page Not Found (404)
         </span>
 

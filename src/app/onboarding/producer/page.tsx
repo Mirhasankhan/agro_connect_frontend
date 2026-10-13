@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {  
+import {
   Tractor,
   Building2,
   UploadCloud,
@@ -251,7 +251,7 @@ export default function ProducerOnboardingPage() {
 
             {/* Section 1: Producer Type */}
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <Tractor className="h-4 w-4 text-emerald-600" />
                 <span>1. Producer Category</span>
               </h2>
@@ -280,11 +280,10 @@ export default function ProducerOnboardingPage() {
                       key={item.type}
                       type="button"
                       onClick={() => setValue("producerType", item.type)}
-                      className={`flex flex-col text-left rounded-xl border p-4 transition-all ${
-                        isSelected
+                      className={`flex flex-col text-left rounded-xl border p-4 transition-all ${isSelected
                           ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
                           : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                      }`}
+                        }`}
                     >
                       <Icon className={`h-5 w-5 ${isSelected ? "text-emerald-700" : "text-slate-400"}`} />
                       <span className="mt-2 text-xs font-semibold">{item.label}</span>
@@ -297,7 +296,7 @@ export default function ProducerOnboardingPage() {
 
             {/* Section 2: Farm Details */}
             <div className="border-t border-slate-100 pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-emerald-600" />
                 <span>2. Farm & Location Details</span>
               </h2>
@@ -404,7 +403,7 @@ export default function ProducerOnboardingPage() {
             {/* Section 3: Company Legal Information (Conditional) */}
             {producerType === "Company" && (
               <div className="border-t border-slate-100 pt-6">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+                <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                   <Building2 className="h-4 w-4 text-emerald-600" />
                   <span>3. Company Business Details</span>
                 </h2>
@@ -456,7 +455,7 @@ export default function ProducerOnboardingPage() {
 
             {/* Section 4: Document Uploads */}
             <div className="border-t border-slate-100 pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <FileText className="h-4 w-4 text-emerald-600" />
                 <span>{producerType === "Company" ? "4. Verification Documents" : "3. Verification Documents"}</span>
               </h2>

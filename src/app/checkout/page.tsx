@@ -212,11 +212,10 @@ export default function CheckoutPage() {
                     addresses.map((addr) => (
                       <label
                         key={addr.id}
-                        className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                          selectedAddressId === addr.id
+                        className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${selectedAddressId === addr.id
                             ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
                             : "bg-slate-50 border-slate-200 hover:border-slate-300"
-                        }`}
+                          }`}
                       >
                         <input
                           type="radio"
@@ -253,7 +252,7 @@ export default function CheckoutPage() {
                   onSubmit={handleSubmit(handleCreateAddress)}
                   className="space-y-4 pt-2 border-t border-slate-100"
                 >
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-slate-800  tracking-wider">
                     Add Destination Address
                   </h4>
 

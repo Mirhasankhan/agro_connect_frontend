@@ -12,7 +12,7 @@ import {
   Clock,
   Truck,
   PackageCheck,
-  Star, 
+  Star,
   AlertCircle,
   User,
   Car,
@@ -129,15 +129,14 @@ export default function ProducerOrderItemDetailsPage() {
               Order #{item.order?.orderId || item.id.slice(-6).toUpperCase()}
             </span>
             <span
-              className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 ${
-                item.status === "Pending"
+              className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 ${item.status === "Pending"
                   ? "bg-amber-50 text-amber-700 border border-amber-200"
                   : item.status === "SentToHub"
-                  ? "bg-blue-50 text-blue-700 border border-blue-200"
-                  : item.status === "Delivered"
-                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                  : "bg-rose-50 text-rose-700 border border-rose-200"
-              }`}
+                    ? "bg-blue-50 text-blue-700 border border-blue-200"
+                    : item.status === "Delivered"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-rose-50 text-rose-700 border border-rose-200"
+                }`}
             >
               {item.status === "Pending" && <Clock className="w-3.5 h-3.5" />}
               {item.status === "SentToHub" && <Truck className="w-3.5 h-3.5" />}
@@ -218,8 +217,8 @@ export default function ProducerOrderItemDetailsPage() {
             {item.status === "Delivered"
               ? "Completed"
               : item.status === "SentToHub"
-              ? "In Logistics Hub"
-              : "Dispatch Pending"}
+                ? "In Logistics Hub"
+                : "Dispatch Pending"}
           </p>
           <p className="text-[11px] text-slate-400 mt-0.5">
             {driver?.fullName ? `Driver: ${driver.fullName}` : "Awaiting Driver Pickup"}
@@ -232,7 +231,7 @@ export default function ProducerOrderItemDetailsPage() {
         {/* Left Column (2 Cols) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Produce & Harvest Details Card */}
-      
+
 
           {/* Fulfillment & Delivery Logistics Card */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
@@ -254,13 +253,12 @@ export default function ProducerOrderItemDetailsPage() {
 
               {/* Step 2 */}
               <div
-                className={`p-3 rounded-xl border ${
-                  isSentToHub
+                className={`p-3 rounded-xl border ${isSentToHub
                     ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                     : isPending
-                    ? "bg-amber-50 border-amber-200 text-amber-800"
-                    : "bg-slate-50 border-slate-200 text-slate-400"
-                }`}
+                      ? "bg-amber-50 border-amber-200 text-amber-800"
+                      : "bg-slate-50 border-slate-200 text-slate-400"
+                  }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   {isSentToHub ? (
@@ -277,13 +275,12 @@ export default function ProducerOrderItemDetailsPage() {
 
               {/* Step 3 */}
               <div
-                className={`p-3 rounded-xl border ${
-                  isDelivered || latestDelivery?.status === "PickedUp"
+                className={`p-3 rounded-xl border ${isDelivered || latestDelivery?.status === "PickedUp"
                     ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                     : isDriverAssigned
-                    ? "bg-blue-50 border-blue-200 text-blue-800"
-                    : "bg-slate-50 border-slate-200 text-slate-400"
-                }`}
+                      ? "bg-blue-50 border-blue-200 text-blue-800"
+                      : "bg-slate-50 border-slate-200 text-slate-400"
+                  }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   {isDelivered || latestDelivery?.status === "PickedUp" ? (
@@ -302,11 +299,10 @@ export default function ProducerOrderItemDetailsPage() {
 
               {/* Step 4 */}
               <div
-                className={`p-3 rounded-xl border ${
-                  isDelivered
+                className={`p-3 rounded-xl border ${isDelivered
                     ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                     : "bg-slate-50 border-slate-200 text-slate-400"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   {isDelivered ? (
@@ -326,7 +322,7 @@ export default function ProducerOrderItemDetailsPage() {
             {driver ? (
               <div className="border border-slate-200 bg-slate-50/60 rounded-xl p-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <span className="text-xs font-bold  tracking-wider text-slate-500">
                     Assigned Delivery Logistics Driver
                   </span>
                   {latestDelivery?.status && (
@@ -386,7 +382,7 @@ export default function ProducerOrderItemDetailsPage() {
               </div>
             )}
           </div>
-         
+
         </div>
 
         {/* Right Sidebar (1 Col) */}
@@ -435,10 +431,10 @@ export default function ProducerOrderItemDetailsPage() {
                   </div>
                 </div>
               )}
-            </div>         
-          </div> 
+            </div>
+          </div>
 
-           {/* Customer Feedback & Review Card */}
+          {/* Customer Feedback & Review Card */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
             <h2 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-500" />
@@ -452,11 +448,10 @@ export default function ProducerOrderItemDetailsPage() {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        className={`w-4 h-4 ${
-                          star <= (item.review?.rating || 0)
+                        className={`w-4 h-4 ${star <= (item.review?.rating || 0)
                             ? "fill-amber-400 text-amber-400"
                             : "text-slate-300"
-                        }`}
+                          }`}
                       />
                     ))}
                     <span className="text-xs font-bold text-amber-800 ml-1.5">
@@ -486,7 +481,7 @@ export default function ProducerOrderItemDetailsPage() {
                 </p>
               </div>
             )}
-          </div>      
+          </div>
         </div>
       </div>
     </div>

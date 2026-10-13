@@ -7,7 +7,7 @@ import {
   TrendingDown,
   Percent,
   CheckCircle2,
-  ArrowRight,  
+  ArrowRight,
   Building2,
   UtensilsCrossed,
 } from "lucide-react";
@@ -62,7 +62,7 @@ export default function BulkPricingBanner() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Context & Value Proposition */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/60 border border-emerald-400/30 text-emerald-300 text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/60 border border-emerald-400/30 text-emerald-300 text-xs font-bold  tracking-wider backdrop-blur-sm">
               <TrendingDown className="w-4 h-4 text-emerald-400" />
               <span>Transparent Bulk Tiering</span>
             </div>
@@ -119,7 +119,7 @@ export default function BulkPricingBanner() {
             >
               <div className="flex items-center justify-between border-b border-emerald-800/60 pb-4">
                 <div>
-                  <span className="text-xs font-semibold text-emerald-300 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-emerald-300  tracking-wider">
                     Interactive Simulation
                   </span>
                   <h3 className="font-serif text-lg sm:text-xl font-bold text-white mt-0.5">
@@ -139,11 +139,10 @@ export default function BulkPricingBanner() {
                     key={tier.label}
                     type="button"
                     onClick={() => setVolumeLevel(idx)}
-                    className={`p-2.5 rounded-2xl text-left transition-all border ${
-                      volumeLevel === idx
+                    className={`p-2.5 rounded-2xl text-left transition-all border ${volumeLevel === idx
                         ? "bg-emerald-500/20 border-emerald-400 text-white ring-1 ring-emerald-400/40 shadow-sm"
                         : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
-                    }`}
+                      }`}
                   >
                     <span className="block text-[10px] font-medium text-slate-400">
                       Tier {idx + 1}
@@ -169,7 +168,7 @@ export default function BulkPricingBanner() {
                       {formatCurrency(currentTier.unitPrice)}
                     </span>
                     {volumeLevel > 0 && (
-                       <span className="text-xs text-slate-400 line-through ml-2">
+                      <span className="text-xs text-slate-400 line-through ml-2">
                         {formatCurrency(standardCost)}
                       </span>
                     )}

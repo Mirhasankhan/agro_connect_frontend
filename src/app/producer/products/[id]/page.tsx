@@ -12,9 +12,9 @@ import {
   DollarSign,
   TrendingUp,
   Star,
-  CheckCircle2,  
+  CheckCircle2,
   Sparkles,
-  MapPin,  
+  MapPin,
   ShoppingBag,
   Loader2,
   AlertCircle,
@@ -93,11 +93,10 @@ export default function ProducerProductDetailsPage() {
                 {product.name}
               </h1>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
-                  product.isActive
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${product.isActive
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : "bg-slate-100 text-slate-600 border-slate-200"
-                }`}
+                  }`}
               >
                 {product.isActive ? "Active on Marketplace" : "Hidden from Buyers"}
               </span>
@@ -122,7 +121,7 @@ export default function ProducerProductDetailsPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">       
+        <div className="flex items-center gap-2.5">
           <Link
             href={`/producer/products/${productId}/edit`}
             className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-sm"
@@ -228,11 +227,10 @@ export default function ProducerProductDetailsPage() {
                     key={idx}
                     type="button"
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative h-16 w-20 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx
+                    className={`relative h-16 w-20 shrink-0 rounded-xl overflow-hidden border-2 transition-all ${activeImageIndex === idx
                         ? "border-emerald-600 ring-2 ring-emerald-600/20"
                         : "border-slate-200 opacity-70 hover:opacity-100"
-                    }`}
+                      }`}
                   >
                     <Image
                       src={imgUrl}
@@ -274,7 +272,7 @@ export default function ProducerProductDetailsPage() {
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
+              <h3 className="text-xs font-semibold  tracking-wider text-slate-500 mb-1.5">
                 Harvest Description
               </h3>
               <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50/50 p-4 rounded-xl border border-slate-200/80">
@@ -307,7 +305,7 @@ export default function ProducerProductDetailsPage() {
             {product.pricingTiers && product.pricingTiers.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px] border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3">Order Quantity Threshold</th>
                       <th className="py-2.5 px-3">Discounted Unit Price</th>
@@ -398,13 +396,12 @@ export default function ProducerProductDetailsPage() {
                         </div>
 
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border ${
-                            item.status === "Delivered"
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold border ${item.status === "Delivered"
                               ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                               : item.status === "SentToHub"
-                              ? "bg-blue-50 text-blue-700 border-blue-200"
-                              : "bg-amber-50 text-amber-700 border-amber-200"
-                          }`}
+                                ? "bg-blue-50 text-blue-700 border-blue-200"
+                                : "bg-amber-50 text-amber-700 border-amber-200"
+                            }`}
                         >
                           {item.status}
                         </span>
@@ -461,11 +458,10 @@ export default function ProducerProductDetailsPage() {
                         {Array.from({ length: 5 }).map((_, starIdx) => (
                           <Star
                             key={starIdx}
-                            className={`h-3 w-3 ${
-                              starIdx < rev.rating
+                            className={`h-3 w-3 ${starIdx < rev.rating
                                 ? "fill-amber-400 text-amber-400"
                                 : "text-slate-300"
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>

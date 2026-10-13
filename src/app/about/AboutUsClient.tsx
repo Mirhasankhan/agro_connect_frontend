@@ -272,7 +272,7 @@ export default function AboutUsClient() {
                 <p className="font-serif text-2xl lg:text-3xl font-extrabold text-emerald-700 tracking-tight">
                   {item.value}
                 </p>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-800 mt-1">
+                <p className="text-xs font-bold  tracking-wider text-slate-800 mt-1">
                   {item.label}
                 </p>
                 <p className="text-[12px] text-slate-500 mt-1 leading-snug">{item.detail}</p>
@@ -323,7 +323,7 @@ export default function AboutUsClient() {
               {/* Right Column: Mission & Vision Content */}
               <div className="space-y-8">
                 <div>
-                  <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+                  <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                     Who We Are & Why It Matters
                   </span>
                   <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2 leading-tight">
@@ -385,7 +385,7 @@ export default function AboutUsClient() {
         <section id="our-values" className="py-20 bg-slate-50 border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                 Our Operating Principles
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">
@@ -435,7 +435,7 @@ export default function AboutUsClient() {
         <section id="our-ecosystem" className="py-24 bg-white border-t border-slate-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                 Synergy Across The Chain
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">
@@ -569,7 +569,7 @@ export default function AboutUsClient() {
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-20">
-              <span className="text-xs uppercase tracking-widest text-emerald-400 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-400 font-bold">
                 The Journey So Far
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white mt-2">
@@ -596,7 +596,7 @@ export default function AboutUsClient() {
                       <span className="font-serif text-3xl font-extrabold text-emerald-400">
                         {step.year}
                       </span>
-                      <span className="px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      <span className="px-2.5 py-1 rounded-full text-[10px]  font-bold tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                         {step.tag}
                       </span>
                     </div>
@@ -617,7 +617,7 @@ export default function AboutUsClient() {
         <section id="our-hubs" className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                 Supply Backbone
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">
@@ -637,7 +637,7 @@ export default function AboutUsClient() {
                 >
                   <div className="flex items-center gap-2 text-emerald-700 mb-3">
                     <MapPin className="w-5 h-5 shrink-0" />
-                    <span className="text-xs font-bold uppercase tracking-wider">{hub.zone}</span>
+                    <span className="text-xs font-bold  tracking-wider">{hub.zone}</span>
                   </div>
                   <h3 className="font-serif text-xl font-bold text-slate-900">{hub.city}</h3>
                   <div className="mt-2 mb-3 px-2.5 py-1 rounded-lg bg-emerald-100/60 text-emerald-800 text-[11px] font-semibold inline-block">
@@ -654,7 +654,7 @@ export default function AboutUsClient() {
         <section id="about-faq" className="py-20 bg-slate-50 border-t border-slate-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-xl mx-auto mb-14">
-              <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
                 Got Questions?
               </span>
               <h2 className="font-serif text-3xl font-bold text-slate-900 mt-2">
@@ -681,9 +681,8 @@ export default function AboutUsClient() {
                     >
                       <span>{faq.q}</span>
                       <ChevronDown
-                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-4 ${
-                          isOpen ? "rotate-180 text-emerald-600" : ""
-                        }`}
+                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-4 ${isOpen ? "rotate-180 text-emerald-600" : ""
+                          }`}
                       />
                     </button>
                     <AnimatePresence>

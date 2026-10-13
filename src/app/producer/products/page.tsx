@@ -73,11 +73,10 @@ export default function ProducerProductsPage() {
       {/* Verification Status Warning for Pending / Rejected */}
       {!isAccepted && (
         <div
-          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
-            isRejected
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${isRejected
               ? "border-rose-200 bg-rose-50 text-rose-800"
               : "border-amber-200 bg-amber-50 text-amber-800"
-          }`}
+            }`}
         >
           {isRejected ? (
             <AlertCircle className="h-5 w-5 shrink-0 text-rose-600" />
@@ -177,7 +176,7 @@ export default function ProducerProductsPage() {
         ) : products.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px] border-b border-slate-200">
                 <tr>
                   <th className="py-3.5 px-4">Harvest</th>
                   <th className="py-3.5 px-4">Category</th>
@@ -232,9 +231,8 @@ export default function ProducerProductsPage() {
                       {/* Stock */}
                       <td className="py-3.5 px-4">
                         <span
-                          className={`font-mono font-semibold ${
-                            prod.availableQuantity > 0 ? "text-slate-800" : "text-red-500"
-                          }`}
+                          className={`font-mono font-semibold ${prod.availableQuantity > 0 ? "text-slate-800" : "text-red-500"
+                            }`}
                         >
                           {prod.availableQuantity} {formatUnit(prod.sellingUnit)}
                         </span>
@@ -257,7 +255,7 @@ export default function ProducerProductsPage() {
                           }
                           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 text-[11px] font-semibold transition-colors"
                         >
-                         
+
                           <span>+ Add Tier</span>
                         </button>
                       </td>
@@ -288,11 +286,10 @@ export default function ProducerProductsPage() {
                             onClick={() => handleToggleActive(prod)}
                             disabled={isUpdating}
                             title={prod.isActive ? "Hide from marketplace" : "Make visible on marketplace"}
-                            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${
-                              prod.isActive
+                            className={`px-2.5 py-1.5 rounded-lg text-[10px] font-bold border transition-colors ${prod.isActive
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-red-50 hover:text-red-700 hover:border-red-200"
                                 : "bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-700"
-                            }`}
+                              }`}
                           >
                             {prod.isActive ? "Active" : "Hidden"}
                           </button>

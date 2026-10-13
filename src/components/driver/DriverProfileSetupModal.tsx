@@ -186,7 +186,7 @@ export default function DriverProfileSetupModal({
         <DialogHeader>
           <div className="flex items-center gap-2 text-emerald-600 mb-1">
             <Truck className="w-5 h-5" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold  tracking-wider">
               Profile Setup
             </span>
           </div>
@@ -224,11 +224,10 @@ export default function DriverProfileSetupModal({
                   key={type}
                   type="button"
                   onClick={() => setValue("vehicleType", type)}
-                  className={`rounded-xl border p-2.5 text-center text-xs font-semibold transition-all ${
-                    selectedVehicle === type
+                  className={`rounded-xl border p-2.5 text-center text-xs font-semibold transition-all ${selectedVehicle === type
                       ? "border-emerald-600 bg-emerald-50 text-emerald-800 ring-2 ring-emerald-600/20"
                       : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
-                  }`}
+                    }`}
                 >
                   {type.replace("_", " ")}
                 </button>
@@ -238,7 +237,7 @@ export default function DriverProfileSetupModal({
 
           {/* Vehicle & Contact Details */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+            <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
               <Truck className="h-4 w-4 text-emerald-600" />
               <span>Vehicle & Contact Details</span>
             </h3>
@@ -304,7 +303,7 @@ export default function DriverProfileSetupModal({
 
           {/* Verification Documents */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+            <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
               <FileText className="h-4 w-4 text-emerald-600" />
               <span>Mandatory Verification Documents</span>
             </h3>

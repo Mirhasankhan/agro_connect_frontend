@@ -253,7 +253,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-emerald-700 font-bold mb-2">
+              <div className="inline-flex items-center gap-2 text-xs  tracking-widest text-emerald-700 font-bold mb-2">
                 <Leaf className="w-3.5 h-3.5 text-emerald-600" />
                 Fresh From The Soil
               </div>
@@ -324,7 +324,7 @@ export default function HomePage() {
       <section id="benefits" className="py-20 bg-slate-50 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+            <span className="text-xs  tracking-widest text-emerald-700 font-bold">
               The Agricultural Revolution
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">
@@ -410,7 +410,7 @@ export default function HomePage() {
       <section id="for-whom" className="py-20 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs uppercase tracking-widest text-emerald-700 font-bold">
+            <span className="text-xs  tracking-widest text-emerald-700 font-bold">
               Tailored Ecosystem
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900 mt-2">
@@ -474,7 +474,7 @@ export default function HomePage() {
               whileHover={{ y: -4 }}
               className="p-7 rounded-3xl bg-white border-2 border-emerald-600 shadow-md space-y-4 flex flex-col justify-between relative"
             >
-              <span className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-sm">
+              <span className="absolute -top-3 right-6 px-3 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold  tracking-wider shadow-sm">
                 High Demand
               </span>
               <div>

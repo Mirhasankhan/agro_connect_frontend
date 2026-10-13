@@ -55,7 +55,7 @@ export default function FaqSection() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 text-xs font-bold  tracking-wider mb-3">
             <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
             <span>Got Questions?</span>
           </div>
@@ -83,11 +83,10 @@ export default function FaqSection() {
                 >
                   <span className="leading-snug">{faq.question}</span>
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${
-                      isOpen
+                    className={`w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${isOpen
                         ? "bg-emerald-100 text-emerald-800 rotate-180"
                         : "bg-slate-100 text-slate-600"
-                    }`}
+                      }`}
                   >
                     <ChevronDown className="w-4 h-4" />
                   </div>

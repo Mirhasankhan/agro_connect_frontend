@@ -269,7 +269,7 @@ export default function FarmProfilePage() {
             {/* Quick Farm Stats Strip */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 mt-6 border-t border-slate-100">
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
                   Active Harvests
                 </p>
                 <p className="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
@@ -277,7 +277,7 @@ export default function FarmProfilePage() {
                 </p>
               </div>
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
                   Farm Status
                 </p>
                 <p className="font-serif text-xl sm:text-2xl font-bold text-emerald-700 mt-0.5 flex items-center gap-1.5">
@@ -286,7 +286,7 @@ export default function FarmProfilePage() {
                 </p>
               </div>
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
                   Satisfaction
                 </p>
                 <p className="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
@@ -294,7 +294,7 @@ export default function FarmProfilePage() {
                 </p>
               </div>
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
                   Escrow Protection
                 </p>
                 <p className="font-serif text-xl sm:text-2xl font-bold text-emerald-700 mt-0.5">
@@ -311,33 +311,30 @@ export default function FarmProfilePage() {
             <button
               type="button"
               onClick={() => setActiveTab("harvests")}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${
-                activeTab === "harvests"
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "harvests"
                   ? "bg-emerald-600 text-white shadow-sm"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
+                }`}
             >
               Harvests & Produce ({producer.products?.length || 0})
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("about")}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${
-                activeTab === "about"
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "about"
                   ? "bg-emerald-600 text-white shadow-sm"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
+                }`}
             >
               Farm Details & Practices
             </button>
             <button
               type="button"
               onClick={() => setActiveTab("reviews")}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${
-                activeTab === "reviews"
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "reviews"
                   ? "bg-emerald-600 text-white shadow-sm"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              }`}
+                }`}
             >
               Customer Reviews ({allReviews.length})
             </button>
@@ -470,13 +467,13 @@ export default function FarmProfilePage() {
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3">
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                      <p className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      <p className="text-[11px]  tracking-wider text-slate-400 font-semibold">
                         Location & Terroir
                       </p>
                       <p className="text-xs font-bold text-slate-800">{locationText}</p>
                     </div>
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                      <p className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      <p className="text-[11px]  tracking-wider text-slate-400 font-semibold">
                         Farm Scale
                       </p>
                       <p className="text-xs font-bold text-slate-800">
@@ -486,7 +483,7 @@ export default function FarmProfilePage() {
                       </p>
                     </div>
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                      <p className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      <p className="text-[11px]  tracking-wider text-slate-400 font-semibold">
                         Producer Classification
                       </p>
                       <p className="text-xs font-bold text-slate-800">
@@ -494,7 +491,7 @@ export default function FarmProfilePage() {
                       </p>
                     </div>
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1">
-                      <p className="text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+                      <p className="text-[11px]  tracking-wider text-slate-400 font-semibold">
                         Delivery Logistics
                       </p>
                       <p className="text-xs font-bold text-slate-800">
@@ -655,11 +652,10 @@ export default function FarmProfilePage() {
                           {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                               key={star}
-                              className={`w-3.5 h-3.5 ${
-                                star <= item.review.rating
+                              className={`w-3.5 h-3.5 ${star <= item.review.rating
                                   ? "fill-amber-400 text-amber-400"
                                   : "text-slate-200"
-                              }`}
+                                }`}
                             />
                           ))}
                         </div>

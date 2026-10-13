@@ -224,7 +224,7 @@ export default function ProducerProfileSetupModal({
         <DialogHeader>
           <div className="flex items-center gap-2 text-emerald-600 mb-1">
             <Sprout className="w-5 h-5" />
-            <span className="text-xs font-bold uppercase tracking-wider">
+            <span className="text-xs font-bold  tracking-wider">
               Profile Setup
             </span>
           </div>
@@ -251,18 +251,16 @@ export default function ProducerProfileSetupModal({
               <button
                 type="button"
                 onClick={() => setValue("producerType", "Private")}
-                className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
-                  producerType === "Private"
+                className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${producerType === "Private"
                     ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20 text-emerald-950 font-medium"
                     : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
-                }`}
+                  }`}
               >
                 <Tractor
-                  className={`h-5 w-5 ${
-                    producerType === "Private"
+                  className={`h-5 w-5 ${producerType === "Private"
                       ? "text-emerald-600"
                       : "text-slate-400"
-                  }`}
+                    }`}
                 />
                 <div>
                   <div className="text-sm font-semibold">Private Farmer</div>
@@ -275,18 +273,16 @@ export default function ProducerProfileSetupModal({
               <button
                 type="button"
                 onClick={() => setValue("producerType", "Company")}
-                className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
-                  producerType === "Company"
+                className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${producerType === "Company"
                     ? "border-emerald-600 bg-emerald-50/60 ring-2 ring-emerald-600/20 text-emerald-950 font-medium"
                     : "border-slate-200 bg-white hover:bg-slate-50 text-slate-700"
-                }`}
+                  }`}
               >
                 <Building2
-                  className={`h-5 w-5 ${
-                    producerType === "Company"
+                  className={`h-5 w-5 ${producerType === "Company"
                       ? "text-emerald-600"
                       : "text-slate-400"
-                  }`}
+                    }`}
                 />
                 <div>
                   <div className="text-sm font-semibold">Agricultural Enterprise</div>
@@ -300,7 +296,7 @@ export default function ProducerProfileSetupModal({
 
           {/* Farm Details */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+            <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
               <Tractor className="h-4 w-4 text-emerald-600" />
               <span>Farm Details</span>
             </h3>
@@ -350,7 +346,7 @@ export default function ProducerProfileSetupModal({
 
           {/* Contact and Address */}
           <div className="space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+            <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
               <MapPin className="h-4 w-4 text-emerald-600" />
               <span>Contact & Physical Address</span>
             </h3>
@@ -403,7 +399,7 @@ export default function ProducerProfileSetupModal({
           {/* Company Details if Company */}
           {producerType === "Company" && (
             <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+              <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
                 <Building2 className="h-4 w-4 text-emerald-600" />
                 <span>Corporate Registration</span>
               </h3>
@@ -447,7 +443,7 @@ export default function ProducerProfileSetupModal({
 
           {/* Verification Documents */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+            <h3 className="text-xs font-bold  tracking-wider text-slate-500 flex items-center gap-2">
               <FileText className="h-4 w-4 text-emerald-600" />
               <span>Verification Documents</span>
             </h3>

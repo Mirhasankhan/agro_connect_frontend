@@ -14,7 +14,7 @@ import {
   Package,
   Loader2,
   Eye,
-  User,  
+  User,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -105,11 +105,10 @@ export default function DriverDeliveriesPage() {
       {/* Verification Status Warning for Pending / Rejected */}
       {!isAccepted && (
         <div
-          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${
-            isRejected
+          className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${isRejected
               ? "border-rose-200 bg-rose-50 text-rose-800"
               : "border-amber-200 bg-amber-50 text-amber-800"
-          }`}
+            }`}
         >
           {isRejected ? (
             <Clock className="h-5 w-5 shrink-0 text-rose-600" />
@@ -150,11 +149,10 @@ export default function DriverDeliveriesPage() {
               key={tab.value}
               type="button"
               onClick={() => setSelectedFilter(tab.value)}
-              className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${
-                selectedFilter === tab.value
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-colors ${selectedFilter === tab.value
                   ? "bg-emerald-600 text-white shadow-sm"
                   : "bg-white text-slate-600 border border-slate-200 hover:text-slate-900 hover:bg-slate-50"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -216,13 +214,12 @@ export default function DriverDeliveriesPage() {
 
                   <div className="flex items-center gap-3 flex-wrap">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 border ${
-                        status === "Delivered"
+                      className={`px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 border ${status === "Delivered"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : status === "PickedUp"
-                          ? "bg-blue-50 text-blue-700 border-blue-200"
-                          : "bg-amber-50 text-amber-700 border-amber-200"
-                      }`}
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-amber-50 text-amber-700 border-amber-200"
+                        }`}
                     >
                       {status === "Delivered" && <CheckCircle2 className="w-3.5 h-3.5" />}
                       {status === "PickedUp" && <Truck className="w-3.5 h-3.5" />}
@@ -240,7 +237,7 @@ export default function DriverDeliveriesPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                   {/* Destination */}
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold  tracking-wider text-[10px]">
                       <MapPin className="w-3.5 h-3.5" />
                       Destination City
                     </div>
@@ -250,7 +247,7 @@ export default function DriverDeliveriesPage() {
 
                   {/* Customer */}
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold  tracking-wider text-[10px]">
                       <User className="w-3.5 h-3.5" />
                       Recipient Buyer
                     </div>
@@ -260,7 +257,7 @@ export default function DriverDeliveriesPage() {
 
                   {/* Cargo Crates */}
                   <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
-                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold uppercase tracking-wider text-[10px]">
+                    <div className="flex items-center gap-1.5 text-emerald-700 font-bold  tracking-wider text-[10px]">
                       <Package className="w-3.5 h-3.5" />
                       Produce Cargo
                     </div>

@@ -11,7 +11,7 @@ import {
   Plus,
   ArrowRight,
   Truck,
-  Sprout,  
+  Sprout,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useGetProducerProductsQuery } from "@/redux/features/product/productApi";
@@ -131,7 +131,7 @@ export default function ProducerDashboardPage() {
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
         <div className="space-y-1">
-          <span className="text-xs uppercase tracking-widest text-emerald-600 font-bold">
+          <span className="text-xs  tracking-widest text-emerald-600 font-bold">
             Farm Management Console
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
@@ -255,7 +255,7 @@ export default function ProducerDashboardPage() {
         ) : orderItems.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px]">
+              <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px]">
                 <tr>
                   <th className="py-3 px-4">Harvest</th>
                   <th className="py-3 px-4">Buyer</th>
@@ -305,13 +305,12 @@ export default function ProducerDashboardPage() {
                     </td>
                     <td className="py-3 px-4">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          item.status === "Pending"
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.status === "Pending"
                             ? "bg-amber-50 text-amber-700 border border-amber-200"
                             : item.status === "SentToHub"
-                            ? "bg-blue-50 text-blue-700 border border-blue-200"
-                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                        }`}
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          }`}
                       >
                         {item.status}
                       </span>

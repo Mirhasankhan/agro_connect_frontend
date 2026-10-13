@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {  
+import {
   Truck,
   UploadCloud,
   FileCheck,
@@ -233,7 +233,7 @@ export default function DriverOnboardingPage() {
 
             {/* Section 1: Vehicle Type */}
             <div>
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <Truck className="h-4 w-4 text-emerald-600" />
                 <span>1. Select Vehicle Type</span>
               </h2>
@@ -245,11 +245,10 @@ export default function DriverOnboardingPage() {
                       key={item.type}
                       type="button"
                       onClick={() => setValue("vehicleType", item.type)}
-                      className={`flex flex-col text-left rounded-xl border p-3.5 transition-all ${
-                        isSelected
+                      className={`flex flex-col text-left rounded-xl border p-3.5 transition-all ${isSelected
                           ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
                           : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
-                      }`}
+                        }`}
                     >
                       <span className="text-xs font-semibold">{item.label}</span>
                       <span className="text-[11px] text-slate-400 mt-0.5">{item.desc}</span>
@@ -261,7 +260,7 @@ export default function DriverOnboardingPage() {
 
             {/* Section 2: Contact & Registration Info */}
             <div className="border-t border-slate-100 pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-emerald-600" />
                 <span>2. Vehicle & Location Information</span>
               </h2>
@@ -334,7 +333,7 @@ export default function DriverOnboardingPage() {
 
             {/* Section 3: 5 Mandatory Document Uploads */}
             <div className="border-t border-slate-100 pt-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm font-semibold  tracking-wider text-slate-900 flex items-center gap-2">
                 <FileText className="h-4 w-4 text-emerald-600" />
                 <span>3. Verification Documents (All 5 Required)</span>
               </h2>

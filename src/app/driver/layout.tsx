@@ -5,15 +5,15 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import logo from "@/assets/logo.png";
-import {  
+import {
   LayoutDashboard,
   Navigation,
   DollarSign,
   User,
   LogOut,
   Menu,
-  X,  
-  AlertTriangle,  
+  X,
+  AlertTriangle,
   MessageSquare,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -96,11 +96,11 @@ export default function DriverLayout({
               priority
               className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
             />
-            <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+            <span className="text-[10px]  tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
               Driver Hub
             </span>
           </Link>
-        </div>     
+        </div>
 
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
@@ -114,11 +114,10 @@ export default function DriverLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                  isActive
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${isActive
                     ? "bg-emerald-600 text-white shadow-sm"
                     : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span>{item.label}</span>
@@ -161,7 +160,7 @@ export default function DriverLayout({
                   height={164}
                   className="h-9 w-auto object-contain"
                 />
-                <span className="text-[10px] uppercase tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                <span className="text-[10px]  tracking-wider text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
                   Driver Hub
                 </span>
               </Link>
@@ -183,11 +182,10 @@ export default function DriverLayout({
                     key={item.href}
                     href={item.href}
                     onClick={() => setMobileSidebarOpen(false)}
-                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold ${
-                      isActive
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold ${isActive
                         ? "bg-emerald-600 text-white shadow-sm"
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                    }`}
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{item.label}</span>

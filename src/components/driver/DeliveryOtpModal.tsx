@@ -71,7 +71,7 @@ export default function DeliveryOtpModal({
         <DialogHeader>
           <div className="flex items-center gap-2 text-emerald-600 mb-1">
             <KeyRound className="w-5 h-5" />
-            <span className="text-xs font-bold uppercase tracking-wider">Handover Check</span>
+            <span className="text-xs font-bold  tracking-wider">Handover Check</span>
           </div>
           <DialogTitle className="font-serif text-xl font-bold text-slate-900">
             Verify Buyer Delivery OTP

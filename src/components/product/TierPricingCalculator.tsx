@@ -3,7 +3,7 @@
 import React from "react";
 import { TPricingTier, SellingUnit } from "@/types";
 import { formatCurrency, formatUnit, getApplicableTierPrice } from "@/utils/formatters";
-import { TrendingDown, Sparkles, Check } from "lucide-react";
+import { Check } from "lucide-react";
 
 interface TierPricingCalculatorProps {
   basePrice: number;
@@ -32,7 +32,6 @@ export default function TierPricingCalculator({
   const subtotal = quantity * activeUnitPrice;
   const regularTotal = quantity * basePrice;
   const savings = Math.max(0, regularTotal - subtotal);
-  const savingsPercent = regularTotal > 0 ? Math.round((savings / regularTotal) * 100) : 0;
 
   const handleIncrement = () => {
     if (quantity < availableQuantity) {
@@ -59,21 +58,6 @@ export default function TierPricingCalculator({
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-4 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <TrendingDown className="w-5 h-5 text-emerald-600" />
-          <h4 className="font-serif font-bold text-slate-900 text-base">
-            Volume & Bulk Pricing Calculator
-          </h4>
-        </div>
-        {savings > 0 && (
-          <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            Save {savingsPercent}% Bulk Discount
-          </span>
-        )}
-      </div>
-
       <p className="text-xs text-slate-500">
         Order higher quantities to unlock discounted producer rates. Select your desired volume
         below to apply savings instantly.

@@ -22,7 +22,7 @@ export default function PaymentSuccessPage() {
           </div>
 
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-widest text-emerald-600 font-bold">
+            <span className="text-xs  tracking-widest text-emerald-600 font-bold">
               Payment Confirmed
             </span>
             <h1 className="font-serif text-3xl font-bold text-slate-900">Order Successful!</h1>

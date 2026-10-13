@@ -30,7 +30,7 @@ import { formatCurrency, formatUnit } from "@/utils/formatters";
 
 export default function DriverDeliveryDetailsPage() {
   const params = useParams();
-  const deliveryId = params?.id as string; 
+  const deliveryId = params?.id as string;
 
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
@@ -122,13 +122,12 @@ export default function DriverDeliveryDetailsPage() {
                 Delivery #{order.orderId}
               </h1>
               <span
-                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border flex items-center gap-1 ${
-                  delivery.status === "Delivered"
+                className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold border flex items-center gap-1 ${delivery.status === "Delivered"
                     ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                     : delivery.status === "PickedUp"
-                    ? "bg-blue-50 text-blue-700 border-blue-200"
-                    : "bg-amber-50 text-amber-700 border-amber-200"
-                }`}
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-amber-50 text-amber-700 border-amber-200"
+                  }`}
               >
                 {delivery.status === "Delivered" && <CheckCircle2 className="h-3 w-3" />}
                 {delivery.status === "PickedUp" && <Truck className="h-3 w-3" />}
@@ -218,17 +217,16 @@ export default function DriverDeliveryDetailsPage() {
 
       {/* Progress Journey Tracker */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
+        <h2 className="text-xs font-semibold  tracking-wider text-slate-500 mb-4">
           Transit Progress
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
           {/* Step 1 */}
           <div
-            className={`p-4 rounded-xl border transition-all ${
-              delivery.status === "Assigned" || delivery.status === "PickedUp" || delivery.status === "Delivered"
+            className={`p-4 rounded-xl border transition-all ${delivery.status === "Assigned" || delivery.status === "PickedUp" || delivery.status === "Delivered"
                 ? "border-emerald-200 bg-emerald-50/50"
                 : "border-slate-200 bg-slate-50"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2 mb-1">
               <div className="w-6 h-6 rounded-full bg-emerald-600 text-white text-xs font-bold flex items-center justify-center">
@@ -243,19 +241,17 @@ export default function DriverDeliveryDetailsPage() {
 
           {/* Step 2 */}
           <div
-            className={`p-4 rounded-xl border transition-all ${
-              delivery.status === "PickedUp" || delivery.status === "Delivered"
+            className={`p-4 rounded-xl border transition-all ${delivery.status === "PickedUp" || delivery.status === "Delivered"
                 ? "border-emerald-200 bg-emerald-50/50"
                 : "border-slate-200 bg-slate-50/50"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2 mb-1">
               <div
-                className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
-                  delivery.status === "PickedUp" || delivery.status === "Delivered"
+                className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${delivery.status === "PickedUp" || delivery.status === "Delivered"
                     ? "bg-emerald-600 text-white"
                     : "bg-slate-200 text-slate-600"
-                }`}
+                  }`}
               >
                 2
               </div>
@@ -268,19 +264,17 @@ export default function DriverDeliveryDetailsPage() {
 
           {/* Step 3 */}
           <div
-            className={`p-4 rounded-xl border transition-all ${
-              delivery.status === "Delivered"
+            className={`p-4 rounded-xl border transition-all ${delivery.status === "Delivered"
                 ? "border-emerald-200 bg-emerald-50/50"
                 : "border-slate-200 bg-slate-50/50"
-            }`}
+              }`}
           >
             <div className="flex items-center gap-2 mb-1">
               <div
-                className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
-                  delivery.status === "Delivered"
+                className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${delivery.status === "Delivered"
                     ? "bg-emerald-600 text-white"
                     : "bg-slate-200 text-slate-600"
-                }`}
+                  }`}
               >
                 3
               </div>
@@ -387,7 +381,7 @@ export default function DriverDeliveryDetailsPage() {
             {items.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] border-b border-slate-200">
+                  <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px] border-b border-slate-200">
                     <tr>
                       <th className="py-2.5 px-3">Crop Produce</th>
                       <th className="py-2.5 px-3">Quantity</th>

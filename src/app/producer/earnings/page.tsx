@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import {
   DollarSign,
   CheckCircle2,
-  Clock,  
+  Clock,
 } from "lucide-react";
 import { useGetProducerWisePaymentsQuery } from "@/redux/features/payment/paymentApi";
 import { formatCurrency, formatUnit, formatDate } from "@/utils/formatters";
@@ -142,7 +142,7 @@ export default function ProducerEarningsPage() {
         ) : payments.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-700">
-              <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider text-[10px] border-b border-slate-200">
+              <thead className="bg-slate-50 text-slate-500  tracking-wider text-[10px] border-b border-slate-200">
                 <tr>
                   <th className="py-3.5 px-4">Harvest Item</th>
                   <th className="py-3.5 px-4">Quantity</th>
@@ -170,11 +170,10 @@ export default function ProducerEarningsPage() {
 
                     <td className="py-3.5 px-4">
                       <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${
-                          p.isTransferred
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${p.isTransferred
                             ? "bg-blue-50 text-blue-700 border border-blue-200"
                             : "bg-amber-50 text-amber-700 border border-amber-200"
-                        }`}
+                          }`}
                       >
                         {p.isTransferred ? (
                           <>

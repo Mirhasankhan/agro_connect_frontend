@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, ShieldCheck, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { useVerifyRegistrationMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
@@ -110,10 +110,7 @@ export default function VerifyOtpPage() {
               priority
               className="h-16 w-auto object-contain"
             />
-          </Link>
-          <div className="mx-auto mt-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 ring-1 ring-emerald-600/20">
-            <ShieldCheck className="h-6 w-6" />
-          </div>
+          </Link>       
           <h1 className="mt-3 text-2xl font-bold text-slate-900 sm:text-3xl">
             Verify your email
           </h1>
