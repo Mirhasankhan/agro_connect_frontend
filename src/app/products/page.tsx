@@ -98,7 +98,7 @@ export default function ProductsPage() {
     queryParams.order = "desc";
   }
 
-  const { data, isLoading, isFetching } = useGetAllProductsQuery(queryParams);
+  const { data, isLoading } = useGetAllProductsQuery(queryParams);
 
   const products = data?.data?.products || [];
   const meta = data?.data?.meta;
@@ -348,7 +348,7 @@ export default function ProductsPage() {
 
           {/* Products Grid */}
           <div className="lg:col-span-3 space-y-8">
-            {isLoading || isFetching ? (
+            {isLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div
