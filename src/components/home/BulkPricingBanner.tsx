@@ -11,6 +11,7 @@ import {
   Building2,
   UtensilsCrossed,
 } from "lucide-react";
+import { formatCurrency } from "@/utils/formatters";
 
 export default function BulkPricingBanner() {
   // Interactive mini simulation state (e.g. wholesale plantain / rice bags)
@@ -165,11 +166,11 @@ export default function BulkPricingBanner() {
                   <span className="text-xs text-slate-300">Unit Price Per Kilogram</span>
                   <div className="text-right">
                     <span className="text-xl sm:text-2xl font-extrabold text-amber-300">
-                      {currentTier.unitPrice.toLocaleString()} FCFA
+                      {formatCurrency(currentTier.unitPrice)}
                     </span>
                     {volumeLevel > 0 && (
-                      <span className="text-xs text-slate-400 line-through ml-2">
-                        {standardCost.toLocaleString()} FCFA
+                       <span className="text-xs text-slate-400 line-through ml-2">
+                        {formatCurrency(standardCost)}
                       </span>
                     )}
                   </div>

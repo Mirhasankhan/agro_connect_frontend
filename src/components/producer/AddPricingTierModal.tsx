@@ -104,7 +104,7 @@ export default function AddPricingTierModal({
 
           <div>
             <label className="form-label text-slate-700">
-              Price Per Unit (FCFA)
+              Price Per Unit (৳)
             </label>
             <input
               type="number"

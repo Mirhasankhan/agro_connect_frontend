@@ -24,6 +24,7 @@ import { useCreateDriverProfileMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
 import { DriverVehicleType } from "@/types";
+import { RegionCitySelect } from "@/components/common/RegionCitySelect";
 
 const driverSchema = z.object({
   vehicleType: z.enum([
@@ -70,6 +71,8 @@ export default function DriverOnboardingPage() {
   });
 
   const selectedVehicle = watch("vehicleType");
+  const watchedRegion = watch("region") || "";
+  const watchedCity = watch("city") || "";
 
   const onSubmit = async (values: DriverFormValues) => {
     // Check all 5 mandatory documents required by backend
@@ -295,37 +298,21 @@ export default function DriverOnboardingPage() {
                   )}
                 </div>
 
-                <div>
-                  <label htmlFor="city" className="form-label">
-                    Operating City *
-                  </label>
-                  <input
-                    id="city"
-                    type="text"
-                    placeholder="e.g. Abidjan, Bouaké"
-                    className="form-input"
-                    {...register("city")}
-                  />
-                  {errors.city && (
-                    <p className="form-error">{errors.city.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="region" className="form-label">
-                    Region *
-                  </label>
-                  <input
-                    id="region"
-                    type="text"
-                    placeholder="e.g. Lagunes, Gbêkê"
-                    className="form-input"
-                    {...register("region")}
-                  />
-                  {errors.region && (
-                    <p className="form-error">{errors.region.message}</p>
-                  )}
-                </div>
+                <RegionCitySelect
+                  regionValue={watchedRegion}
+                  cityValue={watchedCity}
+                  onRegionChange={(reg) => {
+                    setValue("region", reg, { shouldValidate: true });
+                    setValue("city", "", { shouldValidate: true });
+                  }}
+                  onCityChange={(c) => {
+                    setValue("city", c, { shouldValidate: true });
+                  }}
+                  regionError={errors.region?.message}
+                  cityError={errors.city?.message}
+                  variant="form"
+                  containerClassName="contents"
+                />
 
                 <div className="sm:col-span-2">
                   <label htmlFor="address" className="form-label">

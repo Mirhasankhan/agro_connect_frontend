@@ -319,7 +319,7 @@ export default function ProductsPage() {
             {/* Price Range Filter */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
               <label className="text-xs font-semibold text-slate-700 block tracking-wider">
-                Price Range (CFA)
+                Price Range (৳)
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <input

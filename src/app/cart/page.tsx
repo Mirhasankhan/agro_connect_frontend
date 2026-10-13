@@ -24,7 +24,7 @@ import {
 import { useAppSelector } from "@/redux/hooks";
 import { formatCurrency, formatUnit, getApplicableTierPrice } from "@/utils/formatters";
 
-const DELIVERY_CHARGE = 50; // Fixed delivery charge in XOF / FCFA
+const DELIVERY_CHARGE = 50; // Fixed delivery charge in BDT
 
 export default function CartPage() {
   const { isAuthenticated } = useAppSelector((state) => state.auth);

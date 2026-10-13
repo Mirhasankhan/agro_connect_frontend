@@ -25,6 +25,7 @@ import { useCreateProducerProfileMutation } from "@/redux/features/auth/authApi"
 import { useAppDispatch } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
 import { ProducerType } from "@/types";
+import RegionCitySelect from "@/components/common/RegionCitySelect";
 
 const producerSchema = z
   .object({
@@ -88,6 +89,8 @@ export default function ProducerOnboardingPage() {
   });
 
   const producerType = watch("producerType");
+  const selectedRegion = watch("region");
+  const selectedCity = watch("city");
 
   const onSubmit = async (values: ProducerFormValues) => {
     // Validate required documents
@@ -364,37 +367,21 @@ export default function ProducerOnboardingPage() {
                   )}
                 </div>
 
-                <div>
-                  <label htmlFor="city" className="form-label">
-                    City / Town *
-                  </label>
-                  <input
-                    id="city"
-                    type="text"
-                    placeholder="e.g. Bouaké, Abidjan"
-                    className="form-input"
-                    {...register("city")}
-                  />
-                  {errors.city && (
-                    <p className="form-error">{errors.city.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="region" className="form-label">
-                    Region *
-                  </label>
-                  <input
-                    id="region"
-                    type="text"
-                    placeholder="e.g. Gbêkê, Lagunes"
-                    className="form-input"
-                    {...register("region")}
-                  />
-                  {errors.region && (
-                    <p className="form-error">{errors.region.message}</p>
-                  )}
-                </div>
+                <RegionCitySelect
+                  regionValue={selectedRegion}
+                  cityValue={selectedCity}
+                  onRegionChange={(newRegion) => {
+                    setValue("region", newRegion, { shouldValidate: true, shouldDirty: true });
+                    setValue("city", "", { shouldValidate: true, shouldDirty: true });
+                  }}
+                  onCityChange={(newCity) => {
+                    setValue("city", newCity, { shouldValidate: true, shouldDirty: true });
+                  }}
+                  regionError={errors.region?.message}
+                  cityError={errors.city?.message}
+                  required
+                  containerClassName="contents"
+                />
 
                 <div className="sm:col-span-2">
                   <label htmlFor="address" className="form-label">

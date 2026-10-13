@@ -1,23 +1,23 @@
 import { SellingUnit, TPricingTier } from "@/types";
 
 /**
- * Format currency with FCFA (Ivory Coast currency) or ৳ based on requirement
+ * Format currency with Bangladeshi Taka (৳ / BDT)
  */
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat("fr-CI", {
-    style: "currency",
-    currency: "XOF",
-    maximumFractionDigits: 0,
-  })
-    .format(amount)
-    .replace("XOF", "FCFA");
+export const formatCurrency = (amount: number = 0): string => {
+  const numeric = typeof amount === "number" ? amount : Number(amount) || 0;
+  return `৳${numeric.toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+  })}`;
 };
 
 /**
- * Alternative standard price formatter (or display in FCFA)
+ * Alternative standard price formatter in Bangladeshi Taka
  */
-export const formatPrice = (amount: number): string => {
-  return `${amount.toLocaleString()} FCFA`;
+export const formatPrice = (amount: number = 0): string => {
+  const numeric = typeof amount === "number" ? amount : Number(amount) || 0;
+  return `৳${numeric.toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+  })}`;
 };
 
 /**

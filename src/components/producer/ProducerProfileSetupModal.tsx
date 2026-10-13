@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import { useCreateProducerProfileMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
+import RegionCitySelect from "@/components/common/RegionCitySelect";
 
 const producerSchema = z
   .object({
@@ -102,6 +103,8 @@ export default function ProducerProfileSetupModal({
   });
 
   const producerType = watch("producerType");
+  const selectedRegion = watch("region");
+  const selectedCity = watch("city");
 
   const onSubmit = async (values: ProducerFormValues) => {
     if (!nidFile) {
@@ -366,31 +369,21 @@ export default function ProducerProfileSetupModal({
                 )}
               </div>
 
-              <div>
-                <label className="form-label">City</label>
-                <input
-                  type="text"
-                  placeholder="City"
-                  className="form-input"
-                  {...register("city")}
-                />
-                {errors.city && (
-                  <p className="form-error">{errors.city.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="form-label">Region / State</label>
-                <input
-                  type="text"
-                  placeholder="Region"
-                  className="form-input"
-                  {...register("region")}
-                />
-                {errors.region && (
-                  <p className="form-error">{errors.region.message}</p>
-                )}
-              </div>
+              <RegionCitySelect
+                regionValue={selectedRegion}
+                cityValue={selectedCity}
+                onRegionChange={(newRegion) => {
+                  setValue("region", newRegion, { shouldValidate: true, shouldDirty: true });
+                  setValue("city", "", { shouldValidate: true, shouldDirty: true });
+                }}
+                onCityChange={(newCity) => {
+                  setValue("city", newCity, { shouldValidate: true, shouldDirty: true });
+                }}
+                regionError={errors.region?.message}
+                cityError={errors.city?.message}
+                required
+                containerClassName="contents"
+              />
             </div>
 
             <div>

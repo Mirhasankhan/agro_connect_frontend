@@ -533,7 +533,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
                         Daily Rate
                       </div>
                       <p className="mt-1 text-base font-semibold text-slate-900">
-                        ${workerInfo.dailyRate ?? 0}
+                        ৳{workerInfo.dailyRate ?? 0}
                       </p>
                     </div>
 
@@ -543,7 +543,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
                         Current Earnings
                       </div>
                       <p className="mt-1 text-base font-semibold text-slate-900">
-                        ${workerInfo.currentEarnings ?? 0}
+                        ৳{workerInfo.currentEarnings ?? 0}
                       </p>
                     </div>
                   </div>

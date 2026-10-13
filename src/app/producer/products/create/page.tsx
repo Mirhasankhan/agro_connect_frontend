@@ -249,7 +249,7 @@ export default function CreateProductPage() {
             </div>
 
             <div>
-              <label className="form-label">Standard Price Per Unit (FCFA)</label>
+              <label className="form-label">Standard Price Per Unit (৳)</label>
               <input
                 type="number"
                 placeholder="e.g. 1500"
@@ -334,7 +334,7 @@ export default function CreateProductPage() {
 
                       <div>
                         <label className="text-[11px] text-slate-600 block mb-1">
-                          Discounted Unit Price (FCFA)
+                          Discounted Unit Price (৳)
                         </label>
                         <input
                           type="number"

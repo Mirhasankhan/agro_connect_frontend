@@ -394,7 +394,7 @@ export default function ProductDetailsPage() {
             <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-200">
               <div className="flex items-center gap-2 text-xs text-slate-600">
                 <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Flat Delivery: 50 FCFA</span>
+                <span>Flat Delivery: ৳50</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-slate-600">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />

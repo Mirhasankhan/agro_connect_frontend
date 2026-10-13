@@ -127,7 +127,7 @@ export default function Footer() {
                 <span>Transparent tiered wholesale pricing</span>
               </div>
               <div className="pt-2 text-[11px] text-emerald-400 font-mono">
-                Currency: XOF (CFA Franc)
+                Currency: BDT (৳)
               </div>
             </div>
           </div>

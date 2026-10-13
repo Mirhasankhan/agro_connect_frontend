@@ -35,6 +35,7 @@ import {
   useChangePasswordMutation,
 } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
+import { RegionCitySelect } from "@/components/common/RegionCitySelect";
 
 export default function DriverProfilePage() {
   const dispatch = useAppDispatch();
@@ -808,39 +809,18 @@ export default function DriverProfilePage() {
             </div>
 
             {/* City & Region */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
-                  City
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder="e.g. Abidjan, Bouaké, San Pédro"
-                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
-                  />
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
-                  Region / District
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    placeholder="e.g. Lagunes, Vallée du Bandama"
-                    className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
-                  />
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                </div>
-              </div>
-            </div>
+            <RegionCitySelect
+              regionValue={region}
+              cityValue={city}
+              onRegionChange={(newRegion) => {
+                setRegion(newRegion);
+                setCity("");
+              }}
+              onCityChange={(newCity) => {
+                setCity(newCity);
+              }}
+              variant="profile"
+            />
 
             {/* Operational Address */}
             <div>

@@ -24,7 +24,7 @@ const FAQS: FaqItem[] = [
   {
     question: "How are bulk tiered discounts calculated?",
     answer:
-      "Producers configure their own wholesale pricing tiers directly on their dashboard (e.g., 1-20 kg at 1,000 FCFA/kg, 21-100 kg at 850 FCFA/kg, and 100+ kg at 700 FCFA/kg). When you adjust the quantity in your cart or on the product page, our calculator applies the discounted rate instantly.",
+      "Producers configure their own wholesale pricing tiers directly on their dashboard (e.g., 1-20 kg at ৳1,000/kg, 21-100 kg at ৳850/kg, and 100+ kg at ৳700/kg). When you adjust the quantity in your cart or on the product page, our calculator applies the discounted rate instantly.",
   },
   {
     question: "Which cities and agricultural regions are currently covered?",

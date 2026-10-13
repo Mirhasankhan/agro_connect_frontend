@@ -448,11 +448,11 @@ export default function EditProductPage() {
               {/* Price Per Unit */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Base Price Per Unit (XOF) <span className="text-rose-500">*</span>
+                  Base Price Per Unit (৳) <span className="text-rose-500">*</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-3 top-2.5 text-xs font-medium text-slate-400">
-                    CFA
+                    ৳
                   </span>
                   <input
                     type="number"

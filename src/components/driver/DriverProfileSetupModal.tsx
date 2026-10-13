@@ -26,6 +26,7 @@ import { useCreateDriverProfileMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
 import { DriverVehicleType } from "@/types";
+import RegionCitySelect from "@/components/common/RegionCitySelect";
 
 const driverSchema = z.object({
   vehicleType: z.enum([
@@ -79,6 +80,8 @@ export default function DriverProfileSetupModal({
   });
 
   const selectedVehicle = watch("vehicleType");
+  const selectedRegion = watch("region");
+  const selectedCity = watch("city");
 
   const onSubmit = async (values: DriverFormValues) => {
     if (
@@ -270,33 +273,20 @@ export default function DriverProfileSetupModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="form-label">City</label>
-                <input
-                  type="text"
-                  placeholder="City"
-                  className="form-input"
-                  {...register("city")}
-                />
-                {errors.city && (
-                  <p className="form-error">{errors.city.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="form-label">Region / State</label>
-                <input
-                  type="text"
-                  placeholder="Region"
-                  className="form-input"
-                  {...register("region")}
-                />
-                {errors.region && (
-                  <p className="form-error">{errors.region.message}</p>
-                )}
-              </div>
-            </div>
+            <RegionCitySelect
+              regionValue={selectedRegion}
+              cityValue={selectedCity}
+              onRegionChange={(newRegion) => {
+                setValue("region", newRegion, { shouldValidate: true, shouldDirty: true });
+                setValue("city", "", { shouldValidate: true, shouldDirty: true });
+              }}
+              onCityChange={(newCity) => {
+                setValue("city", newCity, { shouldValidate: true, shouldDirty: true });
+              }}
+              regionError={errors.region?.message}
+              cityError={errors.city?.message}
+              required
+            />
 
             <div>
               <label className="form-label">Physical Address</label>
