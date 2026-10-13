@@ -13,7 +13,6 @@ import {
   Building2,
   UploadCloud,
   FileCheck,
-  Loader2,
   ArrowRight,
   MapPin,
   FileText,
@@ -495,8 +494,7 @@ export default function ProducerOnboardingPage() {
                 className="btn-primary"
               >
                 {isLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <>            
                     <span>Submitting profile...</span>
                   </>
                 ) : (

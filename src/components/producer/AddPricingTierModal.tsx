@@ -11,7 +11,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAddPricingTierMutation } from "@/redux/features/product/productApi";
 import { SellingUnit } from "@/types";
@@ -133,7 +132,6 @@ export default function AddPricingTierModal({
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
                   Saving...
                 </>
               ) : (

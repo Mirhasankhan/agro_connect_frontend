@@ -16,7 +16,6 @@ import {
   Sparkles,
   MapPin,
   ShoppingBag,
-  Loader2,
   AlertCircle,
   Tag,
 } from "lucide-react";
@@ -40,8 +39,7 @@ export default function ProducerProductDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">        
         <p className="text-xs text-slate-500">Loading harvest details...</p>
       </div>
     );

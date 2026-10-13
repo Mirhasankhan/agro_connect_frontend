@@ -13,7 +13,6 @@ import {
   X,
   Plus,
   Trash2,
-  Loader2,
   TrendingDown,
   Leaf,
 } from "lucide-react";
@@ -429,8 +428,7 @@ export default function CreateProductPage() {
             }`}
           >
             {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+              <>              
                 Publishing Harvest...
               </>
             ) : !isAccepted ? (

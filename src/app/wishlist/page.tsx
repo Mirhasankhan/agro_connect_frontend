@@ -182,8 +182,7 @@ export default function WishlistPage() {
                   className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-semibold transition-colors shadow-sm"
                 >
                   {isAddingAll ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <>              
                       Adding to Cart...
                     </>
                   ) : (
@@ -342,8 +341,7 @@ export default function WishlistPage() {
                           className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-sm"
                         >
                           {isItemAdding ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            <>                         
                               Adding...
                             </>
                           ) : isAvailable ? (

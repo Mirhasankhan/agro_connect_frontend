@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Star, Loader2 } from "lucide-react";
+import { Star } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSubmitReviewMutation } from "@/redux/features/feedback/feedbackApi";
 
@@ -156,8 +156,7 @@ export default function ReviewModal({
               className="btn-primary text-xs py-2 px-5 flex items-center gap-2"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                <>               
                   Submitting...
                 </>
               ) : (

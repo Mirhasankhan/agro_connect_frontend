@@ -11,7 +11,6 @@ import { z } from "zod";
 import {
   Eye,
   EyeOff,
-  Loader2,  
   ShoppingBag,
   Tractor,
   Truck,
@@ -168,7 +167,7 @@ export default function RegisterPage() {
               <input
                 id="fullName"
                 type="text"
-                placeholder="e.g. Jean Kouassi"
+                placeholder="Enter your full name"
                 className="form-input"
                 autoComplete="name"
                 disabled={isLoading}
@@ -187,7 +186,7 @@ export default function RegisterPage() {
               <input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder="Enter your email"
                 className="form-input"
                 autoComplete="email"
                 disabled={isLoading}
@@ -207,7 +206,7 @@ export default function RegisterPage() {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Create a strong password (6+ chars)"
+                  placeholder="Enter your password"
                   className="form-input pr-10"
                   autoComplete="new-password"
                   disabled={isLoading}
@@ -232,8 +231,7 @@ export default function RegisterPage() {
               className="btn-primary mt-2 w-full"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <>            
                   <span>Creating account...</span>
                 </>
               ) : (

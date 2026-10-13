@@ -18,7 +18,6 @@ import {
   EyeOff,
   Camera,
   CheckCircle2,
-  Loader2,
   FileText,
   ExternalLink,
   Save,
@@ -274,8 +273,7 @@ export default function DriverProfilePage() {
 
   if (isProfileLoading && !profile) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 space-y-4">
-        <Loader2 className="w-9 h-9 animate-spin text-emerald-600" />
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">    
         <p className="text-sm font-medium text-slate-500">
           Loading driver profile & vehicle credentials...
         </p>
@@ -862,8 +860,7 @@ export default function DriverProfilePage() {
                 className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {isUpdatingProfile ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <>              
                     <span>Saving Changes...</span>
                   </>
                 ) : (
@@ -1032,8 +1029,7 @@ export default function DriverProfilePage() {
                 className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {isChangingPassword ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <>                 
                     <span>Updating Password...</span>
                   </>
                 ) : (

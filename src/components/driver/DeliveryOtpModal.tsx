@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ShieldCheck, Loader2, KeyRound } from "lucide-react";
+import { ShieldCheck, KeyRound } from "lucide-react";
 import { toast } from "react-toastify";
 import { useVerifyDeliveryCompletionOtpMutation } from "@/redux/features/order/orderApi";
 
@@ -116,8 +116,7 @@ export default function DeliveryOtpModal({
               className="btn-primary text-xs py-2.5 px-6 flex items-center gap-2"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                <>              
                   Verifying...
                 </>
               ) : (

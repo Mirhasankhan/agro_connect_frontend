@@ -17,7 +17,6 @@ import {
   Building2,
   UploadCloud,
   FileCheck,
-  Loader2,
   MapPin,
   FileText,
   AlertCircle,
@@ -478,8 +477,7 @@ export default function ProducerProfileSetupModal({
               className="btn-primary text-xs px-5 py-2.5"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <>                 
                   <span>Submitting...</span>
                 </>
               ) : (

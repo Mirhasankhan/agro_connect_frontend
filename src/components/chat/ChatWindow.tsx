@@ -225,8 +225,7 @@ export default function ChatWindow({
       {/* Messages Thread */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3 bg-[#f8faf9]">
         {isLoadingHistory ? (
-          <div className="flex h-full min-h-[300px] items-center justify-center">
-            <Loader2 className="h-7 w-7 animate-spin text-emerald-600" />
+          <div className="flex h-full min-h-[300px] items-center justify-center">          
             <span className="ml-2 text-sm text-slate-500">Loading conversation history...</span>
           </div>
         ) : messages.length === 0 ? (

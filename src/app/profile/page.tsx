@@ -15,7 +15,6 @@ import {
   Camera,
   ShieldCheck,
   CheckCircle2,  
-  Loader2,
   Package,
   MessageSquare,
   ShoppingCart,  
@@ -230,7 +229,6 @@ export default function BuyerProfilePage() {
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-9 h-9 animate-spin text-emerald-600" />
             <p className="text-sm font-medium text-slate-500">
               Loading your profile...
             </p>
@@ -554,8 +552,7 @@ export default function BuyerProfilePage() {
                       className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                     >
                       {isUpdatingProfile ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                        <>                
                           <span>Saving Changes...</span>
                         </>
                       ) : (
@@ -712,8 +709,7 @@ export default function BuyerProfilePage() {
                       className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                     >
                       {isChangingPassword ? (
-                        <>
-                          <Loader2 className="w-4 h-4 animate-spin" />
+                        <>                
                           <span>Updating Password...</span>
                         </>
                       ) : (

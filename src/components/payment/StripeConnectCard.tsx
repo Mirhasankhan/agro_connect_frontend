@@ -6,7 +6,6 @@ import {
   CheckCircle2,
   AlertCircle,
   ExternalLink,
-  Loader2,
   CreditCard,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -108,8 +107,7 @@ export default function StripeConnectCard({ userRole = "PRODUCER" }: StripeConne
           className="btn-secondary text-xs py-2 px-4 inline-flex items-center justify-center gap-2 shrink-0 self-start sm:self-auto"
         >
           {isConnecting ? (
-            <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            <>           
               <span>Opening...</span>
             </>
           ) : (
@@ -161,8 +159,7 @@ export default function StripeConnectCard({ userRole = "PRODUCER" }: StripeConne
         className="btn-primary text-xs py-2.5 px-4 inline-flex items-center justify-center gap-2 shrink-0 shadow-sm self-start sm:self-auto"
       >
         {isConnecting ? (
-          <>
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          <>   
             <span>Connecting...</span>
           </>
         ) : (

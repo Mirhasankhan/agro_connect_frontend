@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft, Loader2, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import { toast } from "react-toastify";
 import { useSendForgotPasswordOtpMutation } from "@/redux/features/auth/authApi";
 
@@ -106,8 +106,7 @@ export default function ForgotPasswordPage() {
               className="btn-primary mt-2 w-full"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <>            
                   <span>Sending code...</span>
                 </>
               ) : (

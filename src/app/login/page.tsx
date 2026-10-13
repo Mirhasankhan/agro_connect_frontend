@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ArrowRight } from "lucide-react";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
@@ -199,8 +199,7 @@ export default function LoginPage() {
               className="btn-primary mt-2 w-full"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <>                
                   <span>Signing in...</span>
                 </>
               ) : (

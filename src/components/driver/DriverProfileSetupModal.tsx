@@ -15,7 +15,6 @@ import {
   Truck,
   UploadCloud,
   FileCheck,
-  Loader2,
   FileText,
   AlertCircle,
   X,
@@ -332,8 +331,7 @@ export default function DriverProfileSetupModal({
               className="btn-primary text-xs px-5 py-2.5"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <>          
                   <span>Submitting...</span>
                 </>
               ) : (

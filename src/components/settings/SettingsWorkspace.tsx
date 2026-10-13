@@ -17,7 +17,6 @@ import {
   Eye,
   EyeOff,
   KeyRound,
-  Loader2,
   Lock,
   Mail,
   MapPin,
@@ -306,7 +305,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
             </div>
             {isUploadingAvatar && (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-medium text-amber-700 animate-pulse">
-                <Loader2 size={13} className="animate-spin" />
+             
                 Uploading to Cloudinary...
               </span>
             )}
@@ -336,8 +335,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
 
               {/* Uploading Overlay */}
               {isUploadingAvatar && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white">
-                  <Loader2 size={24} className="animate-spin" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white">                 
                   <span className="mt-1 text-[10px] font-semibold">Saving...</span>
                 </div>
               )}
@@ -569,8 +567,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
               className="btn-primary w-full sm:w-auto min-w-[150px]"
             >
               {isUpdatingProfile ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
+                <>                  
                   Saving...
                 </>
               ) : (
@@ -712,8 +709,7 @@ export default function SettingsWorkspace({ role }: SettingsWorkspaceProps) {
               className="btn-primary w-full sm:w-auto min-w-[170px]"
             >
               {isChangingPassword ? (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
+                <>              
                   Updating Password...
                 </>
               ) : (

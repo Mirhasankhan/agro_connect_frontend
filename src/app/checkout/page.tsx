@@ -14,7 +14,6 @@ import {
   Truck,
   ArrowLeft,
   AlertCircle,
-  Loader2,
   CheckCircle2,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -322,8 +321,7 @@ export default function CheckoutPage() {
                       className="btn-primary text-xs py-2 px-5 flex items-center gap-2"
                     >
                       {isCreatingAddress ? (
-                        <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <>                      
                           Saving...
                         </>
                       ) : (
@@ -441,8 +439,7 @@ export default function CheckoutPage() {
                 className="btn-primary w-full py-3.5 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-sm"
               >
                 {isPlacingOrder ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <>                   
                     Creating Order...
                   </>
                 ) : (

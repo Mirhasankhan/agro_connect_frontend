@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   Eye,
   EyeOff,  
-  Loader2,
   ShieldCheck,  
   CheckCircle2,
 } from "lucide-react";
@@ -190,7 +189,6 @@ export default function ResetPasswordPage() {
               >
                 {isVerifying ? (
                   <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
                     <span>Verifying code...</span>
                   </>
                 ) : (
@@ -268,8 +266,7 @@ export default function ResetPasswordPage() {
                 className="btn-primary mt-2 w-full"
               >
                 {isResetting ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                  <>             
                     <span>Saving new password...</span>
                   </>
                 ) : (
