@@ -24,7 +24,7 @@ import {
   ExternalLink,
   Save,
   RotateCcw,
-  Image as ImageIcon,    
+  Image as ImageIcon,
 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { updateProfileData } from "@/redux/features/auth/authSlice";
@@ -59,7 +59,9 @@ export default function ProducerProfilePage() {
   const verificationStatus = producer?.verificationStatus || "Pending";
 
   // Tab State: "farm" | "personal" | "security"
-  const [activeTab, setActiveTab] = useState<"farm" | "personal" | "security">("farm");
+  const [activeTab, setActiveTab] = useState<"farm" | "personal" | "security">(
+    "farm",
+  );
 
   // Personal Profile Form State
   const [fullName, setFullName] = useState("");
@@ -228,8 +230,7 @@ export default function ProducerProfilePage() {
     }
   };
 
-  const currentDisplayImage =
-    avatarPreview || profile?.profileImage || null;
+  const currentDisplayImage = avatarPreview || profile?.profileImage || null;
   const currentDisplayName =
     fullName.trim() || profile?.fullName || "Agricultural Producer";
   const farmDisplayName =
@@ -294,12 +295,13 @@ export default function ProducerProfilePage() {
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
       {/* Page Header */}
       <div className="border-b border-slate-200 pb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>     
+        <div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             Farm & Producer Profile
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Review your verified farmland records, update your personal information, and manage account security.
+            Review your verified farmland records, update your personal
+            information, and manage account security.
           </p>
         </div>
 
@@ -309,28 +311,37 @@ export default function ProducerProfilePage() {
               verificationStatus === "Accepted"
                 ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
                 : verificationStatus === "Rejected"
-                ? "bg-red-100 text-red-800 border border-red-200"
-                : "bg-amber-100 text-amber-800 border border-amber-200"
+                  ? "bg-red-100 text-red-800 border border-red-200"
+                  : "bg-amber-100 text-amber-800 border border-amber-200"
             }`}
           >
-            {verificationStatus === "Accepted" && <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />}
-            {verificationStatus === "Pending" && <Clock className="w-3.5 h-3.5 text-amber-600" />}
-            {verificationStatus === "Rejected" && <AlertTriangle className="w-3.5 h-3.5 text-red-600" />}
+            {verificationStatus === "Accepted" && (
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            )}
+            {verificationStatus === "Pending" && (
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+            )}
+            {verificationStatus === "Rejected" && (
+              <AlertTriangle className="w-3.5 h-3.5 text-red-600" />
+            )}
             Verification: {verificationStatus}
           </span>
         </div>
       </div>
-
-
 
       {verificationStatus === "Rejected" && (
         <div className="p-4 sm:p-5 rounded-2xl border border-red-200 bg-red-50/90 text-red-900 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
             <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <h3 className="font-bold text-sm">Farm Verification Requires Revision</h3>
+              <h3 className="font-bold text-sm">
+                Farm Verification Requires Revision
+              </h3>
               <p className="text-xs text-red-800 leading-relaxed">
-                Reason: &ldquo;{producer?.rejectionReason || "Incomplete or unverifiable documentation"}&rdquo;.
+                Reason: &ldquo;
+                {producer?.rejectionReason ||
+                  "Incomplete or unverifiable documentation"}
+                &rdquo;.
               </p>
             </div>
           </div>
@@ -394,7 +405,9 @@ export default function ProducerProfilePage() {
                   Producer
                 </span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
-                  {producer?.producerType === "Company" ? "Commercial Agribusiness" : "Private Farmer"}
+                  {producer?.producerType === "Company"
+                    ? "Commercial Agribusiness"
+                    : "Private Farmer"}
                 </span>
               </div>
 
@@ -462,7 +475,7 @@ export default function ProducerProfilePage() {
           }`}
         >
           <Sprout className="w-4 h-4" />
-          <span>Farmland Profile & Legal Docs</span>         
+          <span>Farmland Profile & Legal Docs</span>
         </button>
 
         <button
@@ -475,7 +488,7 @@ export default function ProducerProfilePage() {
           }`}
         >
           <User className="w-4 h-4" />
-          <span>Personal Details</span>         
+          <span>Personal Details</span>
         </button>
 
         <button
@@ -496,8 +509,7 @@ export default function ProducerProfilePage() {
       {/* TAB 1: FARMLAND PROFILE & COMPLIANCE (READ-ONLY)         */}
       {/* ========================================================= */}
       {activeTab === "farm" && (
-        <div className="space-y-8 animate-in fade-in duration-150">    
-
+        <div className="space-y-8 animate-in fade-in duration-150">
           {/* Farmland Core Specifications */}
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-sm">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -546,7 +558,9 @@ export default function ProducerProfilePage() {
                   Total Farmland Surface
                 </span>
                 <p className="font-mono font-bold text-emerald-700 text-sm">
-                  {producer?.farmSize ? `${producer.farmSize} Hectares` : "Not specified"}
+                  {producer?.farmSize
+                    ? `${producer.farmSize} Hectares`
+                    : "Not specified"}
                 </p>
               </div>
 
@@ -556,7 +570,7 @@ export default function ProducerProfilePage() {
                 </span>
                 <p className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
                   <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{producer?.farmLocation || "Ivory Coast"}</span>
+                  <span>{producer?.farmLocation || "Bangladesh"}</span>
                 </p>
               </div>
 
@@ -582,7 +596,9 @@ export default function ProducerProfilePage() {
                       Connected Account
                     </span>
                   ) : (
-                    <span className="text-slate-500">AgroConnect Platform Managed</span>
+                    <span className="text-slate-500">
+                      AgroConnect Platform Managed
+                    </span>
                   )}
                 </p>
               </div>
@@ -666,7 +682,7 @@ export default function ProducerProfilePage() {
                           {doc.desc}
                         </p>
                       </div>
-                    </div>               
+                    </div>
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
@@ -684,7 +700,7 @@ export default function ProducerProfilePage() {
                       <span className="text-xs text-slate-400 italic">
                         No digital attachment submitted
                       </span>
-                    )}                  
+                    )}
                   </div>
                 </div>
               ))}
@@ -708,7 +724,8 @@ export default function ProducerProfilePage() {
                   Update Personal Information
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Update your contact details, operational address, and public profile avatar.
+                  Update your contact details, operational address, and public
+                  profile avatar.
                 </p>
               </div>
             </div>
@@ -736,11 +753,13 @@ export default function ProducerProfilePage() {
                     Profile Avatar / Photo
                   </h4>
                   <p className="text-xs text-slate-500">
-                    Appears in the producer workspace navbar, harvest listings, and buyer chats.
+                    Appears in the producer workspace navbar, harvest listings,
+                    and buyer chats.
                   </p>
                   {avatarFile && (
                     <p className="text-xs text-emerald-700 font-semibold mt-1">
-                      Selected: {avatarFile.name} ({(avatarFile.size / 1024).toFixed(0)} KB)
+                      Selected: {avatarFile.name} (
+                      {(avatarFile.size / 1024).toFixed(0)} KB)
                     </p>
                   )}
                 </div>
@@ -801,7 +820,7 @@ export default function ProducerProfilePage() {
                     className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-500 cursor-not-allowed font-medium"
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                </div>            
+                </div>
               </div>
             </div>
 
@@ -876,7 +895,7 @@ export default function ProducerProfilePage() {
                 className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {isUpdatingProfile ? (
-                  <>                  
+                  <>
                     <span>Saving Changes...</span>
                   </>
                 ) : (
@@ -906,7 +925,8 @@ export default function ProducerProfilePage() {
                   Change Account Password
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Keep your producer account secure by using a strong, unique password.
+                  Keep your producer account secure by using a strong, unique
+                  password.
                 </p>
               </div>
             </div>
@@ -992,9 +1012,7 @@ export default function ProducerProfilePage() {
                   <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
                   <button
                     type="button"
-                    onClick={() =>
-                      setShowConfirmPassword(!showConfirmPassword)
-                    }
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
                     tabIndex={-1}
                   >

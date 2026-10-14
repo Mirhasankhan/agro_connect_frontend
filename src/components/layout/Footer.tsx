@@ -1,6 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import { Sprout, Mail, Phone, MapPin, ShieldCheck, Truck, Award } from "lucide-react";
+import {
+  Sprout,
+  Mail,
+  Phone,
+  MapPin,
+  ShieldCheck,
+  Truck,
+  Award,
+} from "lucide-react";
 
 export default function Footer() {
   return (
@@ -20,9 +28,10 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              Agricultural platform number 1 in Ivory Coast. Connecting certified local producers
-              directly with wholesale & retail buyers, offering dynamic bulk pricing and reliable
-              temperature-controlled logistics.
+              Agricultural platform number 1 in Bangladesh. Connecting certified
+              local producers directly with wholesale & retail buyers, offering
+              dynamic bulk pricing and reliable temperature-controlled
+              logistics.
             </p>
             <div className="pt-2 flex flex-col space-y-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
@@ -47,27 +56,42 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs">
               <li>
-                <Link href="/products" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/products"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   All Harvests & Products
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/products"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Wholesale Bulk Discounts
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/about"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   About Us & Mission
                 </Link>
               </li>
               <li>
-                <Link href="/#benefits" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/#benefits"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Quality Standards
                 </Link>
               </li>
               <li>
-                <Link href="/#for-whom" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/#for-whom"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   How Ordering Works
                 </Link>
               </li>
@@ -81,27 +105,42 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs">
               <li>
-                <Link href="/register" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/register"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Sell as a Farmer / Producer
                 </Link>
               </li>
               <li>
-                <Link href="/register" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/register"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Deliver as a Transporter / Driver
                 </Link>
               </li>
               <li>
-                <Link href="/onboarding/producer" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/onboarding/producer"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Producer Verification Process
                 </Link>
               </li>
               <li>
-                <Link href="/onboarding/driver" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/onboarding/driver"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Driver Vehicle Inspection
                 </Link>
               </li>
               <li>
-                <Link href="/#for-whom" className="hover:text-emerald-400 transition-colors">
+                <Link
+                  href="/#for-whom"
+                  className="hover:text-emerald-400 transition-colors"
+                >
                   Wholesale Buyer Accounts
                 </Link>
               </li>
@@ -135,7 +174,10 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} Agro Connect Côte d&apos;Ivoire. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} Agro Connect Côte d&apos;Ivoire. All
+            rights reserved.
+          </p>
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:text-emerald-400 transition-colors">
               Privacy Policy

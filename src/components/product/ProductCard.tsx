@@ -8,7 +8,7 @@ import {
   Heart,
   Star,
   MapPin,
-  CheckCircle2,  
+  CheckCircle2,
   Loader2,
 } from "lucide-react";
 import { toast } from "react-toastify";
@@ -26,12 +26,14 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const [addToCartMutation, { isLoading: isAddingToCart }] = useAddToCartMutation();
-  const [addToWishlistMutation, { isLoading: isAddingWishlist }] = useAddToWishlistMutation();
+  const [addToCartMutation, { isLoading: isAddingToCart }] =
+    useAddToCartMutation();
+  const [addToWishlistMutation, { isLoading: isAddingWishlist }] =
+    useAddToWishlistMutation();
 
   // Directly derive wishlist status from query response
   const isWishlisted = Boolean(
-    Array.isArray(product.wishlists) && product.wishlists.length > 0
+    Array.isArray(product.wishlists) && product.wishlists.length > 0,
   );
 
   const fallbackImage =
@@ -44,9 +46,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     product.producer?.fullName ||
     "Local Producer";
 
-  const city = product.producer?.producerProfile?.city || "Ivory Coast";
-
-
+  const city = product.producer?.producerProfile?.city || "Bangladesh";
 
   const handleQuickAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -106,7 +106,6 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.category.name}
             </span>
           )}
-          
         </div>
 
         {/* Wishlist Button */}
@@ -121,7 +120,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           }`}
           title="Wishlist"
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
+          <Heart
+            className={`w-4 h-4 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`}
+          />
         </button>
       </div>
 
@@ -153,7 +154,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Product Title */}
-          <Link href={`/products/${product.id}`} className="block group-hover:text-emerald-700">
+          <Link
+            href={`/products/${product.id}`}
+            className="block group-hover:text-emerald-700"
+          >
             <h3 className="font-serif font-bold text-slate-900 text-base leading-snug line-clamp-1 group-hover:text-emerald-700 transition-colors">
               {product.name}
             </h3>
@@ -163,14 +167,19 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center gap-3 mt-1.5 text-xs">
             <div className="flex items-center gap-1 text-amber-600 font-semibold">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{product.avgRating ? Number(product.avgRating).toFixed(1) : "5.0"}</span>
+              <span>
+                {product.avgRating
+                  ? Number(product.avgRating).toFixed(1)
+                  : "5.0"}
+              </span>
               <span className="text-slate-400 text-[10px]">
                 ({product.totalReviews || 0})
               </span>
             </div>
             <span className="text-slate-300">•</span>
             <span className="text-slate-500 text-[11px]">
-              Stock: {product.availableQuantity} {formatUnit(product.sellingUnit)}
+              Stock: {product.availableQuantity}{" "}
+              {formatUnit(product.sellingUnit)}
             </span>
           </div>
         </div>
@@ -178,7 +187,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Price & Quick Add */}
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
           <div>
-            <span className="text-[10px] text-slate-400 block font-medium">Price per unit</span>
+            <span className="text-[10px] text-slate-400 block font-medium">
+              Price per unit
+            </span>
             <div className="flex items-baseline gap-1">
               <span className="text-lg font-bold text-emerald-600 font-mono">
                 {formatCurrency(product.pricePerUnit)}

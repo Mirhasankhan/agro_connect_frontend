@@ -13,7 +13,7 @@ import {
   Truck,
   ArrowLeft,
   Share2,
-  AlertCircle,  
+  AlertCircle,
   MessageSquare,
   Store,
 } from "lucide-react";
@@ -41,8 +41,10 @@ export default function ProductDetailsPage() {
     skip: !productId,
   });
 
-  const [addToCartMutation, { isLoading: isAddingToCart }] = useAddToCartMutation();
-  const [addToWishlistMutation, { isLoading: isAddingWishlist }] = useAddToWishlistMutation();
+  const [addToCartMutation, { isLoading: isAddingToCart }] =
+    useAddToCartMutation();
+  const [addToWishlistMutation, { isLoading: isAddingWishlist }] =
+    useAddToWishlistMutation();
 
   const [selectedQuantity, setSelectedQuantity] = useState<number>(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
@@ -50,7 +52,7 @@ export default function ProductDetailsPage() {
 
   // Directly derive wishlist status from query response
   const isWishlisted = Boolean(
-    Array.isArray(product?.wishlists) && product.wishlists.length > 0
+    Array.isArray(product?.wishlists) && product.wishlists.length > 0,
   );
 
   const images = product?.imageUrls || [];
@@ -63,7 +65,7 @@ export default function ProductDetailsPage() {
     product?.producer?.fullName ||
     "Certified Producer";
 
-  const city = product?.producer?.producerProfile?.city || "Ivory Coast";
+  const city = product?.producer?.producerProfile?.city || "Bangladesh";
 
   const handleAddToCart = async (redirectToCart = false) => {
     if (!isAuthenticated) {
@@ -81,7 +83,7 @@ export default function ProductDetailsPage() {
       }).unwrap();
 
       toast.success(
-        `${selectedQuantity} ${formatUnit(product.sellingUnit)} of ${product.name} added to cart!`
+        `${selectedQuantity} ${formatUnit(product.sellingUnit)} of ${product.name} added to cart!`,
       );
 
       if (redirectToCart) {
@@ -147,10 +149,12 @@ export default function ProductDetailsPage() {
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center py-20 px-4 text-center">
           <AlertCircle className="w-16 h-16 text-rose-500 mb-4" />
-          <h2 className="font-serif text-3xl font-bold text-slate-900">Product Not Found</h2>
+          <h2 className="font-serif text-3xl font-bold text-slate-900">
+            Product Not Found
+          </h2>
           <p className="text-slate-500 text-sm max-w-md mt-2 mb-6">
-            The agricultural harvest you are looking for may have been removed or is temporarily
-            unavailable.
+            The agricultural harvest you are looking for may have been removed
+            or is temporarily unavailable.
           </p>
           <Link href="/products" className="btn-primary text-xs py-2.5 px-6">
             Back to Marketplace
@@ -216,12 +220,18 @@ export default function ProductDetailsPage() {
                     key={idx}
                     type="button"
                     onClick={() => setSelectedImageIndex(idx)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${selectedImageIndex === idx
+                    className={`relative w-20 h-20 rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
+                      selectedImageIndex === idx
                         ? "border-emerald-600 scale-105 shadow-sm"
                         : "border-slate-200 opacity-70 hover:opacity-100"
-                      }`}
+                    }`}
                   >
-                    <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-cover" />
+                    <Image
+                      src={img}
+                      alt={`Thumbnail ${idx}`}
+                      fill
+                      className="object-cover"
+                    />
                   </button>
                 ))}
               </div>
@@ -301,7 +311,8 @@ export default function ProductDetailsPage() {
               <div className="flex items-center gap-2 mb-2">
                 {product.availableQuantity > 0 ? (
                   <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
-                    In Stock ({product.availableQuantity} {formatUnit(product.sellingUnit)} left)
+                    In Stock ({product.availableQuantity}{" "}
+                    {formatUnit(product.sellingUnit)} left)
                   </span>
                 ) : (
                   <span className="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold">
@@ -318,7 +329,11 @@ export default function ProductDetailsPage() {
               <div className="flex items-center gap-3 mt-3 text-sm">
                 <div className="flex items-center gap-1 text-amber-500 font-bold">
                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span>{product.avgRating ? Number(product.avgRating).toFixed(1) : "5.0"}</span>
+                  <span>
+                    {product.avgRating
+                      ? Number(product.avgRating).toFixed(1)
+                      : "5.0"}
+                  </span>
                 </div>
                 <span className="text-slate-300">•</span>
                 <span className="text-slate-600">
@@ -356,13 +371,12 @@ export default function ProductDetailsPage() {
                 className="btn-primary w-full sm:flex-1 py-3.5 text-sm flex items-center justify-center gap-2"
               >
                 {isAddingToCart ? (
-                  <>                    
-                    Adding to Cart...
-                  </>
+                  <>Adding to Cart...</>
                 ) : (
                   <>
                     <ShoppingCart className="w-4 h-4" />
-                    Add to Cart ({selectedQuantity} {formatUnit(product.sellingUnit)})
+                    Add to Cart ({selectedQuantity}{" "}
+                    {formatUnit(product.sellingUnit)})
                   </>
                 )}
               </button>
@@ -383,7 +397,9 @@ export default function ProductDetailsPage() {
                 className="p-3.5 rounded-full bg-white border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-rose-500 shadow-sm transition-all"
                 title="Wishlist"
               >
-                <Heart className={`w-5 h-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`} />
+                <Heart
+                  className={`w-5 h-5 ${isWishlisted ? "fill-rose-500 text-rose-500" : ""}`}
+                />
               </button>
             </div>
 
@@ -392,11 +408,7 @@ export default function ProductDetailsPage() {
               <div className="flex items-center gap-2 text-xs text-slate-600">
                 <Truck className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>Flat Delivery: ৳50</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-slate-600">
-                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>6-Digit OTP Delivery Check</span>
-              </div>
+              </div>            
             </div>
           </div>
         </div>
@@ -409,7 +421,8 @@ export default function ProductDetailsPage() {
                 Customer Reviews & Ratings
               </h2>
               <p className="text-xs text-slate-500 mt-1">
-                Verified feedback from verified buyers who received this produce.
+                Verified feedback from verified buyers who received this
+                produce.
               </p>
             </div>
 
@@ -417,7 +430,9 @@ export default function ProductDetailsPage() {
               <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
               <div>
                 <span className="font-serif text-lg font-bold text-slate-900">
-                  {product.avgRating ? Number(product.avgRating).toFixed(1) : "5.0"}
+                  {product.avgRating
+                    ? Number(product.avgRating).toFixed(1)
+                    : "5.0"}
                 </span>
                 <span className="text-xs text-slate-400 ml-1">/ 5.0</span>
               </div>
@@ -429,43 +444,48 @@ export default function ProductDetailsPage() {
 
           {/* Review List */}
           {product.reviews && product.reviews.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {product.reviews.map((rev, idx) => (
                 <div
                   key={rev.id || idx}
-                  className="bg-white border border-slate-200/90 rounded-2xl p-5 space-y-3 shadow-sm"
+                  className="bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 space-y-2.5 sm:space-y-3 shadow-sm flex flex-col justify-between"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-xs">
-                        {rev.buyer?.fullName?.charAt(0).toUpperCase() || "B"}
+                  <div className="space-y-2.5">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center font-bold text-emerald-800 text-xs shrink-0">
+                          {rev.buyer?.fullName?.charAt(0).toUpperCase() || "B"}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
+                            {rev.buyer?.fullName || "Verified Buyer"}
+                          </p>
+                          <p className="text-[10px] text-slate-400">
+                            {rev.createdAt
+                              ? formatDate(rev.createdAt)
+                              : "Recently"}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-900">
-                          {rev.buyer?.fullName || "Verified Buyer"}
-                        </p>
-                        <p className="text-[10px] text-slate-400">
-                          {rev.createdAt ? formatDate(rev.createdAt) : "Recently"}
-                        </p>
-                      </div>
-                    </div>
 
-                    <div className="flex items-center gap-0.5 text-amber-400">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3.5 h-3.5 ${i < rev.rating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-slate-200"
+                      <div className="flex items-center gap-0.5 text-amber-400 shrink-0">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${
+                              i < rev.rating
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-slate-200"
                             }`}
-                        />
-                      ))}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  <p className="text-xs text-slate-600 leading-relaxed italic">
-                    &ldquo;{rev.comment}&rdquo;
-                  </p>
+                    <p className="text-xs text-slate-600 leading-relaxed italic">
+                      &ldquo;{rev.comment}&rdquo;
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -473,7 +493,8 @@ export default function ProductDetailsPage() {
             <div className="p-8 text-center bg-white border border-slate-200 rounded-2xl shadow-sm">
               <Star className="w-8 h-8 text-slate-300 mx-auto mb-2" />
               <p className="text-xs text-slate-500">
-                No reviews yet for this harvest. Be the first to order and share your feedback!
+                No reviews yet for this harvest. Be the first to order and share
+                your feedback!
               </p>
             </div>
           )}

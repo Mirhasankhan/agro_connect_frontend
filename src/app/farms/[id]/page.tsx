@@ -6,7 +6,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   MapPin,
-  ShieldCheck,
   Sprout,
   MessageSquare,
   Phone,
@@ -16,7 +15,6 @@ import {
   ArrowLeft,
   AlertCircle,
   CheckCircle2,
-  Building2,
   ShoppingBag,
   ExternalLink,
 } from "lucide-react";
@@ -183,7 +181,7 @@ export default function FarmProfilePage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
                 {/* Farmer / Farm Avatar */}
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-emerald-100 border-4 border-white shadow-md overflow-hidden shrink-0 flex items-center justify-center">
+                <div className="relative w-32 h-32 sm:w-28 sm:h-28 rounded-2xl bg-emerald-100 border-4 border-white shadow-md overflow-hidden shrink-0 flex items-center justify-center">
                   {producer.profileImage ? (
                     <Image
                       src={producer.profileImage}
@@ -198,21 +196,7 @@ export default function FarmProfilePage() {
                   )}
                 </div>
 
-                <div className="space-y-1.5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      Certified Local Producer
-                    </span>
-                    {producer.producerProfile?.producerType && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold">
-                        <Building2 className="w-3.5 h-3.5" />
-                        {producer.producerProfile.producerType === "Company"
-                          ? "Commercial Enterprise"
-                          : "Smallholder Farmer"}
-                      </span>
-                    )}
-                  </div>
+                <div className="space-y-1.5">              
 
                   <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
                     {farmName}
@@ -266,42 +250,7 @@ export default function FarmProfilePage() {
               </div>
             </div>
 
-            {/* Quick Farm Stats Strip */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 mt-6 border-t border-slate-100">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
-                  Active Harvests
-                </p>
-                <p className="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
-                  {producer.products?.length || 0} Crops
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
-                  Farm Status
-                </p>
-                <p className="font-serif text-xl sm:text-2xl font-bold text-emerald-700 mt-0.5 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                  Verified
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
-                  Satisfaction
-                </p>
-                <p className="font-serif text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">
-                  {averageFarmRating} / 5.0
-                </p>
-              </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100">
-                <p className="text-[11px] font-semibold text-slate-500  tracking-wider">
-                  Escrow Protection
-                </p>
-                <p className="font-serif text-xl sm:text-2xl font-bold text-emerald-700 mt-0.5">
-                  100% Guaranteed
-                </p>
-              </div>
-            </div>
+          
           </div>
         </div>
 

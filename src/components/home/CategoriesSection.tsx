@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
-  ArrowRight,  
   Sprout,
   Apple,
   Wheat,
@@ -178,13 +176,7 @@ export default function CategoriesSection({
               </button>
             </div>
 
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100/70 px-4 py-2 rounded-full border border-emerald-200/60 transition-colors"
-            >
-              <span>View All</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+           
           </div>
         </div>
 

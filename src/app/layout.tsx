@@ -26,7 +26,7 @@ const serifFont = Playfair_Display({
 export const metadata: Metadata = {
   title: "Agro Connect - From Fields to Tables",
   description:
-    "Agricultural platform in Ivory Coast connecting certified local producers directly with buyers and reliable delivery.",
+    "Agricultural platform in Bangladesh connecting certified local producers directly with buyers and reliable delivery.",
 };
 
 export default function RootLayout({
@@ -40,7 +40,9 @@ export default function RootLayout({
         <link rel="icon" type="image/png" href="/logo9.png" />
       </head>
 
-      <body className={`${sansFont.variable} ${serifFont.variable} font-sans antialiased`}>
+      <body
+        className={`${sansFont.variable} ${serifFont.variable} font-sans antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -51,9 +53,7 @@ export default function RootLayout({
             <ToastContainer position="top-right" autoClose={3000} />
             <Toaster richColors position="top-right" />
 
-            <AuthRoleGuard>
-              {children}
-            </AuthRoleGuard>
+            <AuthRoleGuard>{children}</AuthRoleGuard>
           </Providers>
         </ThemeProvider>
       </body>

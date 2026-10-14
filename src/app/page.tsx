@@ -16,7 +16,6 @@ import {
   CheckCircle2,
   Search,
   Package,
-  ChevronRight,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -37,14 +36,17 @@ export default function HomePage() {
   const router = useRouter();
   const [heroSearch, setHeroSearch] = useState("");
 
-  const { data: productsData, isLoading: isLoadingProducts } = useGetAllProductsQuery({
-    limit: 8,
-    sort: "createdAt",
-    order: "desc",
-  });
+  const { data: productsData, isLoading: isLoadingProducts } =
+    useGetAllProductsQuery({
+      limit: 8,
+      sort: "createdAt",
+      order: "desc",
+    });
 
-  const { data: categoriesData, isLoading: isLoadingCategories } = useGetAllCategoriesQuery();
-  const categories = categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [];
+  const { data: categoriesData, isLoading: isLoadingCategories } =
+    useGetAllCategoriesQuery();
+  const categories =
+    categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [];
 
   const products = productsData?.data?.products || [];
 
@@ -93,7 +95,7 @@ export default function HomePage() {
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-xs font-medium text-emerald-100 tracking-wide">
-                Agricultural platform number 1 in Ivory Coast
+                Agricultural platform number 1 in Bangladesh
               </span>
             </motion.div>
 
@@ -119,38 +121,12 @@ export default function HomePage() {
               className="text-base sm:text-lg text-white/80 leading-relaxed font-sans max-w-2xl font-normal"
             >
               Connect directly with{" "}
-              <strong className="text-white font-bold">certified local producers</strong>, place
-              your orders and receive your deliveries quickly anywhere in Ivory Coast.
+              <strong className="text-white font-bold">
+                certified local producers
+              </strong>
+              , place your orders and receive your deliveries quickly anywhere
+              in Bangladesh.
             </motion.p>
-
-            {/* Call to Action Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 14 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.15 }}
-              className="flex flex-wrap items-center gap-4 pt-2"
-            >
-              <Link
-                href="/register"
-                className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-semibold text-sm flex items-center gap-2 shadow-lg shadow-emerald-950/50 transition-all hover:scale-105 active:scale-95"
-              >
-                Start for free
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/login"
-                className="px-6 py-3.5 rounded-xl bg-[#09351d]/50 hover:bg-[#0c4425]/60 text-white font-semibold text-sm border border-emerald-400/30 backdrop-blur-md shadow-sm transition-all hover:border-emerald-300/50"
-              >
-                Log in
-              </Link>
-              <Link
-                href="/products"
-                className="px-5 py-3.5 rounded-xl text-emerald-200/80 hover:text-white font-medium text-sm flex items-center gap-1.5 transition-colors"
-              >
-                Explore marketplace
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
 
             {/* Hero Quick Search Bar */}
             <motion.form
@@ -181,12 +157,16 @@ export default function HomePage() {
             {/* Quick Category Pills */}
             {categories.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 pt-2">
-                <span className="text-xs text-emerald-200/70 mr-1 font-medium">Quick Jump:</span>
+                <span className="text-xs text-emerald-200/70 mr-1 font-medium">
+                  Quick Jump:
+                </span>
                 {categories.slice(0, 6).map((cat) => (
                   <button
                     key={cat.id}
                     type="button"
-                    onClick={() => router.push(`/products?categoryId=${cat.id}`)}
+                    onClick={() =>
+                      router.push(`/products?categoryId=${cat.id}`)
+                    }
                     className="px-3 py-1 rounded-full bg-white/10 hover:bg-emerald-500/25 border border-white/15 text-xs text-white/90 hover:text-white transition-colors backdrop-blur-sm"
                   >
                     {cat.name}
@@ -209,8 +189,12 @@ export default function HomePage() {
               transition={{ duration: 0.35 }}
               className="space-y-1"
             >
-              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">500+</p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium">Certified Local Producers</p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">
+                500+
+              </p>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                Certified Local Producers
+              </p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -219,8 +203,12 @@ export default function HomePage() {
               transition={{ duration: 0.35, delay: 0.08 }}
               className="space-y-1"
             >
-              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">12,500+</p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium">Tons Delivered Safely</p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">
+                12,500+
+              </p>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                Tons Delivered Safely
+              </p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -229,8 +217,12 @@ export default function HomePage() {
               transition={{ duration: 0.35, delay: 0.16 }}
               className="space-y-1"
             >
-              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">0%</p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium">Middlemen Exploitation</p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">
+                0%
+              </p>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                Middlemen Exploitation
+              </p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -239,15 +231,22 @@ export default function HomePage() {
               transition={{ duration: 0.35, delay: 0.24 }}
               className="space-y-1"
             >
-              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">24/48h</p>
-              <p className="text-xs sm:text-sm text-slate-600 font-medium">Express Agro-Logistics</p>
+              <p className="font-serif text-3xl sm:text-4xl font-bold text-emerald-600">
+                24/48h
+              </p>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium">
+                Express Agro-Logistics
+              </p>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* SECTION 1: CATEGORIES SECTION (Icon-size category images with minimal animations) */}
-      <CategoriesSection categories={categories} isLoading={isLoadingCategories} />
+      <CategoriesSection
+        categories={categories}
+        isLoading={isLoadingCategories}
+      />
 
       {/* SECTION 2: FEATURED HARVESTS / MARKETPLACE PREVIEW */}
       <section className="py-20 bg-white">
@@ -262,8 +261,8 @@ export default function HomePage() {
                 Featured Harvests Today
               </h2>
               <p className="text-sm text-slate-600 mt-1 max-w-xl">
-                Directly harvested crops with transparent wholesale tiered pricing. Buy by the bag,
-                crate, or ton.
+                Directly harvested crops with transparent wholesale tiered
+                pricing. Buy by the bag, crate, or ton.
               </p>
             </div>
 
@@ -299,11 +298,14 @@ export default function HomePage() {
                 Fresh Harvests Arriving Soon
               </h3>
               <p className="text-sm text-slate-600 max-w-md mx-auto mt-2">
-                Producers are currently harvesting crops in Bouaké, Korhogo, and Yamoussoukro.
-                Check back shortly or register your farm today!
+                Producers are currently harvesting crops in Bouaké, Korhogo, and
+                Yamoussoukro. Check back shortly or register your farm today!
               </p>
               <div className="mt-6 flex justify-center gap-4">
-                <Link href="/products" className="btn-primary text-xs py-2.5 px-6">
+                <Link
+                  href="/products"
+                  className="btn-primary text-xs py-2.5 px-6"
+                >
                   Visit Marketplace
                 </Link>
               </div>
@@ -325,7 +327,10 @@ export default function HomePage() {
       <RegionalHubsSection />
 
       {/* SECTION 6: PLATFORM BENEFITS - WHY AGRO CONNECT */}
-      <section id="benefits" className="py-20 bg-slate-50 border-t border-slate-200">
+      <section
+        id="benefits"
+        className="py-20 bg-slate-50 border-t border-slate-200"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs  tracking-widest text-emerald-700 font-bold">
@@ -335,8 +340,9 @@ export default function HomePage() {
               Why Choose Agro Connect?
             </h2>
             <p className="text-sm text-slate-600 mt-3">
-              We bridge the gap between rural Ivorian farmers, professional transport fleets, and
-              buyers with cutting-edge technology and verified fair trade.
+              We bridge the gap between rural Ivorian farmers, professional
+              transport fleets, and buyers with cutting-edge technology and
+              verified fair trade.
             </p>
           </div>
 
@@ -357,8 +363,9 @@ export default function HomePage() {
                 100% Certified Direct Sourcing
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Every producer undergoes rigorous validation of their identity, land certificates,
-                and farm photos. You buy genuine, traceable Ivorian produce straight from the source.
+                Every producer undergoes rigorous validation of their identity,
+                land certificates, and farm photos. You buy genuine, traceable
+                Ivorian produce straight from the source.
               </p>
             </motion.div>
 
@@ -378,8 +385,9 @@ export default function HomePage() {
                 Dynamic Bulk Tier Pricing
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Whether you need 5 kg for your home or 50 tons for a hotel chain, our automatic
-                tiered pricing rewards volume with substantial, instant discounts.
+                Whether you need 5 kg for your home or 50 tons for a hotel
+                chain, our automatic tiered pricing rewards volume with
+                substantial, instant discounts.
               </p>
             </motion.div>
 
@@ -399,8 +407,9 @@ export default function HomePage() {
                 OTP-Protected Agro Logistics
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed">
-                Dedicated registered drivers pick up products directly from farm hubs. Orders are
-                confirmed upon arrival using an encrypted 6-digit OTP code before funds are released.
+                Dedicated registered drivers pick up products directly from farm
+                hubs. Orders are confirmed upon arrival using an encrypted
+                6-digit OTP code before funds are released.
               </p>
             </motion.div>
           </div>
@@ -411,7 +420,10 @@ export default function HomePage() {
       <TrustGuaranteesSection />
 
       {/* SECTION 8: FOR WHOM SECTION */}
-      <section id="for-whom" className="py-20 bg-white border-t border-slate-200">
+      <section
+        id="for-whom"
+        className="py-20 bg-white border-t border-slate-200"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs  tracking-widest text-emerald-700 font-bold">
@@ -421,8 +433,8 @@ export default function HomePage() {
               Built For Everyone in the Supply Chain
             </h2>
             <p className="text-sm text-slate-600 mt-3">
-              Discover how Agro Connect empowers producers, transporters, and buyers across Côte
-              d&apos;Ivoire.
+              Discover how Agro Connect empowers producers, transporters, and
+              buyers across Côte d&apos;Ivoire.
             </p>
           </div>
 
@@ -440,10 +452,13 @@ export default function HomePage() {
                 <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-emerald-600 mb-4 shadow-sm">
                   <Users className="w-6 h-6" />
                 </div>
-                <h3 className="font-serif text-xl font-bold text-slate-900">For Buyers & Businesses</h3>
+                <h3 className="font-serif text-xl font-bold text-slate-900">
+                  For Buyers & Businesses
+                </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Access freshest produce at unbeatable farm prices. Pay securely via Stripe with
-                  guaranteed doorstep delivery in Abidjan and major cities.
+                  Access freshest produce at unbeatable farm prices. Pay
+                  securely via Stripe with guaranteed doorstep delivery in
+                  Abidjan and major cities.
                 </p>
                 <ul className="mt-4 space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
@@ -489,8 +504,9 @@ export default function HomePage() {
                   For Farmers & Producers
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Sell directly to thousands of buyers without intermediaries taking your profit.
-                  Configure bulk discount tiers and track earnings seamlessly.
+                  Sell directly to thousands of buyers without intermediaries
+                  taking your profit. Configure bulk discount tiers and track
+                  earnings seamlessly.
                 </p>
                 <ul className="mt-4 space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
@@ -533,8 +549,9 @@ export default function HomePage() {
                   For Drivers & Transporters
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Earn competitive income moving fresh crops from regional hubs to urban tables.
-                  Bikes, vans, pickups, and trucks are all welcome.
+                  Earn competitive income moving fresh crops from regional hubs
+                  to urban tables. Bikes, vans, pickups, and trucks are all
+                  welcome.
                 </p>
                 <ul className="mt-4 space-y-2 text-xs text-slate-700">
                   <li className="flex items-center gap-2">
@@ -579,8 +596,8 @@ export default function HomePage() {
             Ready to experience fresh harvests direct from the source?
           </h2>
           <p className="text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Join thousands of satisfied buyers, cooperative producers, and logistics drivers
-            transforming agriculture in Ivory Coast today.
+            Join thousands of satisfied buyers, cooperative producers, and
+            logistics drivers transforming agriculture in Bangladesh today.
           </p>
           <div className="flex flex-wrap justify-center gap-4 pt-4">
             <Link

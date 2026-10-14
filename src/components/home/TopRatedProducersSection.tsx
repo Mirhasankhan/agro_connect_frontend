@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import {
   Star,
   MapPin,
-  Package,
   Award,
   ShieldCheck,
   ArrowRight,
@@ -155,32 +154,14 @@ export default function TopRatedProducersSection({
             </h3>
             <p className="text-sm text-slate-600 max-w-md mx-auto">
               Our regional verification inspectors are tallying the latest customer reviews and fresh crop batches.
-              Check back shortly or register your farm today to be featured!
+              Check back shortly for the latest top-rated producers.
             </p>
-            <div className="pt-2">
-              <Link
-                href="/register"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition-colors shadow-sm"
-              >
-                Join as a Producer
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
           </div>
         )}
 
         {/* Producers Grid */}
         {!isLoading && producers.length > 0 && (
-          <div
-            className={`grid gap-6 ${producers.length === 1
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto"
-                : producers.length === 2
-                  ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
-                  : producers.length === 3
-                    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-              }`}
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {producers.map((producer, index) => {
               const rank = getRankBadge(index);
               const RankIcon = rank.icon;
@@ -339,57 +320,6 @@ export default function TopRatedProducersSection({
               );
             })}
 
-            {/* If there is only 1 or 2 producers, show an engaging "Join as Producer" card to balance the grid! */}
-            {producers.length <= 2 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-                whileHover={{ y: -6 }}
-                className="bg-gradient-to-br from-[#062414] to-[#0a3820] text-white rounded-3xl p-6 sm:p-7 border border-emerald-800/60 shadow-md flex flex-col justify-between relative overflow-hidden"
-              >
-                {/* Subtle radial decorative sheen */}
-                <div className="absolute top-0 right-0 w-44 h-44 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none" />
-
-                <div>
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-300 mb-5">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-300">
-                    Become A Certified Producer
-                  </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-white mt-1.5 leading-snug">
-                    Are you harvesting premium produce?
-                  </h3>
-                  <p className="text-xs text-emerald-100/80 mt-2.5 leading-relaxed">
-                    List your harvests on Agro Connect, fulfill orders directly to buyers across major cities, and
-                    earn your place on the Top Rated Producers leaderboard.
-                  </p>
-
-                  <ul className="mt-4 space-y-2 text-xs text-emerald-100/90">
-                    <li className="flex items-center gap-2">
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      100% verified farm profiles
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Package className="w-3.5 h-3.5 text-emerald-400" />
-                      Automatic volume discount tiers
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="pt-6">
-                  <Link
-                    href="/register"
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-[#041d0f] font-bold text-xs transition-colors shadow-sm"
-                  >
-                    <span>Register Your Farm Today</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </motion.div>
-            )}
           </div>
         )}
       </div>
