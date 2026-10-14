@@ -1,5 +1,5 @@
 import { baseApi } from "../../api/baseApi";
-import { TApiResponse, TCartItem, TWishlistItem } from "@/types";
+import { TApiResponse, TCartItem, TWishlistItem, TTopRatedProducer } from "@/types";
 
 const shoppingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -86,6 +86,14 @@ const shoppingApi = baseApi.injectEndpoints({
         { type: "Product", id: productId },
       ],
     }),
+
+    getTopRatedProducers: builder.query<TApiResponse<TTopRatedProducer[]>, void>({
+      query: () => ({
+        url: "/shopping/top-rated-producers",
+        method: "GET",
+      }),
+      providesTags: ["Product", "User"],
+    }),
   }),
 });
 
@@ -98,4 +106,5 @@ export const {
   useAddToWishlistMutation,
   useToggleWishlistMutation,
   useRemoveFromWishlistMutation,
+  useGetTopRatedProducersQuery,
 } = shoppingApi;

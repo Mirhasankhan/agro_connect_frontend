@@ -29,6 +29,7 @@ import TrustGuaranteesSection from "@/components/home/TrustGuaranteesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import FaqSection from "@/components/home/FaqSection";
 import HarvestNewsletterSection from "@/components/home/HarvestNewsletterSection";
+import TopRatedProducersSection from "@/components/home/TopRatedProducersSection";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/categoryApi";
 
@@ -310,6 +311,9 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* OUR TOP RATED PRODUCER SECTION */}
+      <TopRatedProducersSection />
 
       {/* SECTION 3: WHOLESALE BULK TIER PRICING BANNER */}
       <BulkPricingBanner />

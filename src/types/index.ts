@@ -541,6 +541,18 @@ export interface TConversationHistory {
   messages: TChatMessage[];
 }
 
+export interface TTopRatedProducer {
+  producerId: string;
+  fullName: string;
+  profileImage?: string | null;
+  farmName?: string | null;
+  farmLocation?: string | null;
+  farmPhotoUrl?: string | null;
+  totalOrders: number;
+  avgRating: number;
+  totalProductCount: number;
+}
+
 export interface TApiResponse<T> {
   statusCode?: number;
   message: string;
