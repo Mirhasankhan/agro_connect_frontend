@@ -8,7 +8,7 @@ import logo from "@/assets/logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, ArrowRight, Check, Copy } from "lucide-react";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
 import { useAppDispatch } from "@/redux/hooks";
@@ -21,6 +21,23 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+const demoPassword = "123456";
+
+const demoAccounts = [
+  {
+    role: "Producer",
+    email: "kodidad642@leafflip.com",
+  },
+  {
+    role: "Driver",
+    email: "lecola6489@aahzz.com",
+  },
+  {
+    role: "Buyer",
+    email: "gikoco8207@aahzz.com",
+  },
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,6 +45,7 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
   const [login, { isLoading }] = useLoginMutation();
 
   const emailParam = searchParams.get("email") || "";
@@ -105,6 +123,16 @@ export default function LoginPage() {
     }
   };
 
+  const copyEmail = async (email: string) => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopiedEmail(email);
+      window.setTimeout(() => setCopiedEmail(null), 1500);
+    } catch {
+      toast.error("Unable to copy the email address.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
       <div className="w-full max-w-md">
@@ -133,6 +161,50 @@ export default function LoginPage() {
 
         {/* Card */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+            <h2 className="text-sm font-bold text-emerald-900">
+              Demo accounts
+            </h2>           
+            <div className="mt-3 space-y-1 text-xs text-slate-700">
+              {demoAccounts.map((account) => (
+                <div
+                  key={account.role}
+                  className="rounded-md border border-emerald-100 bg-white p-2"
+                >
+                  <p className="font-semibold text-slate-900">{account.role}</p>
+                  <div className="mt-1 flex items-center justify-between gap-2">
+                    <p className="break-all">
+                      <span className="font-medium">Email:</span>{" "}
+                      {account.email}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => copyEmail(account.email)}
+                      className="flex shrink-0 items-center gap-1 rounded border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-600 hover:bg-slate-50"
+                      aria-label={`Copy ${account.role} email`}
+                    >
+                      {copiedEmail === account.email ? (
+                        <>
+                          <Check className="h-3 w-3 text-emerald-600" />
+                          Copied
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3 w-3" />
+                          Copy
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-slate-700">
+              <span className="font-medium">Password for all Accounts:</span>{" "}
+              {demoPassword}
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {errors.root && (
               <div className="rounded-lg bg-rose-50 p-3 text-xs font-medium text-rose-700">

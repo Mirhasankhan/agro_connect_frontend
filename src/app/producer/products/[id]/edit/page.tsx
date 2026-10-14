@@ -268,8 +268,7 @@ export default function EditProductPage() {
 
   if (isLoadingProduct) {
     return (
-      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">    
         <p className="text-xs text-slate-500">Loading harvest information...</p>
       </div>
     );
@@ -796,8 +795,7 @@ export default function EditProductPage() {
                 className="btn-primary text-xs py-2.5 px-5 flex items-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isUpdatingImages ? (
-                  <>
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <>                 
                     Uploading Photos...
                   </>
                 ) : (

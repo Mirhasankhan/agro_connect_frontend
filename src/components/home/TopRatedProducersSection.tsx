@@ -88,7 +88,7 @@ export default function TopRatedProducersSection({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl">           
+          <div className="max-w-2xl">
 
             {/* Main Title */}
             <motion.h2
@@ -172,15 +172,14 @@ export default function TopRatedProducersSection({
         {/* Producers Grid */}
         {!isLoading && producers.length > 0 && (
           <div
-            className={`grid gap-6 ${
-              producers.length === 1
+            className={`grid gap-6 ${producers.length === 1
                 ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto"
                 : producers.length === 2
-                ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
-                : producers.length === 3
-                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-            }`}
+                  ? "grid-cols-1 sm:grid-cols-2 max-w-3xl mx-auto"
+                  : producers.length === 3
+                    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+              }`}
           >
             {producers.map((producer, index) => {
               const rank = getRankBadge(index);
@@ -264,9 +263,8 @@ export default function TopRatedProducersSection({
                             <ShoppingBag className="w-3 h-3 text-emerald-600" />
                             <span>
                               {producer.totalOrders > 0
-                                ? `${producer.totalOrders} ${
-                                    producer.totalOrders === 1 ? "order" : "orders"
-                                  }`
+                                ? `${producer.totalOrders} ${producer.totalOrders === 1 ? "order" : "orders"
+                                }`
                                 : "Fresh Harvest"}
                             </span>
                           </span>

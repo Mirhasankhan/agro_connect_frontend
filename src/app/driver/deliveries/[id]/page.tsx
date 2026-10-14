@@ -72,8 +72,7 @@ export default function DriverDeliveryDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+      <div className="flex min-h-[500px] flex-col items-center justify-center gap-3">      
         <p className="text-xs text-slate-500">Loading delivery details...</p>
       </div>
     );

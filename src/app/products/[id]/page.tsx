@@ -13,8 +13,7 @@ import {
   Truck,
   ArrowLeft,
   Share2,
-  AlertCircle,
-  Loader2,
+  AlertCircle,  
   MessageSquare,
   Store,
 } from "lucide-react";
@@ -357,8 +356,7 @@ export default function ProductDetailsPage() {
                 className="btn-primary w-full sm:flex-1 py-3.5 text-sm flex items-center justify-center gap-2"
               >
                 {isAddingToCart ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                  <>                    
                     Adding to Cart...
                   </>
                 ) : (
