@@ -298,7 +298,7 @@ export default function ProductDetailsPage() {
                     className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-50 hover:bg-emerald-50 text-xs font-semibold text-emerald-700 border border-emerald-200 transition-colors shadow-sm"
                   >
                     <MessageSquare className="w-3.5 h-3.5" />
-                    Chat with Farmer / Inquire
+                    Chat with Producer
                   </Link>
                 </div>
               )}

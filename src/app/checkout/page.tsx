@@ -10,8 +10,7 @@ import {
   MapPin,
   Plus,
   CreditCard,
-  ShieldCheck,
-  Truck,
+  ShieldCheck, 
   ArrowLeft,
   AlertCircle,
   CheckCircle2,
@@ -260,7 +259,7 @@ export default function CheckoutPage() {
                       <label className="form-label">Street / Neighborhood Address</label>
                       <input
                         type="text"
-                        placeholder="e.g. Rue des Jardins, Deux Plateaux"
+                        placeholder="e.g. block 5, street 12, near the market"
                         {...register("addressLine")}
                         className="form-input"
                       />
@@ -270,10 +269,10 @@ export default function CheckoutPage() {
                     </div>
 
                     <div>
-                      <label className="form-label">City / Commune</label>
+                      <label className="form-label">City</label>
                       <input
                         type="text"
-                        placeholder="e.g. Abidjan"
+                        placeholder="e.g. Chittagong"
                         {...register("city")}
                         className="form-input"
                       />
@@ -426,7 +425,7 @@ export default function CheckoutPage() {
               {/* Total */}
               <div className="flex justify-between items-baseline">
                 <span className="text-xs text-slate-600 font-semibold">Total to Pay</span>
-                <span className="font-serif font-bold text-2xl text-emerald-600 font-mono">
+                <span className="font-serif font-bold text-2xl text-emerald-600">
                   {formatCurrency(total)}
                 </span>
               </div>
@@ -450,10 +449,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              <div className="flex items-center gap-2 text-[11px] text-slate-500 justify-center">
-                <Truck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Protected by 6-digit delivery OTP verification</span>
-              </div>
+             
             </div>
           </div>
         </div>
