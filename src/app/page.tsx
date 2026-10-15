@@ -40,6 +40,7 @@ export default function HomePage() {
       limit: 8,
       sort: "createdAt",
       order: "desc",
+      isFeatured: "true",
     });
 
   const { data: categoriesData, isLoading: isLoadingCategories } =
@@ -47,7 +48,9 @@ export default function HomePage() {
   const categories =
     categoriesData?.data?.categories?.filter((c) => c.isActive !== false) || [];
 
-  const products = productsData?.data?.products || [];
+  const products = (productsData?.data?.products || []).filter(
+    (p) => p.isFeatured === true
+  );
 
   const handleHeroSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -311,14 +314,10 @@ export default function HomePage() {
             </div>
           )}
         </div>
-      </section>
-
-    
-      <TopRatedProducersSection />   
+      </section>    
+     
       <BulkPricingBanner />  
-      <HowItWorksSection />
-
-      {/* SECTION 6: PLATFORM BENEFITS - WHY AGRO CONNECT */}
+      <HowItWorksSection />    
       <section
         id="benefits"
         className="py-20 bg-slate-50 border-t border-slate-200"
@@ -410,6 +409,7 @@ export default function HomePage() {
 
       {/* SECTION 7: TRUST GUARANTEES PILLARS */}
       <TrustGuaranteesSection />
+       <TopRatedProducersSection />   
 
       {/* SECTION 8: FOR WHOM SECTION */}
       <section

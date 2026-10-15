@@ -12,6 +12,7 @@ export interface ProductQueryParams {
   categoryId?: string;
   sellingUnit?: SellingUnit;
   status?: "active" | "outOfStock";
+  isFeatured?: boolean | string;
   minPrice?: number | string;
   maxPrice?: number | string;
   sort?: "pricePerUnit" | "availableQuantity" | "avgRating" | "createdAt";
