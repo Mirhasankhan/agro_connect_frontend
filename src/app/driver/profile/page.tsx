@@ -21,7 +21,6 @@ import {
   FileText,
   ExternalLink,
   Save,
-  RotateCcw,
   Image as ImageIcon,
   BadgeCheck,
   Car,
@@ -823,7 +822,7 @@ export default function DriverProfilePage() {
             {/* Operational Address */}
             <div>
               <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
-                Operational / Garage Address
+                Address
               </label>
               <textarea
                 rows={3}
@@ -836,23 +835,7 @@ export default function DriverProfilePage() {
 
             {/* Form Actions */}
             <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setFullName(profile?.fullName || "");
-                  setPhoneNumber(profile?.phoneNumber || "");
-                  setCity(profile?.city || "");
-                  setRegion(profile?.region || "");
-                  setAddress(profile?.address || "");
-                  setAvatarFile(null);
-                  setAvatarPreview(null);
-                }}
-                disabled={isUpdatingProfile}
-                className="w-full sm:w-auto px-5 py-2.5 text-xs font-semibold rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                Discard Changes
-              </button>
+              
 
               <button
                 type="submit"

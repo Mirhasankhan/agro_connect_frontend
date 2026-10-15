@@ -314,7 +314,7 @@ export default function DriverOnboardingPage() {
 
                 <div className="sm:col-span-2">
                   <label htmlFor="address" className="form-label">
-                    Base Address / Garage Location *
+                    Address *
                   </label>
                   <input
                     id="address"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +14,6 @@ import {
   Clock,
   MapPin,
   HeartHandshake,
-  ChevronDown,
   Leaf,
   Target,
   Eye,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FaqSection from "@/components/common/FaqSection";
 
 // Metric statistics for social proof & impact
 const IMPACT_METRICS = [
@@ -140,29 +140,7 @@ const REGIONAL_HUBS = [
   },
 ];
 
-// About Us FAQ
-const ABOUT_FAQS = [
-  {
-    q: "How does Agro Connect verify farmers and produce quality?",
-    a: "Every producer must complete our strict onboarding process including national identification verification, agricultural land certificates, and on-site hub inspections. All harvests are categorized into clear standard grades with authentic photo documentation.",
-  },
-  {
-    q: "How does the Escrow and OTP system protect both sides?",
-    a: "When a buyer places an order, payment is secured in escrow. A unique 6-digit OTP is generated for the buyer. When the delivery arrives, the buyer inspects the freshness and weight. Only when satisfied does the buyer give the OTP to the driver, releasing payments instantly.",
-  },
-  {
-    q: "Can hotels, supermarkets, and catering companies buy in wholesale bulk?",
-    a: "Yes. Agro Connect features automatic volume tier discounts. When purchasing in 50 kg, 200 kg, or metric ton increments, wholesale pricing kicks in automatically with scheduled repeat freight options.",
-  },
-  {
-    q: "Who handles the transportation and delivery?",
-    a: "We maintain a network of vetted, temperature-conscious freight drivers registered on our driver platform. Drivers receive dedicated cargo manifests and are compensated promptly upon verified OTP confirmation.",
-  },
-];
-
 export default function AboutUsClient() {
-  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col selection:bg-emerald-500 selection:text-white">
       <Navbar />
@@ -650,60 +628,7 @@ export default function AboutUsClient() {
           </div>
         </section>
 
-        {/* FAQ ACCORDION */}
-        <section id="about-faq" className="py-20 bg-slate-50 border-t border-slate-200">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-xl mx-auto mb-14">
-              <span className="text-xs  tracking-widest text-emerald-700 font-bold">
-                Got Questions?
-              </span>
-              <h2 className="font-serif text-3xl font-bold text-slate-900 mt-2">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-xs text-slate-600 mt-2">
-                Everything you need to know about our sourcing, escrow, and agricultural logistics.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              {ABOUT_FAQS.map((faq, index) => {
-                const isOpen = openFaqIndex === index;
-                return (
-                  <div
-                    key={index}
-                    className="border border-slate-200 rounded-2xl bg-white overflow-hidden shadow-sm transition-colors"
-                  >
-                    <button
-                      type="button"
-                      id={`about-faq-btn-${index}`}
-                      onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                      className="w-full flex items-center justify-between p-5 text-left font-serif text-base font-bold text-slate-900 hover:text-emerald-700 transition-colors focus:outline-none"
-                    >
-                      <span>{faq.q}</span>
-                      <ChevronDown
-                        className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ml-4 ${isOpen ? "rotate-180 text-emerald-600" : ""
-                          }`}
-                      />
-                    </button>
-                    <AnimatePresence>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="px-5 pb-5 text-xs text-slate-600 leading-relaxed border-t border-slate-100 pt-3"
-                        >
-                          {faq.a}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
+        <FaqSection id="about-faq" />
 
         {/* CALL TO ACTION BANNER */}
         <section className="py-20 bg-white">

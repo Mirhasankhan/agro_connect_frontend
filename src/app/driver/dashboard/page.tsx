@@ -327,30 +327,6 @@ export default function DriverDashboardPage() {
         )}
       </div>
 
-      {/* Operational Instructions Banner */}
-      <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs space-y-2 shadow-sm">
-        <h3 className="font-serif font-bold text-sm text-slate-900 flex items-center gap-2">
-          <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          Standard Agro-Logistics Delivery Protocol
-        </h3>
-        <ol className="list-decimal list-inside space-y-1 text-slate-600 text-[11px] leading-relaxed">
-          <li>
-            <strong>Hub Pickup:</strong> Inspect crop crates and produce packaging, then mark status as{" "}
-            <span className="text-emerald-700 font-semibold">Picked Up</span>.
-          </li>
-          <li>
-            <strong>Buyer Arrival:</strong> Upon reaching customer destination, click{" "}
-            <span className="text-emerald-700 font-semibold">Send OTP</span> to generate their
-            verification code.
-          </li>
-          <li>
-            <strong>Handover & Payment:</strong> Input the buyer&apos;s 4-digit code in the{" "}
-            <span className="text-emerald-700 font-semibold">Verify OTP</span> modal to immediately
-            complete delivery and claim your fee.
-          </li>
-        </ol>
-      </div>
-
       {/* Recent Trips Table */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">

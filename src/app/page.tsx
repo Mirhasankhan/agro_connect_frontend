@@ -26,7 +26,7 @@ import BulkPricingBanner from "@/components/home/BulkPricingBanner";
 import RegionalHubsSection from "@/components/home/RegionalHubsSection";
 import TrustGuaranteesSection from "@/components/home/TrustGuaranteesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import FaqSection from "@/components/home/FaqSection";
+import FaqSection from "@/components/common/FaqSection";
 import HarvestNewsletterSection from "@/components/home/HarvestNewsletterSection";
 import TopRatedProducersSection from "@/components/home/TopRatedProducersSection";
 import { useGetAllProductsQuery } from "@/redux/features/product/productApi";
