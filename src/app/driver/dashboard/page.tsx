@@ -21,6 +21,7 @@ import { useAppSelector } from "@/redux/hooks";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import DriverProfileSetupModal from "@/components/driver/DriverProfileSetupModal";
 import DriverEarningChart from "@/components/driver/DriverEarningChart";
+import DriverAvailabilitySection from "@/components/driver/DriverAvailabilitySection";
 import { formatCurrency, formatDate } from "@/utils/formatters";
 
 export default function DriverDashboardPage() {
@@ -32,10 +33,9 @@ export default function DriverDashboardPage() {
   const { data: profileData, isLoading: isLoadingProfile } = useGetProfileQuery(undefined, {
     skip: !isAuthenticated,
   });
-  const hasDriverProfile = Boolean(
-    profileData?.data?.driverProfile || user?.driverProfile
-  );
-  const verificationStatus = profileData?.data?.driverProfile?.verificationStatus;
+  const driverProfile = profileData?.data?.driverProfile || user?.driverProfile;
+  const hasDriverProfile = Boolean(driverProfile);
+  const verificationStatus = driverProfile?.verificationStatus;
   const isAccepted = verificationStatus === "Accepted";
   const isRejected = verificationStatus === "Rejected";
 
@@ -150,86 +150,87 @@ export default function DriverDashboardPage() {
         />
       )}
 
-      {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
-        <div className="space-y-1">
-          <span className="text-xs  tracking-widest text-emerald-600 font-bold">
-            Logistics Console
-          </span>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900">
-            Driver Delivery Control Center
-          </h1>
-          <p className="text-xs text-slate-600 max-w-xl">
-            Transport fresh farm harvests from regional hubs to urban tables. Confirm pickups,
-            verify customer handovers with 4-digit OTP codes, and secure instant earnings.
-          </p>
+      {/* Driver Status Widget & Quick Performance Metrics */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Exact Driver Status Card */}
+        <div className="lg:col-span-5 xl:col-span-4 flex justify-center">
+          <DriverAvailabilitySection activeDeliveriesCount={activeDeliveries.length} />
         </div>
 
-        <Link
-          href="/driver/deliveries"
-          className="btn-primary text-xs py-3 px-5 flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
-        >
-          <Truck className="w-4 h-4" />
-          View All Deliveries
-        </Link>
-      </div>
+        {/* 4 Performance Metrics in 2x2 Grid */}
+        <div className="lg:col-span-7 xl:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Total Earned */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between text-slate-500 text-xs">
+                <span>Total Earnings</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <DollarSign className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="font-mono text-2xl font-bold text-slate-900 mt-2">
+                {isLoadingPayments ? "..." : formatCurrency(totalEarnings)}
+              </p>
+            </div>
+            <p className="text-[11px] text-slate-500">Fixed delivery charge rewards</p>
+          </div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Earned */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span>Total Earnings</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-              <DollarSign className="w-4 h-4" />
+          {/* Completed Deliveries */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between text-slate-500 text-xs">
+                <span>Completed Trips</span>
+                <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="font-mono text-2xl font-bold text-slate-900 mt-2">
+                {isLoadingDeliveries ? "..." : completedTripsCount}
+              </p>
+            </div>
+            <p className="text-[11px] text-slate-500">Verified with 4-digit OTP check</p>
+          </div>
+
+          {/* Active In-Transit */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between text-slate-500 text-xs">
+                <span>Active Deliveries</span>
+                <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
+                  <Truck className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="font-mono text-2xl font-bold text-slate-900 mt-2">
+                {isLoadingDeliveries ? "..." : activeDeliveries.length}
+              </p>
+            </div>
+            <p className="text-[11px] text-slate-500">Assigned or in transit to buyers</p>
+          </div>
+
+          {/* Fleet Vehicle & Readiness */}
+          <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between text-slate-500 text-xs">
+                <span>Fleet & Credentials</span>
+                <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-base font-bold text-slate-900 mt-2 truncate">
+                {driverProfile?.vehicleType || "Standard Fleet"}
+              </p>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+              <span className="font-mono truncate">{driverProfile?.registrationNumber || "Reg: Pending"}</span>
+              <span
+                className={`font-semibold shrink-0 ${
+                  isAccepted ? "text-emerald-700" : isRejected ? "text-rose-700" : "text-amber-700"
+                }`}
+              >
+                {isAccepted ? "Verified" : isRejected ? "Rejected" : "Under Review"}
+              </span>
             </div>
           </div>
-          <p className="font-mono text-2xl font-bold text-slate-900">
-            {isLoadingPayments ? "..." : formatCurrency(totalEarnings)}
-          </p>
-          <p className="text-[11px] text-slate-500">Fixed delivery charge rewards</p>
-        </div>
-
-        {/* Completed Deliveries */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span>Completed Trips</span>
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="font-mono text-2xl font-bold text-slate-900">
-            {isLoadingDeliveries ? "..." : completedTripsCount}
-          </p>
-          <p className="text-[11px] text-slate-500">Verified with 4-digit OTP check</p>
-        </div>
-
-        {/* Active In-Transit */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span>Active Deliveries</span>
-            <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-              <Truck className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="font-mono text-2xl font-bold text-slate-900">
-            {isLoadingDeliveries ? "..." : activeDeliveries.length}
-          </p>
-          <p className="text-[11px] text-slate-500">Assigned or in transit to buyers</p>
-        </div>
-
-        {/* Fleet Readiness */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
-          <div className="flex items-center justify-between text-slate-500 text-xs">
-            <span>Fleet Status</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <p className="text-base font-bold text-emerald-700">
-            {isAccepted ? "On Duty & Active" : "Pending Verification"}
-          </p>
-          <p className="text-[11px] text-slate-500">Bangladesh Agro-Grid</p>
         </div>
       </div>
 

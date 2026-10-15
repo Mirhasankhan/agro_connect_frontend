@@ -231,6 +231,28 @@ export default function DriverLayout({
           </div>
 
           <div className="flex items-center gap-3">
+            {driverProfile && (
+              <div
+                className={`hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${
+                  driverProfile.isAvailable
+                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                    : "bg-slate-100 text-slate-600 border-slate-200"
+                }`}
+              >
+                <span className="relative flex h-2 w-2">
+                  {driverProfile.isAvailable && (
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  )}
+                  <span
+                    className={`relative inline-flex rounded-full h-2 w-2 ${
+                      driverProfile.isAvailable ? "bg-emerald-600" : "bg-slate-400"
+                    }`}
+                  />
+                </span>
+                <span>{driverProfile.isAvailable ? "Online" : "Offline"}</span>
+              </div>
+            )}
+
             <Link
               href="/driver/profile"
               title="View Driver & Personal Profile"

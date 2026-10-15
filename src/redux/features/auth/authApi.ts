@@ -123,6 +123,17 @@ const authApi = baseApi.injectEndpoints({
         body: data,
       }),
     }),
+
+    toggleOnlineStatus: builder.mutation<
+      TApiResponse<{ isAvailable: boolean } | null>,
+      void
+    >({
+      query: () => ({
+        url: "/auth/availability",
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -138,7 +149,9 @@ export const {
   useVerifyForgotPasswordOtpMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
+  useToggleOnlineStatusMutation,
 } = authApi;
 
 export const useProfileQuery = useGetProfileQuery;
 export const useForgotPasswordMutation = useSendForgotPasswordOtpMutation;
+export const useToggleDriverAvailabilityMutation = useToggleOnlineStatusMutation;
