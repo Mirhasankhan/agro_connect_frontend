@@ -651,3 +651,23 @@ export interface TProducerFarmInfo {
   producer: TProducerFarmData;
 }
 
+export type TNotificationType =
+  | "Profile"
+  | "Order"
+  | "Payment"
+  | "Delivery"
+  | "Payout"
+  | "Review";
+
+export interface TNotification {
+  id: string;
+  receiverId: string;
+  title: string;
+  content: string;
+  isRead: boolean;
+  notificationType: TNotificationType;
+  createdAt: string;
+  updatedAt: string;
+}
+
+

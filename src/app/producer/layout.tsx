@@ -20,6 +20,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
+import NotificationDropdown from "@/components/common/NotificationDropdown";
 
 export default function ProducerLayout({
   children,
@@ -244,6 +245,7 @@ export default function ProducerLayout({
           </div>
 
           <div className="flex items-center gap-3">
+            <NotificationDropdown />
             <Link
               href="/producer/profile"
               title="View Farm & Personal Profile"

@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout, updateProfileData } from "@/redux/features/auth/authSlice";
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
 import { useGetCartQuery, useGetWishlistQuery } from "@/redux/features/shopping/shoppingApi";
+import NotificationDropdown from "@/components/common/NotificationDropdown";
 
 export default function Navbar() {
   const router = useRouter();
@@ -184,6 +185,11 @@ export default function Navbar() {
                   </span>
                 )}
               </Link>
+            )}
+
+            {/* Notification Dropdown (Authenticated Users) */}
+            {isAuthenticated && (
+              <NotificationDropdown />
             )}
 
             {/* Auth Dropdown or Login / Register */}

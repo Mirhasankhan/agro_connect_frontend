@@ -19,6 +19,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/features/auth/authSlice";
 import { useGetProfileQuery } from "@/redux/features/auth/authApi";
+import NotificationDropdown from "@/components/common/NotificationDropdown";
 
 export default function DriverLayout({
   children,
@@ -252,6 +253,8 @@ export default function DriverLayout({
                 <span>{driverProfile.isAvailable ? "Online" : "Offline"}</span>
               </div>
             )}
+
+            <NotificationDropdown />
 
             <Link
               href="/driver/profile"
