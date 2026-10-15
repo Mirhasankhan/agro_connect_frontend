@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  TrendingDown,
+import {  
   Percent,
   CheckCircle2,
   ArrowRight,
@@ -61,11 +60,7 @@ export default function BulkPricingBanner() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Left Column: Context & Value Proposition */}
-          <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-900/60 border border-emerald-400/30 text-emerald-300 text-xs font-bold  tracking-wider backdrop-blur-sm">
-              <TrendingDown className="w-4 h-4 text-emerald-400" />
-              <span>Transparent Bulk Tiering</span>
-            </div>
+          <div className="lg:col-span-6 space-y-6">         
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
               Buy in Bulk, <br />

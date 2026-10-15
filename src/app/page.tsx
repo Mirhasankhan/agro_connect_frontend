@@ -23,7 +23,6 @@ import ProductCard from "@/components/product/ProductCard";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import BulkPricingBanner from "@/components/home/BulkPricingBanner";
-import RegionalHubsSection from "@/components/home/RegionalHubsSection";
 import TrustGuaranteesSection from "@/components/home/TrustGuaranteesSection";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
 import FaqSection from "@/components/common/FaqSection";
@@ -314,17 +313,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* OUR TOP RATED PRODUCER SECTION */}
-      <TopRatedProducersSection />
-
-      {/* SECTION 3: WHOLESALE BULK TIER PRICING BANNER */}
-      <BulkPricingBanner />
-
-      {/* SECTION 4: HOW AGRO CONNECT WORKS (4-Step process with dual persona toggle) */}
+    
+      <TopRatedProducersSection />   
+      <BulkPricingBanner />  
       <HowItWorksSection />
-
-      {/* SECTION 5: REGIONAL HUBS SPOTLIGHT (Bouaké, Korhogo, Yamoussoukro, San Pédro) */}
-      <RegionalHubsSection />
 
       {/* SECTION 6: PLATFORM BENEFITS - WHY AGRO CONNECT */}
       <section

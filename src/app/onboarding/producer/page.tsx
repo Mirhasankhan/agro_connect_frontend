@@ -280,8 +280,8 @@ export default function ProducerOnboardingPage() {
                       type="button"
                       onClick={() => setValue("producerType", item.type)}
                       className={`flex flex-col text-left rounded-xl border p-4 transition-all ${isSelected
-                          ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                        ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                         }`}
                     >
                       <Icon className={`h-5 w-5 ${isSelected ? "text-emerald-700" : "text-slate-400"}`} />
@@ -356,7 +356,7 @@ export default function ProducerOnboardingPage() {
                   <input
                     id="phoneNumber"
                     type="text"
-                    placeholder="e.g. +225 0700000000"
+                    placeholder="e.g. +880 0700000000"
                     className="form-input"
                     {...register("phoneNumber")}
                   />
@@ -494,7 +494,7 @@ export default function ProducerOnboardingPage() {
                 className="btn-primary"
               >
                 {isLoading ? (
-                  <>            
+                  <>
                     <span>Submitting profile...</span>
                   </>
                 ) : (

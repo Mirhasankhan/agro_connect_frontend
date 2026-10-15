@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
+import logo from "@/assets/logo.png";
 import {
-  Sprout,
   Mail,
   Phone,
   MapPin,
@@ -9,6 +9,7 @@ import {
   Truck,
   Award,
 } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -18,14 +19,14 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-full bg-emerald-500 p-0.5 flex items-center justify-center">
-                <div className="w-full h-full bg-slate-900 rounded-full flex items-center justify-center">
-                  <Sprout className="w-5 h-5 text-emerald-400" />
-                </div>
-              </div>
-              <span className="font-serif text-2xl font-bold tracking-tight text-white">
-                Agro<span className="text-emerald-400 font-sans">Connect</span>
-              </span>
+              <Image
+                src={logo}
+                alt="AgroConnect"
+                width={181}
+                height={164}
+                priority
+                className="h-12 sm:h-14 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
             </Link>
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
               Agricultural platform number 1 in Bangladesh. Connecting certified
@@ -36,15 +37,15 @@ export default function Footer() {
             <div className="pt-2 flex flex-col space-y-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-emerald-400" />
-                <span>Plateau & Cocody, Abidjan, Bangladesh</span>
+                <span>Chittagong, Bangladesh</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-400" />
-                <span>+225 07 00 00 00 00</span>
+                <span>+880-1839033505</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-emerald-400" />
-                <span>support@agroconnect.ci</span>
+                <span>mirhasan000034@gmail.com</span>
               </div>
             </div>
           </div>

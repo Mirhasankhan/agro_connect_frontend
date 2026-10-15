@@ -308,10 +308,10 @@ export default function ProducerProfilePage() {
         <div className="flex items-center gap-2">
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${verificationStatus === "Accepted"
-                ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                : verificationStatus === "Rejected"
-                  ? "bg-red-100 text-red-800 border border-red-200"
-                  : "bg-amber-100 text-amber-800 border border-amber-200"
+              ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+              : verificationStatus === "Rejected"
+                ? "bg-red-100 text-red-800 border border-red-200"
+                : "bg-amber-100 text-amber-800 border border-amber-200"
               }`}
           >
             {verificationStatus === "Accepted" && (
@@ -468,8 +468,8 @@ export default function ProducerProfilePage() {
           type="button"
           onClick={() => setActiveTab("farm")}
           className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "farm"
-              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
-              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+            ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+            : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
             }`}
         >
           <Sprout className="w-4 h-4" />
@@ -480,8 +480,8 @@ export default function ProducerProfilePage() {
           type="button"
           onClick={() => setActiveTab("personal")}
           className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "personal"
-              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
-              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+            ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+            : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
             }`}
         >
           <User className="w-4 h-4" />
@@ -492,8 +492,8 @@ export default function ProducerProfilePage() {
           type="button"
           onClick={() => setActiveTab("security")}
           className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "security"
-              ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
-              : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
+            ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
+            : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
             }`}
         >
           <Lock className="w-4 h-4" />
@@ -830,7 +830,7 @@ export default function ProducerProfilePage() {
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+225 07 12 34 56 78"
+                  placeholder="+880 07 12 34 56 78"
                   className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
                 />
                 <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -1031,8 +1031,8 @@ export default function ProducerProfilePage() {
                 <li className="flex items-center gap-2">
                   <CheckCircle2
                     className={`w-3.5 h-3.5 ${newPassword.length >= 6
-                        ? "text-emerald-600"
-                        : "text-slate-400"
+                      ? "text-emerald-600"
+                      : "text-slate-400"
                       }`}
                   />
                   <span>At least 6 characters in length</span>
@@ -1040,8 +1040,8 @@ export default function ProducerProfilePage() {
                 <li className="flex items-center gap-2">
                   <CheckCircle2
                     className={`w-3.5 h-3.5 ${confirmPassword && newPassword === confirmPassword
-                        ? "text-emerald-600"
-                        : "text-slate-400"
+                      ? "text-emerald-600"
+                      : "text-slate-400"
                       }`}
                   />
                   <span>Both password fields match exactly</span>

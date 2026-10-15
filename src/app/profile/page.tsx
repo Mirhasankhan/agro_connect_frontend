@@ -14,10 +14,10 @@ import {
   EyeOff,
   Camera,
   ShieldCheck,
-  CheckCircle2,  
+  CheckCircle2,
   Package,
   MessageSquare,
-  ShoppingCart,  
+  ShoppingCart,
   ArrowRight,
   Save,
   RotateCcw,
@@ -356,11 +356,10 @@ export default function BuyerProfilePage() {
               <button
                 type="button"
                 onClick={() => setActiveTab("profile")}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                  activeTab === "profile"
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeTab === "profile"
                     ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
                     : "text-slate-700 hover:bg-slate-50"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <User className="w-4 h-4" />
@@ -372,11 +371,10 @@ export default function BuyerProfilePage() {
               <button
                 type="button"
                 onClick={() => setActiveTab("security")}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
-                  activeTab === "security"
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${activeTab === "security"
                     ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
                     : "text-slate-700 hover:bg-slate-50"
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Lock className="w-4 h-4" />
@@ -442,7 +440,7 @@ export default function BuyerProfilePage() {
                   <h2 className="font-serif text-xl font-bold text-slate-900 flex items-center gap-2">
                     <User className="w-5 h-5 text-emerald-600" />
                     Personal & Delivery Information
-                  </h2>                 
+                  </h2>
                 </div>
 
                 <form onSubmit={handleProfileSubmit} className="space-y-6">
@@ -477,7 +475,7 @@ export default function BuyerProfilePage() {
                           className="w-full bg-slate-100 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-500 cursor-not-allowed font-medium"
                         />
                         <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                      </div>                      
+                      </div>
                     </div>
                   </div>
 
@@ -491,7 +489,7 @@ export default function BuyerProfilePage() {
                         type="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="+225 07 12 34 56 78"
+                        placeholder="+880 07 12 34 56 78"
                         className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
                       />
                       <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -552,7 +550,7 @@ export default function BuyerProfilePage() {
                       className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                     >
                       {isUpdatingProfile ? (
-                        <>                
+                        <>
                           <span>Saving Changes...</span>
                         </>
                       ) : (
@@ -573,7 +571,7 @@ export default function BuyerProfilePage() {
                   <h2 className="font-serif text-xl font-bold text-slate-900 flex items-center gap-2">
                     <KeyRound className="w-5 h-5 text-emerald-600" />
                     Change Account Password
-                  </h2>                 
+                  </h2>
                 </div>
 
                 <form onSubmit={handleChangePasswordSubmit} className="space-y-6">
@@ -680,21 +678,19 @@ export default function BuyerProfilePage() {
                     <ul className="text-xs text-slate-600 space-y-1.5">
                       <li className="flex items-center gap-2">
                         <CheckCircle2
-                          className={`w-3.5 h-3.5 ${
-                            newPassword.length >= 6
+                          className={`w-3.5 h-3.5 ${newPassword.length >= 6
                               ? "text-emerald-600"
                               : "text-slate-400"
-                          }`}
+                            }`}
                         />
                         <span>At least 6 characters in length</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle2
-                          className={`w-3.5 h-3.5 ${
-                            confirmPassword && newPassword === confirmPassword
+                          className={`w-3.5 h-3.5 ${confirmPassword && newPassword === confirmPassword
                               ? "text-emerald-600"
                               : "text-slate-400"
-                          }`}
+                            }`}
                         />
                         <span>Both new password fields match</span>
                       </li>
@@ -709,7 +705,7 @@ export default function BuyerProfilePage() {
                       className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                     >
                       {isChangingPassword ? (
-                        <>                
+                        <>
                           <span>Updating Password...</span>
                         </>
                       ) : (

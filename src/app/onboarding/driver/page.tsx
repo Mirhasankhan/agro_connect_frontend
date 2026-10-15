@@ -245,8 +245,8 @@ export default function DriverOnboardingPage() {
                       type="button"
                       onClick={() => setValue("vehicleType", item.type)}
                       className={`flex flex-col text-left rounded-xl border p-3.5 transition-all ${isSelected
-                          ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                        ? "border-emerald-600 bg-emerald-50/70 text-emerald-950 ring-2 ring-emerald-600/20"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                         }`}
                     >
                       <span className="text-xs font-semibold">{item.label}</span>
@@ -287,7 +287,7 @@ export default function DriverOnboardingPage() {
                   <input
                     id="phoneNumber"
                     type="text"
-                    placeholder="e.g. +225 0500000000"
+                    placeholder="e.g. +880 0500000000"
                     className="form-input"
                     {...register("phoneNumber")}
                   />
@@ -365,7 +365,7 @@ export default function DriverOnboardingPage() {
                 className="btn-primary"
               >
                 {isLoading ? (
-                  <>              
+                  <>
                     <span>Submitting driver profile...</span>
                   </>
                 ) : (

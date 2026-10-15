@@ -272,7 +272,7 @@ export default function DriverProfilePage() {
 
   if (isProfileLoading && !profile) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 space-y-4">    
+      <div className="flex flex-col items-center justify-center py-24 space-y-4">
         <p className="text-sm font-medium text-slate-500">
           Loading driver profile & vehicle credentials...
         </p>
@@ -295,13 +295,12 @@ export default function DriverProfilePage() {
 
         <div className="flex items-center gap-2">
           <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-              verificationStatus === "Accepted"
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${verificationStatus === "Accepted"
                 ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
                 : verificationStatus === "Rejected"
-                ? "bg-red-100 text-red-800 border border-red-200"
-                : "bg-amber-100 text-amber-800 border border-amber-200"
-            }`}
+                  ? "bg-red-100 text-red-800 border border-red-200"
+                  : "bg-amber-100 text-amber-800 border border-amber-200"
+              }`}
           >
             {verificationStatus === "Accepted" && (
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -404,16 +403,14 @@ export default function DriverProfilePage() {
                   {driver?.vehicleType}
                 </span>
                 <span
-                  className={`inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full ${
-                    driver?.isAvailable
+                  className={`inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full ${driver?.isAvailable
                       ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                       : "bg-slate-100 text-slate-600"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      driver?.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
-                    }`}
+                    className={`w-1.5 h-1.5 rounded-full ${driver?.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-slate-400"
+                      }`}
                   />
                   {driver?.isAvailable ? "Available for Dispatch" : "Off Duty"}
                 </span>
@@ -478,11 +475,10 @@ export default function DriverProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("vehicle")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "vehicle"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "vehicle"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <Truck className="w-4 h-4" />
           <span>Vehicle & Compliance Records</span>
@@ -491,11 +487,10 @@ export default function DriverProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("personal")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "personal"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "personal"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <User className="w-4 h-4" />
           <span>Personal Details</span>
@@ -504,11 +499,10 @@ export default function DriverProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("security")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "security"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "security"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <Lock className="w-4 h-4" />
           <span>Change Password</span>
@@ -585,7 +579,7 @@ export default function DriverProfilePage() {
                       : "Not specified"}
                   </span>
                 </p>
-              </div>          
+              </div>
 
               <div className="p-4 rounded-2xl bg-slate-50/70 border border-slate-100">
                 <span className="text-slate-500 font-medium block mb-1">
@@ -798,7 +792,7 @@ export default function DriverProfilePage() {
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="+225 05 12 34 56 78"
+                  placeholder="+880 05 12 34 56 78"
                   className="w-full bg-slate-50/70 border border-slate-200 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all font-medium"
                 />
                 <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -835,7 +829,7 @@ export default function DriverProfilePage() {
 
             {/* Form Actions */}
             <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-end gap-3">
-              
+
 
               <button
                 type="submit"
@@ -843,7 +837,7 @@ export default function DriverProfilePage() {
                 className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {isUpdatingProfile ? (
-                  <>              
+                  <>
                     <span>Saving Changes...</span>
                   </>
                 ) : (
@@ -983,21 +977,19 @@ export default function DriverProfilePage() {
               <ul className="text-xs text-slate-600 space-y-1.5">
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`w-3.5 h-3.5 ${
-                      newPassword.length >= 6
+                    className={`w-3.5 h-3.5 ${newPassword.length >= 6
                         ? "text-emerald-600"
                         : "text-slate-400"
-                    }`}
+                      }`}
                   />
                   <span>At least 6 characters in length</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`w-3.5 h-3.5 ${
-                      confirmPassword && newPassword === confirmPassword
+                    className={`w-3.5 h-3.5 ${confirmPassword && newPassword === confirmPassword
                         ? "text-emerald-600"
                         : "text-slate-400"
-                    }`}
+                      }`}
                   />
                   <span>Both password fields match exactly</span>
                 </li>
@@ -1012,7 +1004,7 @@ export default function DriverProfilePage() {
                 className="w-full sm:w-auto px-6 py-2.5 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
               >
                 {isChangingPassword ? (
-                  <>                 
+                  <>
                     <span>Updating Password...</span>
                   </>
                 ) : (
