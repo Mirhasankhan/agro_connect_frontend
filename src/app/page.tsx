@@ -434,7 +434,7 @@ export default function HomePage() {
             </h2>
             <p className="text-sm text-slate-600 mt-3">
               Discover how Agro Connect empowers producers, transporters, and
-              buyers across Côte d&apos;Ivoire.
+              buyers across Bangladesh.
             </p>
           </div>
 

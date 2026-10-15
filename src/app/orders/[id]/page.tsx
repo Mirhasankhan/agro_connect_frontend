@@ -199,8 +199,8 @@ export default function OrderDetailsPage() {
                 <div key={idx} className="flex flex-col items-center text-center space-y-2">
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${step.completed
-                        ? "bg-emerald-600 border-emerald-600 text-white"
-                        : "bg-slate-100 border-slate-300 text-slate-400"
+                      ? "bg-emerald-600 border-emerald-600 text-white"
+                      : "bg-slate-100 border-slate-300 text-slate-400"
                       }`}
                   >
                     {step.completed ? <CheckCircle2 className="w-5 h-5 stroke-[2.5]" /> : idx + 1}
@@ -242,18 +242,18 @@ export default function OrderDetailsPage() {
             {isDriverAssigned ? (
               <span
                 className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border self-start sm:self-auto ${activeDelivery?.status === "Delivered"
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : activeDelivery?.status === "PickedUp"
-                      ? "bg-blue-50 text-blue-700 border-blue-200"
-                      : "bg-amber-50 text-amber-700 border-amber-200"
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                  : activeDelivery?.status === "PickedUp"
+                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                    : "bg-amber-50 text-amber-700 border-amber-200"
                   }`}
               >
                 <span
                   className={`w-1.5 h-1.5 rounded-full ${activeDelivery?.status === "Delivered"
-                      ? "bg-emerald-500"
-                      : activeDelivery?.status === "PickedUp"
-                        ? "bg-blue-500 animate-pulse"
-                        : "bg-amber-500"
+                    ? "bg-emerald-500"
+                    : activeDelivery?.status === "PickedUp"
+                      ? "bg-blue-500 animate-pulse"
+                      : "bg-amber-500"
                     }`}
                 />
                 Status: {activeDelivery?.status === "PickedUp" ? "In Transit" : activeDelivery?.status || "Assigned"}
@@ -458,7 +458,7 @@ export default function OrderDetailsPage() {
                   {order.shippingAddress.addressLine}
                 </p>
                 <p>
-                  {order.shippingAddress.city}, Côte d&apos;Ivoire (
+                  {order.shippingAddress.city}, Bangladesh (
                   {order.shippingAddress.postCode})
                 </p>
                 {order.shippingAddress.instruction && (

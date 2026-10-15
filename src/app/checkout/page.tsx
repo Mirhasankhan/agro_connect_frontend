@@ -10,7 +10,7 @@ import {
   MapPin,
   Plus,
   CreditCard,
-  ShieldCheck, 
+  ShieldCheck,
   ArrowLeft,
   AlertCircle,
   CheckCircle2,
@@ -211,8 +211,8 @@ export default function CheckoutPage() {
                       <label
                         key={addr.id}
                         className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${selectedAddressId === addr.id
-                            ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
-                            : "bg-slate-50 border-slate-200 hover:border-slate-300"
+                          ? "bg-emerald-50 border-emerald-500 ring-1 ring-emerald-500 shadow-sm"
+                          : "bg-slate-50 border-slate-200 hover:border-slate-300"
                           }`}
                       >
                         <input
@@ -226,7 +226,7 @@ export default function CheckoutPage() {
                         <div className="flex-1 text-xs space-y-1">
                           <p className="font-bold text-slate-900 text-sm">{addr.addressLine}</p>
                           <p className="text-slate-600">
-                            {addr.city}, Côte d&apos;Ivoire (Postal: {addr.postCode})
+                            {addr.city}, Bangladesh (Postal: {addr.postCode})
                           </p>
                           {addr.instruction && (
                             <p className="text-emerald-700 text-[11px] italic">
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
                       className="btn-primary text-xs py-2 px-5 flex items-center gap-2"
                     >
                       {isCreatingAddress ? (
-                        <>                      
+                        <>
                           Saving...
                         </>
                       ) : (
@@ -438,7 +438,7 @@ export default function CheckoutPage() {
                 className="btn-primary w-full py-3.5 text-xs font-bold text-center flex items-center justify-center gap-2 shadow-sm"
               >
                 {isPlacingOrder ? (
-                  <>                   
+                  <>
                     Creating Order...
                   </>
                 ) : (
@@ -449,7 +449,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-             
+
             </div>
           </div>
         </div>

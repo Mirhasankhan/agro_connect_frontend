@@ -195,7 +195,7 @@ export default function ProducerDashboardPage() {
           <p className="font-mono text-2xl font-bold text-slate-900">
             {isLoadingProducts ? "..." : totalProductsCount}
           </p>
-          <p className="text-[11px] text-slate-500">Active on Côte d&apos;Ivoire marketplace</p>
+          <p className="text-[11px] text-slate-500">Active on Bangladesh marketplace</p>
         </div>
 
         {/* Metric 3: Orders to Dispatch */}
@@ -306,10 +306,10 @@ export default function ProducerDashboardPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${item.status === "Pending"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : item.status === "SentToHub"
-                              ? "bg-blue-50 text-blue-700 border border-blue-200"
-                              : "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                          ? "bg-amber-50 text-amber-700 border border-amber-200"
+                          : item.status === "SentToHub"
+                            ? "bg-blue-50 text-blue-700 border border-blue-200"
+                            : "bg-emerald-50 text-emerald-700 border border-emerald-200"
                           }`}
                       >
                         {item.status}

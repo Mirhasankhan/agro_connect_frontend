@@ -91,8 +91,8 @@ export default function DriverDashboardPage() {
       {isSetupCompleted && !isAccepted && (
         <div
           className={`flex items-start gap-3 rounded-2xl border p-4 text-xs ${isRejected
-              ? "border-rose-200 bg-rose-50 text-rose-800"
-              : "border-amber-200 bg-amber-50 text-amber-800"
+            ? "border-rose-200 bg-rose-50 text-rose-800"
+            : "border-amber-200 bg-amber-50 text-amber-800"
             }`}
         >
           {isRejected ? (
@@ -229,7 +229,7 @@ export default function DriverDashboardPage() {
           <p className="text-base font-bold text-emerald-700">
             {isAccepted ? "On Duty & Active" : "Pending Verification"}
           </p>
-          <p className="text-[11px] text-slate-500">Côte d&apos;Ivoire Agro-Grid</p>
+          <p className="text-[11px] text-slate-500">Bangladesh Agro-Grid</p>
         </div>
       </div>
 
@@ -298,8 +298,8 @@ export default function DriverDashboardPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${d.status === "PickedUp"
-                            ? "bg-blue-50 text-blue-700 border-blue-200"
-                            : "bg-amber-50 text-amber-700 border-amber-200"
+                          ? "bg-blue-50 text-blue-700 border-blue-200"
+                          : "bg-amber-50 text-amber-700 border-amber-200"
                           }`}
                       >
                         {d.status === "PickedUp" ? "In Transit" : "Assigned"}
@@ -400,8 +400,8 @@ export default function DriverDashboardPage() {
                     <td className="py-3 px-4">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${p.isTransferred
-                            ? "bg-blue-50 text-blue-700 border border-blue-200"
-                            : "bg-amber-50 text-amber-700 border border-amber-200"
+                          ? "bg-blue-50 text-blue-700 border border-blue-200"
+                          : "bg-amber-50 text-amber-700 border border-amber-200"
                           }`}
                       >
                         {p.isTransferred ? "Settled & Paid" : "Escrow Pending"}

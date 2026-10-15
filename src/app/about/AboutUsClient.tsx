@@ -29,7 +29,7 @@ const IMPACT_METRICS = [
   {
     value: "1,500+",
     label: "Certified Producers",
-    detail: "Directly validated smallholder farms across Côte d'Ivoire",
+    detail: "Directly validated smallholder farms across Bangladesh",
   },
   {
     value: "98.4%",
@@ -88,7 +88,7 @@ const TIMELINE_STEPS = [
   {
     year: "2024",
     tag: "Regional Expansion",
-    title: "Connecting Côte d'Ivoire's Breadbaskets",
+    title: "Connecting Bangladesh's Breadbaskets",
     description:
       "Expanded dedicated farm collection hubs into Bouaké and Korhogo. Built automated identity and land registration validation for hundreds of rural cooperatives.",
   },
@@ -111,32 +111,32 @@ const TIMELINE_STEPS = [
 // Regional Agricultural Hubs
 const REGIONAL_HUBS = [
   {
-    city: "Bouaké Hub",
-    zone: "Central Crossroad",
-    crops: "Cassava, Yams, Maize, Groundnuts",
+    city: "Dhaka Hub",
+    zone: "Central Distribution Corridor",
+    crops: "Fresh Vegetables, Rice, Mustard, Dairy",
     description:
-      "Our central distribution node coordinating produce between savannah farms and coastal consumption centers.",
+      "Our central distribution node coordinating fresh farm produce from rural growers directly to urban retail networks and mega-city markets.",
   },
   {
-    city: "Korhogo Hub",
-    zone: "Northern Savanna",
-    crops: "Kent Mangoes, Cashew, Cereals",
+    city: "Chittagong Hub",
+    zone: "South-Eastern Coastal Gateway",
+    crops: "Tea, Seasonal Fruits, Spices, Winter Crops",
     description:
-      "World-renowned northern agricultural basin known for export-grade fruits and seasonal grain reserves.",
+      "Connecting hill tract harvests, coastal agricultural belts, and seaport logistics for streamlined commercial and retail distribution.",
   },
   {
-    city: "Yamoussoukro Hub",
-    zone: "Central Belt",
-    crops: "Plantain Bananas, Fresh Vegetables, Tomatoes",
+    city: "Barishal Hub",
+    zone: "Southern Riverine Belt",
+    crops: "Paddy Rice, Guava, Betel Leaf, River Produce",
     description:
-      "Fertile green belt providing continuous year-round supplies of fresh vegetables to major urban centers.",
+      "Located in Bangladesh's fertile riverine granary, optimizing direct water-to-land transport and cold handling for fresh harvests.",
   },
   {
-    city: "Abidjan Logistics",
-    zone: "Coastal Commercial Terminal",
-    crops: "Cold Warehousing, Direct Storefront Distribution",
+    city: "Khulna Hub",
+    zone: "South-Western Delta Zone",
+    crops: "Jute, Coconut, Fresh Produce, Agro-Aquaculture",
     description:
-      "State-of-the-art temperature-managed receiving depot providing same-day delivery to hotels, supermarkets, and families.",
+      "Strategically positioned in the south-western delta region to aggregate organic farming clusters, coconut groves, and regional harvests.",
   },
 ];
 
@@ -203,7 +203,7 @@ export default function AboutUsClient() {
               >
                 <Sprout className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-semibold text-emerald-100 tracking-wide">
-                  About Agro Connect Côte d&apos;Ivoire
+                  About Agro Connect Bangladesh
                 </span>
               </motion.div>
 
@@ -296,7 +296,7 @@ export default function AboutUsClient() {
                 <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border border-slate-200">
                   <Image
                     src="https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=1200&q=80"
-                    alt="African agricultural harvest in Côte d'Ivoire"
+                    alt="African agricultural harvest in Bangladesh"
                     fill
                     unoptimized
                     className="object-cover"
@@ -330,7 +330,7 @@ export default function AboutUsClient() {
                     Transforming Agriculture Into a High-Efficiency Highway
                   </h2>
                   <p className="text-sm text-slate-600 mt-4 leading-relaxed">
-                    Agriculture accounts for over 20% of Côte d&apos;Ivoire&apos;s GDP and employs
+                    Agriculture accounts for over 20% of Bangladesh&apos;s GDP and employs
                     nearly half the working population. Yet for generations, systemic bottlenecks
                     have kept rural growers impoverished while urban households pay inflated prices
                     for deteriorating produce.
@@ -349,7 +349,7 @@ export default function AboutUsClient() {
                           Our Mission
                         </h3>
                         <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-                          To democratize food distribution across Côte d&apos;Ivoire by eliminating
+                          To democratize food distribution across Bangladesh by eliminating
                           middleman exploitation, providing guaranteed escrow transactions, and
                           delivering certified farm-fresh harvests within 24 hours of cutting.
                         </p>
@@ -624,7 +624,7 @@ export default function AboutUsClient() {
                 Our Strategic Agricultural Hubs
               </h2>
               <p className="text-sm text-slate-600 mt-3">
-                Positioned directly within Côte d&apos;Ivoire&apos;s prime crop regions to minimize
+                Positioned directly within Bangladesh&apos;s prime crop regions to minimize
                 travel times and preserve organic harvest quality.
               </p>
             </div>

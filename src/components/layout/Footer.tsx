@@ -36,7 +36,7 @@ export default function Footer() {
             <div className="pt-2 flex flex-col space-y-2 text-xs text-slate-400">
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-emerald-400" />
-                <span>Plateau & Cocody, Abidjan, Côte d&apos;Ivoire</span>
+                <span>Plateau & Cocody, Abidjan, Bangladesh</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-400" />
@@ -175,7 +175,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>
-            © {new Date().getFullYear()} Agro Connect Côte d&apos;Ivoire. All
+            © {new Date().getFullYear()} Agro Connect Bangladesh. All
             rights reserved.
           </p>
           <div className="flex items-center gap-6">

@@ -64,7 +64,7 @@ export default function RegionalHubsSection() {
               Direct From Regional Farm Hubs
             </h2>
             <p className="text-sm text-slate-600 mt-2 max-w-xl">
-              Every harvest listed on Agro Connect is geo-verified from certified cooperatives across Côte d&apos;Ivoire.
+              Every harvest listed on Agro Connect is geo-verified from certified cooperatives across Bangladesh.
             </p>
           </div>
 

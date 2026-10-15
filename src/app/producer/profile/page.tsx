@@ -258,25 +258,25 @@ export default function ProducerProfilePage() {
     },
     ...(producer?.producerType === "Company"
       ? [
-          {
-            title: "Company Registration Certificate",
-            url: producer?.companyCertificate,
-            type: "Corporate Entity",
-            desc: "Official enterprise incorporation certificate.",
-          },
-          {
-            title: "Trade & Property Register (RCCM)",
-            url: producer?.rcmUrl,
-            type: "Trade Register",
-            desc: "Commerce register document (RCCM).",
-          },
-          {
-            title: "Tax Clearance / DGI Attestation",
-            url: producer?.taxUrl,
-            type: "Tax Compliance",
-            desc: "Tax administration declaration and clearance certificate.",
-          },
-        ]
+        {
+          title: "Company Registration Certificate",
+          url: producer?.companyCertificate,
+          type: "Corporate Entity",
+          desc: "Official enterprise incorporation certificate.",
+        },
+        {
+          title: "Trade & Property Register (RCCM)",
+          url: producer?.rcmUrl,
+          type: "Trade Register",
+          desc: "Commerce register document (RCCM).",
+        },
+        {
+          title: "Tax Clearance / DGI Attestation",
+          url: producer?.taxUrl,
+          type: "Tax Compliance",
+          desc: "Tax administration declaration and clearance certificate.",
+        },
+      ]
       : []),
   ];
 
@@ -307,13 +307,12 @@ export default function ProducerProfilePage() {
 
         <div className="flex items-center gap-2">
           <span
-            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-              verificationStatus === "Accepted"
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${verificationStatus === "Accepted"
                 ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
                 : verificationStatus === "Rejected"
                   ? "bg-red-100 text-red-800 border border-red-200"
                   : "bg-amber-100 text-amber-800 border border-amber-200"
-            }`}
+              }`}
           >
             {verificationStatus === "Accepted" && (
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
@@ -468,11 +467,10 @@ export default function ProducerProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("farm")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "farm"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "farm"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <Sprout className="w-4 h-4" />
           <span>Farmland Profile & Legal Docs</span>
@@ -481,11 +479,10 @@ export default function ProducerProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("personal")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "personal"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "personal"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <User className="w-4 h-4" />
           <span>Personal Details</span>
@@ -494,11 +491,10 @@ export default function ProducerProfilePage() {
         <button
           type="button"
           onClick={() => setActiveTab("security")}
-          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${
-            activeTab === "security"
+          className={`flex items-center gap-2 py-3 px-4 text-xs sm:text-sm font-bold border-b-2 transition-all shrink-0 ${activeTab === "security"
               ? "border-emerald-600 text-emerald-700 bg-emerald-50/40 rounded-t-xl"
               : "border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300"
-          }`}
+            }`}
         >
           <Lock className="w-4 h-4" />
           <span>Change Password</span>
@@ -581,7 +577,7 @@ export default function ProducerProfilePage() {
                 <p className="font-bold text-slate-900 text-sm">
                   {profile?.city || profile?.region
                     ? `${profile.city || ""}${profile.city && profile.region ? ", " : ""}${profile.region || ""}`
-                    : "Côte d'Ivoire"}
+                    : "Bangladesh"}
                 </p>
               </div>
 
@@ -1034,21 +1030,19 @@ export default function ProducerProfilePage() {
               <ul className="text-xs text-slate-600 space-y-1.5">
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`w-3.5 h-3.5 ${
-                      newPassword.length >= 6
+                    className={`w-3.5 h-3.5 ${newPassword.length >= 6
                         ? "text-emerald-600"
                         : "text-slate-400"
-                    }`}
+                      }`}
                   />
                   <span>At least 6 characters in length</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2
-                    className={`w-3.5 h-3.5 ${
-                      confirmPassword && newPassword === confirmPassword
+                    className={`w-3.5 h-3.5 ${confirmPassword && newPassword === confirmPassword
                         ? "text-emerald-600"
                         : "text-slate-400"
-                    }`}
+                      }`}
                   />
                   <span>Both password fields match exactly</span>
                 </li>

@@ -137,12 +137,12 @@ export default function ProductsPage() {
       {/* Header Banner */}
       <div className="bg-white border-b border-slate-200 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl space-y-2">           
+          <div className="max-w-2xl space-y-2">
             <h1 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
               Fresh Harvests & Farm Goods
             </h1>
             <p className="text-sm text-slate-600">
-              Explore freshly harvested produce across Côte d&apos;Ivoire with dynamic tiered bulk
+              Explore freshly harvested produce across Bangladesh with dynamic tiered bulk
               discounts directly from verified producers.
             </p>
           </div>
@@ -216,9 +216,8 @@ export default function ProductsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Filters (Desktop & Mobile Drawer) */}
           <aside
-            className={`lg:block ${
-              mobileFilterOpen ? "block mb-6" : "hidden"
-            } bg-white border border-slate-200/90 rounded-2xl p-5 space-y-6 h-fit shadow-sm`}
+            className={`lg:block ${mobileFilterOpen ? "block mb-6" : "hidden"
+              } bg-white border border-slate-200/90 rounded-2xl p-5 space-y-6 h-fit shadow-sm`}
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
@@ -268,11 +267,10 @@ export default function ProductsPage() {
                   <button
                     type="button"
                     onClick={() => handleCategorySelect("")}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                      selectedCategory === ""
+                    className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${selectedCategory === ""
                         ? "bg-emerald-600 text-white font-semibold shadow-sm"
                         : "text-slate-700 hover:bg-slate-100"
-                    }`}
+                      }`}
                   >
                     All Harvests
                   </button>
@@ -281,11 +279,10 @@ export default function ProductsPage() {
                       key={cat.id}
                       type="button"
                       onClick={() => handleCategorySelect(cat.id)}
-                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
-                        selectedCategory === cat.id
+                      className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition-colors ${selectedCategory === cat.id
                           ? "bg-emerald-600 text-white font-semibold shadow-sm"
                           : "text-slate-700 hover:bg-slate-100"
-                      }`}
+                        }`}
                     >
                       {cat.name}
                     </button>
@@ -343,7 +340,7 @@ export default function ProductsPage() {
                   className="form-input text-xs"
                 />
               </div>
-            </div>           
+            </div>
           </aside>
 
           {/* Products Grid */}

@@ -135,7 +135,7 @@ export default function FarmProfilePage() {
     producer.region,
   ]
     .filter(Boolean)
-    .join(", ") || "Côte d'Ivoire";
+    .join(", ") || "Bangladesh";
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-emerald-500 selection:text-white">
@@ -196,7 +196,7 @@ export default function FarmProfilePage() {
                   )}
                 </div>
 
-                <div className="space-y-1.5">              
+                <div className="space-y-1.5">
 
                   <h1 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
                     {farmName}
@@ -250,7 +250,7 @@ export default function FarmProfilePage() {
               </div>
             </div>
 
-          
+
           </div>
         </div>
 
@@ -261,8 +261,8 @@ export default function FarmProfilePage() {
               type="button"
               onClick={() => setActiveTab("harvests")}
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "harvests"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
             >
               Harvests & Produce ({producer.products?.length || 0})
@@ -271,8 +271,8 @@ export default function FarmProfilePage() {
               type="button"
               onClick={() => setActiveTab("about")}
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "about"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
             >
               Farm Details & Practices
@@ -281,8 +281,8 @@ export default function FarmProfilePage() {
               type="button"
               onClick={() => setActiveTab("reviews")}
               className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${activeTab === "reviews"
-                  ? "bg-emerald-600 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                ? "bg-emerald-600 text-white shadow-sm"
+                : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                 }`}
             >
               Customer Reviews ({allReviews.length})
@@ -602,8 +602,8 @@ export default function FarmProfilePage() {
                             <Star
                               key={star}
                               className={`w-3.5 h-3.5 ${star <= item.review.rating
-                                  ? "fill-amber-400 text-amber-400"
-                                  : "text-slate-200"
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-slate-200"
                                 }`}
                             />
                           ))}

@@ -172,7 +172,7 @@ export default function TopRatedProducersSection({
                 producer.profileImage ||
                 FALLBACK_AVATARS[index % FALLBACK_AVATARS.length];
               const farmName = producer.farmName || `${producer.fullName}'s Farm`;
-              const location = producer.farmLocation || "Côte d'Ivoire";
+              const location = producer.farmLocation || "Bangladesh";
               const ratingScore = Number(producer.avgRating || 5).toFixed(1);
 
               return (
