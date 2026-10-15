@@ -244,6 +244,41 @@ export interface TShippingAddress {
   createdAt?: string;
 }
 
+export type ReportStatus = "Pending" | "Resolved" | "Rejected";
+
+export interface TReport {
+  id: string;
+  buyerId?: string;
+  orderItemId: string;
+  reason: string;
+  fileUrl?: string | null;
+  adminComment?: string | null;
+  status: ReportStatus;
+  createdAt: string;
+  updatedAt?: string;
+  buyer?: {
+    id?: string;
+    fullName: string;
+    email?: string;
+    profileImage?: string | null;
+    phoneNumber?: string | null;
+  };
+  orderItem?: {
+    id: string;
+    productName: string;
+    sellingUnit: SellingUnit;
+    quantity: number;
+    unitPrice: number;
+    subtotal: number;
+    status: ItemStatus;
+    order?: {
+      id?: string;
+      orderId: string;
+      createdAt?: string;
+    };
+  };
+}
+
 export interface TOrderItem {
   id: string;
   orderId?: string;
@@ -255,8 +290,10 @@ export interface TOrderItem {
   subtotal: number;
   status: ItemStatus;
   createdAt?: string;
+  updatedAt?: string;
   isReviewed?: boolean;
   cancelReason?: string | null;
+  report?: TReport | null;
   order?: {
     id?: string;
     orderId?: string;
@@ -295,6 +332,7 @@ export interface TProducerOrderItemDetails {
   unitPrice: number;
   isReviewed: boolean;
   status: ItemStatus;
+  updatedAt?: string;
   product?: {
     imageUrls: string[];
   } | null;
@@ -304,6 +342,7 @@ export interface TProducerOrderItemDetails {
     comment: string;
     createdAt: string;
   } | null;
+  report?: TReport | null;
   order: {
     orderId: string;
     customer: {
@@ -360,6 +399,7 @@ export interface TOrder {
   paymentStatus: PaymentStatus;
   cancelReason?: string | null;
   createdAt: string;
+  updatedAt?: string;
   shippingAddress?: TShippingAddress;
   deliveries?: TOrderDelivery[];
   items: TOrderItem[];
@@ -398,6 +438,7 @@ export interface TProducerEarning {
     sellingUnit: SellingUnit;
     unitPrice: number;
     subtotal: number;
+    report?: TReport | null;
   };
 }
 

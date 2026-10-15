@@ -168,25 +168,42 @@ export default function ProducerEarningsPage() {
                       {formatCurrency(p.amount)}
                     </td>
 
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${p.isTransferred
-                            ? "bg-blue-50 text-blue-700 border border-blue-200"
-                            : "bg-amber-50 text-amber-700 border border-amber-200"
-                          }`}
-                      >
-                        {p.isTransferred ? (
-                          <>
-                            <CheckCircle2 className="w-3 h-3" />
-                            Transferred
-                          </>
-                        ) : (
-                          <>
-                            <Clock className="w-3 h-3" />
-                            Pending Escrow
-                          </>
-                        )}
-                      </span>
+                    <td className="py-3.5 px-4 space-y-1">
+                      <div>
+                        <span
+                          className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 ${p.isTransferred
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : "bg-amber-50 text-amber-700 border border-amber-200"
+                            }`}
+                        >
+                          {p.isTransferred ? (
+                            <>
+                              <CheckCircle2 className="w-3 h-3" />
+                              Transferred
+                            </>
+                          ) : (
+                            <>
+                              <Clock className="w-3 h-3" />
+                              Pending Escrow
+                            </>
+                          )}
+                        </span>
+                      </div>
+                      {p.orderItem?.report && (
+                        <div>
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-semibold inline-block border ${
+                              p.orderItem.report.status === "Pending"
+                                ? "bg-rose-50 text-rose-700 border-rose-200"
+                                : p.orderItem.report.status === "Resolved"
+                                ? "bg-slate-100 text-slate-600 border-slate-200"
+                                : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            }`}
+                          >
+                            Dispute: {p.orderItem.report.status}
+                          </span>
+                        </div>
+                      )}
                     </td>
 
                     <td className="py-3.5 px-4 text-slate-500 font-mono">

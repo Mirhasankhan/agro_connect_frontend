@@ -482,6 +482,77 @@ export default function ProducerOrderItemDetailsPage() {
               </div>
             )}
           </div>
+
+          {/* Customer Quality Dispute / Report Card */}
+          {item.report && (
+            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600" />
+                  <span>Quality Dispute</span>
+                </h2>
+                <span
+                  className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${
+                    item.report.status === "Pending"
+                      ? "bg-amber-50 text-amber-700 border-amber-200"
+                      : item.report.status === "Resolved"
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                      : "bg-rose-50 text-rose-700 border-rose-200"
+                  }`}
+                >
+                  {item.report.status === "Pending"
+                    ? "Pending Review"
+                    : item.report.status === "Resolved"
+                    ? "Resolved (Buyer Refunded)"
+                    : "Claim Dismissed"}
+                </span>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                    Buyer Reported Issue ({formatDate(item.report.createdAt)})
+                  </span>
+                  <p className="text-slate-800 mt-1 leading-relaxed whitespace-pre-wrap">
+                    {item.report.reason}
+                  </p>
+                </div>
+
+                {item.report.fileUrl && (
+                  <div>
+                    <a
+                      href={item.report.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-emerald-700 underline font-semibold text-[11px] hover:text-emerald-800"
+                    >
+                      View Attached Evidence Image ↗
+                    </a>
+                  </div>
+                )}
+              </div>
+
+              {item.report.adminComment && (
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                  <span className="text-[10px] font-bold text-slate-600 block uppercase tracking-wider">
+                    Admin Mediation Note
+                  </span>
+                  <p className="text-slate-800 leading-relaxed">
+                    {item.report.adminComment}
+                  </p>
+                </div>
+              )}
+
+              {item.report.status === "Pending" && (
+                <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs">
+                  <p className="font-semibold">Payout Held in Escrow</p>
+                  <p className="text-[11px] mt-0.5">
+                    Earnings for this item remain pending while administrative mediation is in progress.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

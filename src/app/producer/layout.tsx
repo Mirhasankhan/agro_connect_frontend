@@ -71,6 +71,11 @@ export default function ProducerLayout({
       icon: ShoppingBag,
     },
     {
+      label: "Quality Reports",
+      href: "/producer/reports",
+      icon: AlertTriangle,
+    },
+    {
       label: "Earnings & Payouts",
       href: "/producer/earnings",
       icon: DollarSign,

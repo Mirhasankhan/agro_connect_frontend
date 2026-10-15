@@ -20,8 +20,11 @@ import {
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ReviewModal from "@/components/order/ReviewModal";
+import ReportModal from "@/components/order/ReportModal";
+import ReportViewModal from "@/components/order/ReportViewModal";
 import { useGetOrderDetailsQuery } from "@/redux/features/order/orderApi";
 import { useAppSelector } from "@/redux/hooks";
+import { TReport } from "@/types";
 import {
   formatCurrency,
   formatDate,
@@ -45,6 +48,20 @@ export default function OrderDetailsPage() {
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedReviewItem, setSelectedReviewItem] = useState<{
     orderItemId: string;
+    productName: string;
+  } | null>(null);
+
+  // Report modal state
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [selectedReportItem, setSelectedReportItem] = useState<{
+    orderItemId: string;
+    productName: string;
+  } | null>(null);
+
+  // Report view modal state
+  const [reportViewModalOpen, setReportViewModalOpen] = useState(false);
+  const [viewingReport, setViewingReport] = useState<{
+    report: TReport;
     productName: string;
   } | null>(null);
 
@@ -115,6 +132,17 @@ export default function OrderDetailsPage() {
       : null;
   const driver = activeDelivery?.driver;
   const isDriverAssigned = Boolean(driver?.id);
+
+  // Delivery timestamp and 24h report eligibility
+  const deliveryTime = activeDelivery?.updatedAt
+    ? new Date(activeDelivery.updatedAt).getTime()
+    : order.updatedAt
+    ? new Date(order.updatedAt).getTime()
+    : 0;
+  const isWithin24Hours =
+    deliveryTime > 0
+      ? Date.now() - deliveryTime <= 24 * 60 * 60 * 1000
+      : false;
 
   // Determine timeline progress steps
   const steps = [
@@ -396,7 +424,7 @@ export default function OrderDetailsPage() {
 
                   {/* If order is delivered, allow reviewing item or show Reviewed status */}
                   {isDelivered && (
-                    <>
+                    <div className="flex items-center gap-2">
                       {item.isReviewed ? (
                         <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-xl shadow-xs">
                           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
@@ -414,7 +442,45 @@ export default function OrderDetailsPage() {
                           Write Review
                         </button>
                       )}
-                    </>
+
+                      {/* Report / Dispute Option */}
+                      {item.report ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setViewingReport({
+                              report: item.report!,
+                              productName: item.productName || "Product",
+                            });
+                            setReportViewModalOpen(true);
+                          }}
+                          className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-xl border transition-colors ${
+                            item.report.status === "Pending"
+                              ? "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                              : item.report.status === "Resolved"
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                              : "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-100"
+                          }`}
+                        >
+                          <span>Dispute: {item.report.status}</span>
+                        </button>
+                      ) : isWithin24Hours ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedReportItem({
+                              orderItemId: item.id,
+                              productName: item.productName || "Product",
+                            });
+                            setReportModalOpen(true);
+                          }}
+                          className="px-2.5 py-1.5 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors"
+                          title="Report defective produce within 24 hours of delivery"
+                        >
+                          Report
+                        </button>
+                      ) : null}
+                    </div>
                   )}
                 </div>
               </div>
@@ -500,6 +566,35 @@ export default function OrderDetailsPage() {
           }}
           orderItemId={selectedReviewItem.orderItemId}
           productName={selectedReviewItem.productName}
+        />
+      )}
+
+      {/* Report Issue Modal */}
+      {selectedReportItem && (
+        <ReportModal
+          isOpen={reportModalOpen}
+          onClose={() => {
+            setReportModalOpen(false);
+            setSelectedReportItem(null);
+          }}
+          onSuccess={() => {
+            refetch();
+          }}
+          orderItemId={selectedReportItem.orderItemId}
+          productName={selectedReportItem.productName}
+        />
+      )}
+
+      {/* View Dispute Modal */}
+      {viewingReport && (
+        <ReportViewModal
+          isOpen={reportViewModalOpen}
+          onClose={() => {
+            setReportViewModalOpen(false);
+            setViewingReport(null);
+          }}
+          report={viewingReport.report}
+          productName={viewingReport.productName}
         />
       )}
 

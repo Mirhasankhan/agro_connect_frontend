@@ -17,7 +17,7 @@ const feedbackApi = baseApi.injectEndpoints({
 
     submitReport: builder.mutation<
       TApiResponse<null>,
-      { orderItemId: string; reason: string }
+      { orderItemId: string; reason: string; fileUrl?: string }
     >({
       query: (data) => ({
         url: "/feedback/submit-report",

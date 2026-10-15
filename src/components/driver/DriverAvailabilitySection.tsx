@@ -40,14 +40,6 @@ export default function DriverAvailabilitySection({
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Dynamic location formatted cleanly without arbitrary abbreviations
-  const userCity = driverUser?.city;
-  const userRegion = driverUser?.region;
-  const locationParts = [userCity, userRegion].filter(Boolean);
-  const locationDisplay =
-    locationParts.length > 0
-      ? locationParts.join(", ")
-      : "Central Hub";
 
   const handleToggle = async () => {
     setErrorMessage(null);
