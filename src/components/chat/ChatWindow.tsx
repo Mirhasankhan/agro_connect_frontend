@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { Send, Check, CheckCheck, ArrowLeft, MessageSquare, ShieldCheck } from "lucide-react";
+import { Send, Check, CheckCheck, ArrowLeft, MessageSquare, ShieldCheck, X } from "lucide-react";
 import { getSocket, getAuthToken } from "@/lib/socket";
 import { TChatMessage, TParticipant, TConversationHistory } from "@/types";
 import { toast } from "sonner";
@@ -52,13 +52,14 @@ export default function ChatWindow({
       return;
     }
 
+    const participantId = activeParticipant.id;
     setIsLoadingHistory(true);
     const socket = getSocket();
 
     const doSubscribe = () => {
       const token = getAuthToken();
       socket.emit("subscribe", {
-        userId: activeParticipant.id,
+        userId: participantId,
         token,
       });
     };
@@ -87,6 +88,16 @@ export default function ChatWindow({
     };
 
     const handleNewMessage = (msg: TChatMessage) => {
+      // Only handle messages belonging to this active conversation
+      const isFromActiveParticipant = msg.senderId === participantId;
+      const isFromMeToActiveParticipant =
+        (msg.isSendByMe || msg.senderId === currentUserId) &&
+        (msg.receiverId === participantId || !msg.receiverId);
+
+      if (!isFromActiveParticipant && !isFromMeToActiveParticipant) {
+        return;
+      }
+
       setMessages((prev) => {
         // Reconcile optimistic message with server broadcast
         const isMine =
@@ -117,6 +128,18 @@ export default function ChatWindow({
       });
     };
 
+    const handleMessagesRead = (data: { conversationId?: string; readBy?: string }) => {
+      if (!data?.readBy || data.readBy === participantId) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.isSendByMe || m.senderId === currentUserId
+              ? { ...m, isRead: true }
+              : m
+          )
+        );
+      }
+    };
+
     const handleError = (err: { message?: string }) => {
       setIsLoadingHistory(false);
       toast.error(err?.message || "Failed to process chat action");
@@ -128,6 +151,7 @@ export default function ChatWindow({
     socket.on("connect_error", handleConnectError);
     socket.on("conversationHistory", handleConversationHistory);
     socket.on("message", handleNewMessage);
+    socket.on("messagesRead", handleMessagesRead);
     socket.on("error", handleError);
 
     if (socket.connected) {
@@ -144,11 +168,17 @@ export default function ChatWindow({
 
     return () => {
       clearTimeout(safetyTimer);
+      const token = getAuthToken();
+      socket.emit("unsubscribe", {
+        userId: participantId,
+        token,
+      });
       socket.off("connect", handleConnect);
       socket.off("authenticated", handleAuthenticated);
       socket.off("connect_error", handleConnectError);
       socket.off("conversationHistory", handleConversationHistory);
       socket.off("message", handleNewMessage);
+      socket.off("messagesRead", handleMessagesRead);
       socket.off("error", handleError);
     };
   }, [activeParticipant?.id, currentUserId]);
@@ -266,13 +296,26 @@ export default function ChatWindow({
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
-          <span
-            className={`inline-block h-2 w-2 rounded-full ${
-              isConnected ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
-            }`}
-          />
-          {isConnected ? "Connected" : "Connecting..."}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500">
+            <span
+              className={`inline-block h-2 w-2 rounded-full ${
+                isConnected ? "bg-emerald-500" : "bg-amber-500 animate-pulse"
+              }`}
+            />
+            {isConnected ? "Connected" : "Connecting..."}
+          </div>
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="hidden md:inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors shadow-xs"
+              title="Close chat and return to list"
+            >
+              <X className="h-3.5 w-3.5" />
+              <span>Close</span>
+            </button>
+          )}
         </div>
       </div>
 
