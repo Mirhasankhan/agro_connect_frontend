@@ -26,12 +26,14 @@ import {
 import { useCreateOrderMutation } from "@/redux/features/order/orderApi";
 import { useAppSelector } from "@/redux/hooks";
 import { formatCurrency, formatUnit, getApplicableTierPrice } from "@/utils/formatters";
+import RegionCitySelect from "@/components/common/RegionCitySelect";
 
 const DELIVERY_CHARGE = 50;
 
 const addressSchema = z.object({
   addressLine: z.string().min(5, "Address must be at least 5 characters"),
-  city: z.string().min(2, "City is required"),
+  region: z.string().min(1, "Please select a region"),
+  city: z.string().min(1, "Please select a city"),
   postCode: z.string().min(2, "Postal code is required"),
   instruction: z.string().optional(),
 });
@@ -66,10 +68,22 @@ export default function CheckoutPage() {
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
+    defaultValues: {
+      addressLine: "",
+      region: "",
+      city: "",
+      postCode: "",
+      instruction: "",
+    },
   });
+
+  const selectedRegion = watch("region");
+  const selectedCity = watch("city");
 
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
@@ -83,9 +97,22 @@ export default function CheckoutPage() {
 
   const handleCreateAddress = async (values: AddressFormValues) => {
     try {
-      const res = await createAddress(values).unwrap();
+      // User must select region in UI, but payload only requires city
+      const payload = {
+        addressLine: values.addressLine,
+        city: values.city,
+        postCode: values.postCode,
+        instruction: values.instruction,
+      };
+      const res = await createAddress(payload).unwrap();
       toast.success("Delivery address added successfully!");
-      reset();
+      reset({
+        addressLine: "",
+        region: "",
+        city: "",
+        postCode: "",
+        instruction: "",
+      });
       setShowNewAddressForm(false);
       if (res?.data?.id) {
         setSelectedAddressId(res.data.id);
@@ -193,7 +220,18 @@ export default function CheckoutPage() {
 
                 <button
                   type="button"
-                  onClick={() => setShowNewAddressForm(!showNewAddressForm)}
+                  onClick={() => {
+                    if (showNewAddressForm) {
+                      reset({
+                        addressLine: "",
+                        region: "",
+                        city: "",
+                        postCode: "",
+                        instruction: "",
+                      });
+                    }
+                    setShowNewAddressForm(!showNewAddressForm);
+                  }}
                   className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -268,22 +306,40 @@ export default function CheckoutPage() {
                       )}
                     </div>
 
-                    <div>
-                      <label className="form-label">City</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Chittagong"
-                        {...register("city")}
-                        className="form-input"
-                      />
-                      {errors.city && <p className="form-error">{errors.city.message}</p>}
-                    </div>
+                    <RegionCitySelect
+                      regionValue={selectedRegion}
+                      cityValue={selectedCity}
+                      onRegionChange={(newRegion) => {
+                        setValue("region", newRegion, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                        setValue("city", "", {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
+                      onCityChange={(newCity) => {
+                        setValue("city", newCity, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
+                      regionError={errors.region?.message}
+                      cityError={errors.city?.message}
+                      regionLabel="Region / Division"
+                      cityLabel="City / District"
+                      regionId="shippingRegion"
+                      cityId="shippingCity"
+                      required
+                      containerClassName="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4"
+                    />
 
-                    <div>
+                    <div className="sm:col-span-2">
                       <label className="form-label">Postal Code</label>
                       <input
                         type="text"
-                        placeholder="e.g. 01 BP 1234"
+                        placeholder="e.g. 1205"
                         {...register("postCode")}
                         className="form-input"
                       />
@@ -308,7 +364,16 @@ export default function CheckoutPage() {
                     {addresses.length > 0 && (
                       <button
                         type="button"
-                        onClick={() => setShowNewAddressForm(false)}
+                        onClick={() => {
+                          reset({
+                            addressLine: "",
+                            region: "",
+                            city: "",
+                            postCode: "",
+                            instruction: "",
+                          });
+                          setShowNewAddressForm(false);
+                        }}
                         className="btn-secondary text-xs py-2 px-4"
                       >
                         Cancel
