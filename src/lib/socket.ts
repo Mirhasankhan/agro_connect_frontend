@@ -50,11 +50,9 @@ export const getSocket = (): Socket => {
 
   if (!socketInstance) {
     socketInstance = io(socketUrl, {
-      auth: (cb) => {
-        cb({ token: getAuthToken() });
-      },
+      auth: { token },
       query: { token },
-      transports: ["websocket", "polling"],
+      transports: ["websocket"],
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,

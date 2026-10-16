@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { Send, Check, CheckCheck, Loader2, ArrowLeft, MessageSquare, ShieldCheck } from "lucide-react";
+import { Send, Check, CheckCheck, ArrowLeft, MessageSquare, ShieldCheck } from "lucide-react";
 import { getSocket, getAuthToken } from "@/lib/socket";
 import { TChatMessage, TParticipant, TConversationHistory } from "@/types";
 import { toast } from "sonner";
@@ -22,7 +22,6 @@ export default function ChatWindow({
   const [inputValue, setInputValue] = useState("");
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -75,13 +74,38 @@ export default function ChatWindow({
     };
 
     const handleNewMessage = (msg: TChatMessage) => {
-      setMessages((prev) => [...prev, msg]);
-      setIsSending(false);
+      setMessages((prev) => {
+        // Reconcile optimistic message with server broadcast
+        const isMine =
+          msg.isSendByMe ||
+          (Boolean(currentUserId) && msg.senderId === currentUserId);
+
+        if (isMine) {
+          const optimisticIndex = prev.findIndex(
+            (m) =>
+              m.id?.startsWith("temp-") &&
+              m.message === msg.message &&
+              (m.receiverId === msg.receiverId || m.senderId === msg.senderId)
+          );
+
+          if (optimisticIndex !== -1) {
+            const updated = [...prev];
+            updated[optimisticIndex] = msg;
+            return updated;
+          }
+        }
+
+        // Avoid duplicate messages
+        if (msg.id && prev.some((m) => m.id === msg.id)) {
+          return prev;
+        }
+
+        return [...prev, msg];
+      });
     };
 
     const handleError = (err: { message?: string }) => {
       setIsLoadingHistory(false);
-      setIsSending(false);
       toast.error(err?.message || "Failed to process chat action");
     };
 
@@ -114,11 +138,12 @@ export default function ChatWindow({
       socket.off("message", handleNewMessage);
       socket.off("error", handleError);
     };
-  }, [activeParticipant?.id]);
+  }, [activeParticipant?.id, currentUserId]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || !activeParticipant) return;
+    const messageText = inputValue.trim();
+    if (!messageText || !activeParticipant) return;
 
     const socket = getSocket();
     if (!socket.connected) {
@@ -127,10 +152,24 @@ export default function ChatWindow({
       return;
     }
 
-    setIsSending(true);
-    const messageText = inputValue.trim();
+    // 1. Immediately clear input so the user can continue typing instantly
     setInputValue("");
 
+    // 2. Optimistic update: render message immediately (0ms delay)
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    const optimisticMsg: TChatMessage = {
+      id: tempId,
+      senderId: currentUserId,
+      receiverId: activeParticipant.id,
+      message: messageText,
+      isSendByMe: true,
+      createdAt: new Date().toISOString(),
+      isRead: false,
+    };
+
+    setMessages((prev) => [...prev, optimisticMsg]);
+
+    // 3. Emit through WebSocket immediately
     const token = getAuthToken();
     socket.emit("sendMessage", {
       receiverId: activeParticipant.id,
@@ -295,17 +334,11 @@ export default function ChatWindow({
         />
         <button
           type="submit"
-          disabled={!inputValue.trim() || isSending || !isConnected}
+          disabled={!inputValue.trim() || !isConnected}
           className="btn-primary py-2.5 px-4 flex items-center gap-1.5 disabled:opacity-50 text-sm font-semibold rounded-xl flex-shrink-0"
         >
-          {isSending ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <>
-              <Send className="h-4 w-4" />
-              <span className="hidden sm:inline">Send</span>
-            </>
-          )}
+          <Send className="h-4 w-4" />
+          <span className="hidden sm:inline">Send</span>
         </button>
       </form>
     </div>
