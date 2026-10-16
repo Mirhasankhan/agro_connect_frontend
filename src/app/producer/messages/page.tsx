@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useGetConversationsQuery } from "@/redux/features/chat/chatApi";
+import { useConversationList } from "@/hooks/useConversationList";
 import ChatWindow from "@/components/chat/ChatWindow";
 import { TParticipant, TConversationItem } from "@/types";
 import {
@@ -24,12 +24,7 @@ function ProducerMessagesContent() {
 
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const {
-    data: conversations = [],
-    isLoading,
-  } = useGetConversationsQuery(undefined, {
-    pollingInterval: 15000,
-  });
+  const { conversations, isLoading } = useConversationList();
 
   const [activeParticipant, setActiveParticipant] = useState<TParticipant | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
