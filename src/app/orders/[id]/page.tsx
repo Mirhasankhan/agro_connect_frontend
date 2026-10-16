@@ -53,6 +53,8 @@ export default function OrderDetailsPage() {
 
   // Real-time GPS live tracking hook
   const {
+    startLatitude: liveStartLat,
+    startLongitude: liveStartLng,
     latitude: liveLat,
     longitude: liveLng,
     heading: liveHeading,
@@ -61,6 +63,8 @@ export default function OrderDetailsPage() {
     status: liveStatus,
     lastUpdated: liveLastUpdated,
   } = useDeliveryTracking(activeDelivery?.id, {
+    initialStartLatitude: activeDelivery?.startLatitude,
+    initialStartLongitude: activeDelivery?.startLongitude,
     initialLatitude: activeDelivery?.latitude,
     initialLongitude: activeDelivery?.longitude,
     initialHeading: activeDelivery?.heading,
@@ -399,6 +403,8 @@ export default function OrderDetailsPage() {
                   deliveryId={activeDelivery.id}
                   driver={driver}
                   shippingAddress={order.shippingAddress}
+                  startLatitude={liveStartLat ?? activeDelivery.startLatitude}
+                  startLongitude={liveStartLng ?? activeDelivery.startLongitude}
                   currentLatitude={liveLat ?? activeDelivery.latitude}
                   currentLongitude={liveLng ?? activeDelivery.longitude}
                   currentHeading={liveHeading ?? activeDelivery.heading}

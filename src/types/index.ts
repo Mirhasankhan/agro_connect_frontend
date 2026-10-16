@@ -374,6 +374,8 @@ export interface TOrderDelivery {
   orderId?: string;
   driverId?: string;
   status: DeliveryStatus;
+  startLatitude?: number | null;
+  startLongitude?: number | null;
   latitude?: number | null;
   longitude?: number | null;
   heading?: number | null;
@@ -523,6 +525,8 @@ export interface TDriverDeliveryDetails {
   id: string;
   status: DeliveryStatus;
   otpHash?: string | null;
+  startLatitude?: number | null;
+  startLongitude?: number | null;
   latitude?: number | null;
   longitude?: number | null;
   heading?: number | null;

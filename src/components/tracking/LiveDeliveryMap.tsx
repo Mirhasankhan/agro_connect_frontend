@@ -16,7 +16,6 @@ import {
 import {
   loadGoogleMaps,
   AGRO_CENTRAL_HUB_COORDS,
-  geocodeAddress,
 } from "@/lib/googleMaps";
 
 export interface LiveDeliveryMapProps {
@@ -35,6 +34,8 @@ export interface LiveDeliveryMapProps {
     postCode?: string | null;
     instruction?: string | null;
   } | null;
+  startLatitude?: number | null;
+  startLongitude?: number | null;
   currentLatitude?: number | null;
   currentLongitude?: number | null;
   currentHeading?: number | null;
@@ -50,7 +51,8 @@ export interface LiveDeliveryMapProps {
 
 export default function LiveDeliveryMap({
   driver,
-  shippingAddress,
+  startLatitude,
+  startLongitude,
   currentLatitude,
   currentLongitude,
   currentHeading,
@@ -65,54 +67,57 @@ export default function LiveDeliveryMap({
 }: LiveDeliveryMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const startMarkerRef = useRef<google.maps.Marker | null>(null);
   const driverMarkerRef = useRef<google.maps.Marker | null>(null);
-  const destinationMarkerRef = useRef<google.maps.Marker | null>(null);
-  const hubMarkerRef = useRef<google.maps.Marker | null>(null);
   const routePolylineRef = useRef<google.maps.Polyline | null>(null);
+  const directionsRendererRef = useRef<google.maps.DirectionsRenderer | null>(null);
+  const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
   const trafficLayerRef = useRef<google.maps.TrafficLayer | null>(null);
   const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  const breadcrumbsRef = useRef<google.maps.LatLngLiteral[]>([]);
+  const lastDirectionsTimeRef = useRef<number>(0);
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [destinationCoords, setDestinationCoords] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
   const [showTraffic, setShowTraffic] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [timeAgo, setTimeAgo] = useState<string>("Awaiting update");
 
-  // Geocode delivery address to place destination pin
+  // Keep track of the resolved start location
+  const [localStartCoords, setLocalStartCoords] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(() => {
+    if (
+      typeof startLatitude === "number" &&
+      typeof startLongitude === "number" &&
+      !isNaN(startLatitude) &&
+      !isNaN(startLongitude)
+    ) {
+      return { lat: startLatitude, lng: startLongitude };
+    }
+    return null;
+  });
+
+  // Sync or auto-detect start coordinates when tracking starts
   useEffect(() => {
-    let isMounted = true;
-    const resolveDestination = async () => {
-      if (!shippingAddress) return;
-      const fullAddress = [
-        shippingAddress.addressLine,
-        shippingAddress.city,
-        shippingAddress.postCode,
-        "Côte d'Ivoire",
-      ]
-        .filter(Boolean)
-        .join(", ");
-
-      const coords = await geocodeAddress(fullAddress);
-      if (isMounted && coords) {
-        setDestinationCoords(coords);
-      } else if (isMounted) {
-        // Fallback default destination in Abidjan if geocode fails
-        setDestinationCoords({
-          lat: AGRO_CENTRAL_HUB_COORDS.lat + 0.035,
-          lng: AGRO_CENTRAL_HUB_COORDS.lng + 0.042,
-        });
-      }
-    };
-
-    resolveDestination();
-    return () => {
-      isMounted = false;
-    };
-  }, [shippingAddress]);
+    if (
+      typeof startLatitude === "number" &&
+      typeof startLongitude === "number" &&
+      !isNaN(startLatitude) &&
+      !isNaN(startLongitude)
+    ) {
+      setLocalStartCoords({ lat: startLatitude, lng: startLongitude });
+    } else if (
+      isTracking &&
+      typeof currentLatitude === "number" &&
+      typeof currentLongitude === "number" &&
+      !isNaN(currentLatitude) &&
+      !isNaN(currentLongitude)
+    ) {
+      setLocalStartCoords((prev) => prev ?? { lat: currentLatitude, lng: currentLongitude });
+    }
+  }, [startLatitude, startLongitude, isTracking, currentLatitude, currentLongitude]);
 
   // Update time-ago ticker
   useEffect(() => {
@@ -143,7 +148,7 @@ export default function LiveDeliveryMap({
       .then((googleMaps) => {
         if (!isMounted || !mapContainerRef.current) return;
 
-        // Custom clean map styling
+        // Clean modern custom map styles
         const mapStyles: google.maps.MapTypeStyle[] = [
           { featureType: "water", stylers: [{ color: "#dbeafe" }, { visibility: "on" }] },
           { featureType: "landscape", stylers: [{ color: "#f8fafc" }] },
@@ -157,11 +162,11 @@ export default function LiveDeliveryMap({
         const initialCenter =
           typeof currentLatitude === "number" && typeof currentLongitude === "number"
             ? { lat: currentLatitude, lng: currentLongitude }
-            : destinationCoords || AGRO_CENTRAL_HUB_COORDS;
+            : localStartCoords || AGRO_CENTRAL_HUB_COORDS;
 
         const map = new googleMaps.Map(mapContainerRef.current, {
           center: initialCenter,
-          zoom: 14,
+          zoom: 15,
           styles: mapStyles,
           disableDefaultUI: true,
           zoomControl: true,
@@ -176,29 +181,7 @@ export default function LiveDeliveryMap({
         mapInstanceRef.current = map;
         infoWindowRef.current = new googleMaps.InfoWindow();
 
-        // 1. Hub Marker
-        const hubIcon = {
-          url:
-            "data:image/svg+xml;charset=UTF-8," +
-            encodeURIComponent(`
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-              <circle cx="18" cy="18" r="16" fill="#047857" stroke="#ffffff" stroke-width="2.5"/>
-              <path d="M12 22 L18 11 L24 22 Z" fill="#ffffff"/>
-              <rect x="15" y="20" width="6" height="6" fill="#047857"/>
-            </svg>
-          `),
-          scaledSize: new googleMaps.Size(36, 36),
-          anchor: new googleMaps.Point(18, 18),
-        };
-
-        hubMarkerRef.current = new googleMaps.Marker({
-          position: AGRO_CENTRAL_HUB_COORDS,
-          map,
-          title: "Agro Connect Central Hub",
-          icon: hubIcon,
-        });
-
-        // 2. Polyline for path
+        // 1. Polyline for direct/trail GPS path fallback
         routePolylineRef.current = new googleMaps.Polyline({
           map,
           strokeColor: "#059669",
@@ -206,6 +189,25 @@ export default function LiveDeliveryMap({
           strokeWeight: 4,
           geodesic: true,
         });
+
+        // 2. DirectionsRenderer for road-snapped route
+        if (googleMaps.DirectionsRenderer) {
+          directionsRendererRef.current = new googleMaps.DirectionsRenderer({
+            map,
+            suppressMarkers: true, // Do NOT show default A/B markers, use custom start & vehicle markers
+            preserveViewport: true,
+            polylineOptions: {
+              strokeColor: "#059669",
+              strokeWeight: 5,
+              strokeOpacity: 0.9,
+            },
+          });
+        }
+
+        // 3. DirectionsService instance
+        if (googleMaps.DirectionsService) {
+          directionsServiceRef.current = new googleMaps.DirectionsService();
+        }
 
         setMapLoaded(true);
       })
@@ -221,52 +223,68 @@ export default function LiveDeliveryMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Update Destination Marker when coords become available
+  // Update Start Marker ("from where the navigation started")
   useEffect(() => {
-    if (!mapLoaded || !mapInstanceRef.current || !destinationCoords || !window.google?.maps) return;
+    if (!mapLoaded || !mapInstanceRef.current || !window.google?.maps) return;
 
-    if (!destinationMarkerRef.current) {
-      const destIcon = {
-        url:
-          "data:image/svg+xml;charset=UTF-8," +
-          encodeURIComponent(`
-          <svg xmlns="http://www.w3.org/2000/svg" width="38" height="46" viewBox="0 0 38 46">
-            <path d="M19 0 C8.5 0 0 8.5 0 19 C0 31.5 19 46 19 46 C19 46 38 31.5 38 19 C38 8.5 29.5 0 19 0 Z" fill="#e11d48" stroke="#ffffff" stroke-width="2"/>
-            <circle cx="19" cy="18" r="8" fill="#ffffff"/>
-            <path d="M16 14 L22 14 L22 22 L16 22 Z" fill="#e11d48"/>
-          </svg>
-        `),
-        scaledSize: new window.google.maps.Size(34, 42),
-        anchor: new window.google.maps.Point(17, 42),
-      };
+    if (!localStartCoords) {
+      if (startMarkerRef.current) {
+        startMarkerRef.current.setMap(null);
+        startMarkerRef.current = null;
+      }
+      return;
+    }
 
-      destinationMarkerRef.current = new window.google.maps.Marker({
-        position: destinationCoords,
+    const startSvg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="44" height="52" viewBox="0 0 44 52">
+        <defs>
+          <filter id="startShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" flood-color="#022c22" flood-opacity="0.35"/>
+          </filter>
+        </defs>
+        <ellipse cx="22" cy="48" rx="10" ry="3.5" fill="#0f172a" opacity="0.3"/>
+        <path d="M22 2 C11.5 2 3 10.5 3 21 C3 35.5 22 50 22 50 C22 50 41 35.5 41 21 C41 10.5 32.5 2 22 2 Z" fill="#047857" stroke="#ffffff" stroke-width="2.5" filter="url(#startShadow)"/>
+        <circle cx="22" cy="21" r="11" fill="#ffffff"/>
+        <!-- Start play/origin arrow -->
+        <polygon points="19,15 28,21 19,27" fill="#047857"/>
+      </svg>
+    `;
+
+    const startIcon = {
+      url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(startSvg),
+      scaledSize: new window.google.maps.Size(40, 48),
+      anchor: new window.google.maps.Point(20, 48),
+    };
+
+    if (!startMarkerRef.current) {
+      startMarkerRef.current = new window.google.maps.Marker({
+        position: localStartCoords,
         map: mapInstanceRef.current,
-        title: "Delivery Destination",
-        icon: destIcon,
+        title: "Navigation Start Point",
+        icon: startIcon,
+        zIndex: 800,
       });
 
-      const destInfoContent = `
-        <div style="font-family:sans-serif;padding:6px;max-width:200px;">
-          <div style="font-weight:bold;color:#1e293b;font-size:12px;margin-bottom:2px;">Delivery Destination</div>
-          <div style="font-size:11px;color:#64748b;">${shippingAddress?.addressLine || "Customer Address"}</div>
-          <div style="font-size:10px;color:#059669;font-weight:600;margin-top:4px;">${shippingAddress?.city || ""}</div>
+      const startInfoContent = `
+        <div style="font-family:sans-serif;padding:6px;max-width:210px;">
+          <div style="font-weight:bold;color:#047857;font-size:12px;margin-bottom:2px;">Navigation Start Point</div>
+          <div style="font-size:11px;color:#475569;">Trip origin where live navigation started.</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:4px;">Route origin marker</div>
         </div>
       `;
 
-      destinationMarkerRef.current.addListener("click", () => {
-        if (infoWindowRef.current && mapInstanceRef.current && destinationMarkerRef.current) {
-          infoWindowRef.current.setContent(destInfoContent);
-          infoWindowRef.current.open(mapInstanceRef.current, destinationMarkerRef.current);
+      startMarkerRef.current.addListener("click", () => {
+        if (infoWindowRef.current && mapInstanceRef.current && startMarkerRef.current) {
+          infoWindowRef.current.setContent(startInfoContent);
+          infoWindowRef.current.open(mapInstanceRef.current, startMarkerRef.current);
         }
       });
     } else {
-      destinationMarkerRef.current.setPosition(destinationCoords);
+      startMarkerRef.current.setPosition(localStartCoords);
     }
-  }, [mapLoaded, destinationCoords, shippingAddress]);
+  }, [mapLoaded, localStartCoords]);
 
-  // Update Driver Marker & Position
+  // Update Driver Current Location Marker & Route
   useEffect(() => {
     if (!mapLoaded || !mapInstanceRef.current || !window.google?.maps) return;
 
@@ -280,6 +298,12 @@ export default function LiveDeliveryMap({
       if (driverMarkerRef.current) {
         driverMarkerRef.current.setMap(null);
         driverMarkerRef.current = null;
+      }
+      if (routePolylineRef.current) {
+        routePolylineRef.current.setPath([]);
+      }
+      if (directionsRendererRef.current) {
+        directionsRendererRef.current.setMap(null);
       }
       return;
     }
@@ -337,7 +361,7 @@ export default function LiveDeliveryMap({
           <div style="font-size:12px;font-weight:bold;color:#065f46;">🚚 ${driver?.fullName || "Delivery Driver"}</div>
           <div style="font-size:11px;color:#475569;margin-top:2px;">Vehicle: ${driver?.vehicleType || "Fleet Transport"} (${driver?.registrationNumber || "Certified"})</div>
           ${typeof currentSpeed === "number" ? `<div style="font-size:11px;font-weight:600;color:#0284c7;margin-top:4px;">Speed: ${(currentSpeed * 3.6).toFixed(0)} km/h</div>` : ""}
-          <div style="font-size:10px;color:#94a3b8;margin-top:4px;">Live tracking active</div>
+          <div style="font-size:10px;color:#059669;font-weight:600;margin-top:4px;">Live driver current location</div>
         </div>
       `;
 
@@ -352,13 +376,74 @@ export default function LiveDeliveryMap({
       driverMarkerRef.current.setIcon(driverIcon);
     }
 
-    // Update Polyline Route
-    if (routePolylineRef.current) {
-      const pathPoints: google.maps.LatLngLiteral[] = [AGRO_CENTRAL_HUB_COORDS, driverPos];
-      if (destinationCoords) {
-        pathPoints.push(destinationCoords);
+    // -------------------------------------------------------------
+    // Route from Where Navigation Started to Driver Current Location
+    // -------------------------------------------------------------
+    if (localStartCoords) {
+      // Append driver position to breadcrumbs trail if distance moved
+      const trail = breadcrumbsRef.current;
+      const lastPoint = trail[trail.length - 1] || localStartCoords;
+      const distLat = Math.abs(lastPoint.lat - driverPos.lat);
+      const distLng = Math.abs(lastPoint.lng - driverPos.lng);
+
+      if (distLat > 0.00015 || distLng > 0.00015) {
+        trail.push(driverPos);
       }
-      routePolylineRef.current.setPath(pathPoints);
+
+      // Always update the instant polyline path connecting start -> breadcrumbs -> driver
+      const pathPoints: google.maps.LatLngLiteral[] = [
+        localStartCoords,
+        ...trail,
+        driverPos,
+      ];
+
+      if (routePolylineRef.current) {
+        routePolylineRef.current.setMap(mapInstanceRef.current);
+        routePolylineRef.current.setPath(pathPoints);
+      }
+
+      // Try Google DirectionsService for road-accurate driving route (throttled to once every 12s)
+      const now = Date.now();
+      if (
+        directionsServiceRef.current &&
+        directionsRendererRef.current &&
+        now - lastDirectionsTimeRef.current >= 12000
+      ) {
+        lastDirectionsTimeRef.current = now;
+
+        directionsServiceRef.current.route(
+          {
+            origin: localStartCoords,
+            destination: driverPos,
+            travelMode: window.google.maps.TravelMode.DRIVING,
+          },
+          (result, status) => {
+            if (status === window.google.maps.DirectionsStatus.OK && result) {
+              if (directionsRendererRef.current && mapInstanceRef.current) {
+                directionsRendererRef.current.setMap(mapInstanceRef.current);
+                directionsRendererRef.current.setDirections(result);
+                // Hide direct polyline when road snapped route is active
+                routePolylineRef.current?.setMap(null);
+              }
+            } else {
+              // If DirectionsService fails or hits limits, fall back to direct polyline
+              if (directionsRendererRef.current) {
+                directionsRendererRef.current.setMap(null);
+              }
+              if (routePolylineRef.current && mapInstanceRef.current) {
+                routePolylineRef.current.setMap(mapInstanceRef.current);
+              }
+            }
+          }
+        );
+      }
+    } else {
+      if (routePolylineRef.current) {
+        routePolylineRef.current.setPath([]);
+      }
+      if (directionsRendererRef.current) {
+        directionsRendererRef.current.setMap(null);
+      }
     }
   }, [
     mapLoaded,
@@ -367,37 +452,41 @@ export default function LiveDeliveryMap({
     currentHeading,
     currentSpeed,
     driver,
-    destinationCoords,
+    localStartCoords,
   ]);
 
-  // Center on Driver or Route
+  // Center on Driver or Start Position
   const handleCenterOnDriver = useCallback(() => {
     if (!mapInstanceRef.current) return;
     if (typeof currentLatitude === "number" && typeof currentLongitude === "number") {
       mapInstanceRef.current.panTo({ lat: currentLatitude, lng: currentLongitude });
       mapInstanceRef.current.setZoom(16);
-    } else if (destinationCoords) {
-      mapInstanceRef.current.panTo(destinationCoords);
-      mapInstanceRef.current.setZoom(14);
+    } else if (localStartCoords) {
+      mapInstanceRef.current.panTo(localStartCoords);
+      mapInstanceRef.current.setZoom(15);
     }
-  }, [currentLatitude, currentLongitude, destinationCoords]);
+  }, [currentLatitude, currentLongitude, localStartCoords]);
 
+  // Fit bounds around Start location and Driver Current Location
   const handleFitRouteBounds = useCallback(() => {
     if (!mapInstanceRef.current || !window.google?.maps) return;
     const bounds = new window.google.maps.LatLngBounds();
+    let hasPoints = false;
 
-    bounds.extend(AGRO_CENTRAL_HUB_COORDS);
-
-    if (destinationCoords) {
-      bounds.extend(destinationCoords);
+    if (localStartCoords) {
+      bounds.extend(localStartCoords);
+      hasPoints = true;
     }
 
     if (typeof currentLatitude === "number" && typeof currentLongitude === "number") {
       bounds.extend({ lat: currentLatitude, lng: currentLongitude });
+      hasPoints = true;
     }
 
-    mapInstanceRef.current.fitBounds(bounds, 60);
-  }, [destinationCoords, currentLatitude, currentLongitude]);
+    if (hasPoints) {
+      mapInstanceRef.current.fitBounds(bounds, 60);
+    }
+  }, [localStartCoords, currentLatitude, currentLongitude]);
 
   const toggleTraffic = () => {
     if (!mapInstanceRef.current || !window.google?.maps) return;
@@ -460,7 +549,7 @@ export default function LiveDeliveryMap({
           {isDelivered ? (
             <>
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span className="text-emerald-700 font-bold">Delivery Completed</span>
+              <span className="text-emerald-700 font-bold">Trip Completed</span>
             </>
           ) : isTracking && hasLiveCoords ? (
             <>
@@ -509,7 +598,7 @@ export default function LiveDeliveryMap({
             type="button"
             onClick={handleFitRouteBounds}
             className="p-2 rounded-xl bg-white/95 hover:bg-white text-slate-700 hover:text-emerald-700 border border-slate-200 shadow-md transition-all active:scale-95"
-            title="Fit Full Route"
+            title="Fit Route (Start & Driver)"
           >
             <MapPin className="w-4 h-4 text-slate-600" />
           </button>
@@ -548,7 +637,7 @@ export default function LiveDeliveryMap({
             <span className="font-bold text-amber-950 block">Live Navigation Standby</span>
             <p className="text-[11px] text-amber-800 leading-tight">
               {driver
-                ? `${driver.fullName} is assigned. Real-time GPS coordinates stream once navigation starts.`
+                ? `${driver.fullName} is assigned. The live route from trip start to current position will stream once navigation begins.`
                 : "A certified driver will be assigned to fulfill this regional delivery."}
             </p>
           </div>

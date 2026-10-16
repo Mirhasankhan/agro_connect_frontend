@@ -22,6 +22,8 @@ export interface UseDriverGeoTrackerOptions {
   deliveryId: string;
   initialLatitude?: number | null;
   initialLongitude?: number | null;
+  initialStartLatitude?: number | null;
+  initialStartLongitude?: number | null;
   initialIsTracking?: boolean;
   deliveryStatus?: string;
   onLocationUpdate?: (coords: DriverCoords) => void;
@@ -31,6 +33,8 @@ export function useDriverGeoTracker({
   deliveryId,
   initialLatitude,
   initialLongitude,
+  initialStartLatitude,
+  initialStartLongitude,
   initialIsTracking = false,
   deliveryStatus = "Assigned",
   onLocationUpdate,
@@ -50,8 +54,32 @@ export function useDriverGeoTracker({
         }
       : null
   );
+  const [startCoords, setStartCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(
+    typeof initialStartLatitude === "number" &&
+      typeof initialStartLongitude === "number"
+      ? {
+          latitude: initialStartLatitude,
+          longitude: initialStartLongitude,
+        }
+      : null
+  );
   const [lastEmittedAt, setLastEmittedAt] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (
+      typeof initialStartLatitude === "number" &&
+      typeof initialStartLongitude === "number"
+    ) {
+      setStartCoords({
+        latitude: initialStartLatitude,
+        longitude: initialStartLongitude,
+      });
+    }
+  }, [initialStartLatitude, initialStartLongitude]);
 
   const watchIdRef = useRef<number | null>(null);
   const wakeLockRef = useRef<any>(null);
@@ -143,6 +171,7 @@ export function useDriverGeoTracker({
         };
 
         setCoords(currentCoords);
+        setStartCoords((prev) => prev ?? { latitude, longitude });
         setTrackingStatus("Live");
         setLastEmittedAt(new Date());
         lastEmitTimeRef.current = Date.now();
@@ -294,6 +323,7 @@ export function useDriverGeoTracker({
     isNavigating,
     trackingStatus,
     coords,
+    startCoords,
     lastEmittedAt,
     error,
     startNavigation,

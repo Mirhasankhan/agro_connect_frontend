@@ -3,6 +3,8 @@ import { getSocket } from "@/lib/socket";
 
 export interface DeliveryTrackingState {
   deliveryId: string;
+  startLatitude: number | null;
+  startLongitude: number | null;
   latitude: number | null;
   longitude: number | null;
   heading: number | null;
@@ -16,6 +18,8 @@ export interface DeliveryTrackingState {
 }
 
 export interface UseDeliveryTrackingOptions {
+  initialStartLatitude?: number | null;
+  initialStartLongitude?: number | null;
   initialLatitude?: number | null;
   initialLongitude?: number | null;
   initialHeading?: number | null;
@@ -29,6 +33,12 @@ export function useDeliveryTracking(
   deliveryId?: string,
   options?: UseDeliveryTrackingOptions
 ): DeliveryTrackingState {
+  const [startLatitude, setStartLatitude] = useState<number | null>(
+    options?.initialStartLatitude ?? null
+  );
+  const [startLongitude, setStartLongitude] = useState<number | null>(
+    options?.initialStartLongitude ?? null
+  );
   const [latitude, setLatitude] = useState<number | null>(
     options?.initialLatitude ?? null
   );
@@ -57,6 +67,12 @@ export function useDeliveryTracking(
 
   // Sync initial options if they update from parent query
   useEffect(() => {
+    if (typeof options?.initialStartLatitude === "number") {
+      setStartLatitude(options.initialStartLatitude);
+    }
+    if (typeof options?.initialStartLongitude === "number") {
+      setStartLongitude(options.initialStartLongitude);
+    }
     if (typeof options?.initialLatitude === "number") {
       setLatitude(options.initialLatitude);
     }
@@ -79,6 +95,8 @@ export function useDeliveryTracking(
       setLastUpdated(new Date(options.initialUpdatedAt));
     }
   }, [
+    options?.initialStartLatitude,
+    options?.initialStartLongitude,
     options?.initialLatitude,
     options?.initialLongitude,
     options?.initialHeading,
@@ -140,6 +158,8 @@ export function useDeliveryTracking(
     const handleTrackingInitial = (data: any) => {
       if (!data || data.deliveryId !== deliveryIdRef.current) return;
 
+      if (typeof data.startLatitude === "number") setStartLatitude(data.startLatitude);
+      if (typeof data.startLongitude === "number") setStartLongitude(data.startLongitude);
       if (typeof data.latitude === "number") setLatitude(data.latitude);
       if (typeof data.longitude === "number") setLongitude(data.longitude);
       if (typeof data.heading === "number") setHeading(data.heading);
@@ -153,6 +173,8 @@ export function useDeliveryTracking(
     const handleLocationUpdate = (data: any) => {
       if (!data || data.deliveryId !== deliveryIdRef.current) return;
 
+      if (typeof data.startLatitude === "number") setStartLatitude(data.startLatitude);
+      if (typeof data.startLongitude === "number") setStartLongitude(data.startLongitude);
       if (typeof data.latitude === "number") setLatitude(data.latitude);
       if (typeof data.longitude === "number") setLongitude(data.longitude);
       if (typeof data.heading === "number") setHeading(data.heading);
@@ -166,6 +188,8 @@ export function useDeliveryTracking(
     const handleTrackingStatus = (data: any) => {
       if (!data || data.deliveryId !== deliveryIdRef.current) return;
 
+      if (typeof data.startLatitude === "number") setStartLatitude(data.startLatitude);
+      if (typeof data.startLongitude === "number") setStartLongitude(data.startLongitude);
       if (typeof data.isTracking === "boolean") setIsTracking(data.isTracking);
       if (data.status) setStatus(data.status);
       if (typeof data.latitude === "number") setLatitude(data.latitude);
@@ -208,6 +232,8 @@ export function useDeliveryTracking(
 
   return {
     deliveryId: deliveryId || "",
+    startLatitude,
+    startLongitude,
     latitude,
     longitude,
     heading,

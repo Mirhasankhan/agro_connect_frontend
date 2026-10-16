@@ -58,12 +58,15 @@ export default function DriverDeliveryDetailsPage() {
     isNavigating,
     trackingStatus,
     coords: currentCoords,
+    startCoords,
     startNavigation,
     stopNavigation,
   } = useDriverGeoTracker({
     deliveryId,
     initialLatitude: delivery?.latitude,
     initialLongitude: delivery?.longitude,
+    initialStartLatitude: delivery?.startLatitude,
+    initialStartLongitude: delivery?.startLongitude,
     initialIsTracking: delivery?.isTracking,
     deliveryStatus: delivery?.status,
   });
@@ -408,6 +411,8 @@ export default function DriverDeliveryDetailsPage() {
             vehicleType: "Assigned Transport",
           }}
           shippingAddress={shipping}
+          startLatitude={startCoords?.latitude ?? delivery.startLatitude}
+          startLongitude={startCoords?.longitude ?? delivery.startLongitude}
           currentLatitude={currentCoords?.latitude ?? delivery.latitude}
           currentLongitude={currentCoords?.longitude ?? delivery.longitude}
           currentHeading={currentCoords?.heading ?? delivery.heading}
