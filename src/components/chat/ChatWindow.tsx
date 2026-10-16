@@ -22,14 +22,27 @@ export default function ChatWindow({
   const [inputValue, setInputValue] = useState("");
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (smooth = true) => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    if (smooth) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
+    } else {
+      container.scrollTop = container.scrollHeight;
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    scrollToBottom(false);
+  }, [activeParticipant?.id]);
+
+  useEffect(() => {
+    scrollToBottom(true);
   }, [messages]);
 
   useEffect(() => {
@@ -199,18 +212,20 @@ export default function ChatWindow({
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       {/* Chat Header */}
-      <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-5 py-3.5">
-        <div className="flex items-center gap-3">
+      <div className="flex-shrink-0 flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-3 sm:px-5 py-3 sm:py-3.5">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {onBack && (
             <button
+              type="button"
               onClick={onBack}
-              className="md:hidden rounded-lg p-1.5 text-slate-500 hover:bg-slate-200"
-              aria-label="Back"
+              className="md:hidden inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-xs hover:bg-slate-100 active:bg-slate-200 transition-colors flex-shrink-0"
+              aria-label="Back to conversations"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4 text-emerald-700" />
+              <span>Chats</span>
             </button>
           )}
-          <div className="relative h-11 w-11 rounded-full overflow-hidden bg-emerald-100 border border-emerald-200 flex-shrink-0">
+          <div className="relative h-10 w-10 sm:h-11 sm:w-11 rounded-full overflow-hidden bg-emerald-100 border border-emerald-200 flex-shrink-0">
             {activeParticipant.profileImage ? (
               <Image
                 src={activeParticipant.profileImage}
@@ -219,23 +234,23 @@ export default function ChatWindow({
                 className="object-cover"
               />
             ) : (
-              <span className="flex h-full w-full items-center justify-center text-base font-bold text-emerald-800">
+              <span className="flex h-full w-full items-center justify-center text-sm sm:text-base font-bold text-emerald-800">
                 {activeParticipant.fullName?.charAt(0) || "U"}
               </span>
             )}
             <span
-              className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white ${
+              className={`absolute bottom-0 right-0 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full border-2 border-white ${
                 activeParticipant.isOnline ? "bg-emerald-500" : "bg-slate-300"
               }`}
             />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-slate-900 leading-tight">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h3 className="font-semibold text-slate-900 leading-tight text-sm sm:text-base truncate">
                 {activeParticipant.fullName}
               </h3>
               {activeParticipant.role && (
-                <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 tracking-wider">
+                <span className="rounded-md bg-emerald-50 px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-emerald-700 tracking-wider flex-shrink-0">
                   {activeParticipant.role}
                 </span>
               )}
@@ -262,7 +277,10 @@ export default function ChatWindow({
       </div>
 
       {/* Messages Thread */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3 bg-[#f8faf9]">
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-6 space-y-3 bg-[#f8faf9]"
+      >
         {isLoadingHistory ? (
           <div className="flex h-full min-h-[300px] items-center justify-center">          
             <span className="ml-2 text-sm text-slate-500">Loading conversation history...</span>
@@ -316,7 +334,6 @@ export default function ChatWindow({
             );
           })
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input Box */}
