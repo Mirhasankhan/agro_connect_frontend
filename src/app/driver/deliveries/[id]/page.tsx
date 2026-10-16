@@ -18,6 +18,10 @@ import {
   AlertCircle,
   User,
   Info,
+  Navigation,
+  Square,
+  Radio,
+  Compass,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import {
@@ -27,6 +31,8 @@ import {
 } from "@/redux/features/order/orderApi";
 import DeliveryOtpModal from "@/components/driver/DeliveryOtpModal";
 import { formatCurrency, formatUnit } from "@/utils/formatters";
+import { useDriverGeoTracker } from "@/hooks/useDriverGeoTracker";
+import LiveDeliveryMap from "@/components/tracking/LiveDeliveryMap";
 
 export default function DriverDeliveryDetailsPage() {
   const params = useParams();
@@ -46,6 +52,21 @@ export default function DriverDeliveryDetailsPage() {
 
   const delivery = data?.data;
   const order = delivery?.order;
+
+  // Real-time GPS navigation tracker
+  const {
+    isNavigating,
+    trackingStatus,
+    coords: currentCoords,
+    startNavigation,
+    stopNavigation,
+  } = useDriverGeoTracker({
+    deliveryId,
+    initialLatitude: delivery?.latitude,
+    initialLongitude: delivery?.longitude,
+    initialIsTracking: delivery?.isTracking,
+    deliveryStatus: delivery?.status,
+  });
 
   const handlePickUp = async () => {
     try {
@@ -143,6 +164,69 @@ export default function DriverDeliveryDetailsPage() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2.5 flex-wrap">
+          {/* Navigation Start/Stop Toggle */}
+          {delivery.status !== "Delivered" && (
+            <>
+              {!isNavigating ? (
+                <button
+                  type="button"
+                  onClick={startNavigation}
+                  className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5 shadow-md shadow-emerald-700/20 bg-emerald-600 hover:bg-emerald-700"
+                >
+                  <Navigation className="h-3.5 w-3.5" />
+                  Start Navigation
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={stopNavigation}
+                  className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5 border-rose-300 text-rose-700 hover:bg-rose-50 shadow-sm"
+                >
+                  <Square className="h-3.5 w-3.5 fill-rose-600" />
+                  Stop Navigation
+                </button>
+              )}
+
+              {/* Live Tracking Status Badge */}
+              <div
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold ${
+                  isNavigating
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : trackingStatus === "Connecting"
+                    ? "bg-sky-50 text-sky-800 border-sky-200"
+                    : trackingStatus === "Connection Lost"
+                    ? "bg-amber-50 text-amber-800 border-amber-200"
+                    : "bg-slate-50 text-slate-600 border-slate-200"
+                }`}
+              >
+                {isNavigating ? (
+                  <>
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                    </span>
+                    <span>GPS Live</span>
+                  </>
+                ) : trackingStatus === "Connecting" ? (
+                  <>
+                    <Loader2 className="h-3 w-3 animate-spin text-sky-600" />
+                    <span>Acquiring GPS...</span>
+                  </>
+                ) : trackingStatus === "Connection Lost" ? (
+                  <>
+                    <Radio className="h-3 w-3 text-amber-600 animate-pulse" />
+                    <span>GPS Reconnecting</span>
+                  </>
+                ) : (
+                  <>
+                    <Compass className="h-3 w-3 text-slate-400" />
+                    <span>Navigation Ready</span>
+                  </>
+                )}
+              </div>
+            </>
+          )}
+
           {delivery.status === "Assigned" && (
             <button
               type="button"
@@ -284,6 +368,55 @@ export default function DriverDeliveryDetailsPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Real-Time Live Navigation Map Section */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+              <Navigation className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="font-serif text-base font-bold text-slate-900">
+                Live Route & Driver Navigation
+              </h2>
+              <p className="text-xs text-slate-500">
+                Continuous real-time GPS telemetry from vehicle to customer delivery point.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isNavigating && currentCoords?.speed !== null && currentCoords?.speed !== undefined && (
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-slate-900 text-emerald-400">
+                {(currentCoords.speed * 3.6).toFixed(0)} km/h
+              </span>
+            )}
+            {currentCoords?.accuracy && (
+              <span className="text-[11px] font-mono text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                ±{Math.round(currentCoords.accuracy)}m accuracy
+              </span>
+            )}
+          </div>
+        </div>
+
+        <LiveDeliveryMap
+          deliveryId={deliveryId}
+          driver={{
+            fullName: "You (Assigned Driver)",
+            vehicleType: "Assigned Transport",
+          }}
+          shippingAddress={shipping}
+          currentLatitude={currentCoords?.latitude ?? delivery.latitude}
+          currentLongitude={currentCoords?.longitude ?? delivery.longitude}
+          currentHeading={currentCoords?.heading ?? delivery.heading}
+          currentSpeed={currentCoords?.speed ?? delivery.speed}
+          isTracking={isNavigating || Boolean(delivery.isTracking)}
+          status={delivery.status}
+          height="400px"
+          onRefresh={refetch}
+        />
       </div>
 
       {/* 2 Column Details Layout */}

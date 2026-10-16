@@ -35,7 +35,7 @@ export default function ProducerProductsPage() {
 
   const queryParams: any = {
     page,
-    limit: 1,
+    limit: 10,
   };
   if (searchTerm.trim()) queryParams.search = searchTerm.trim();
   if (statusFilter !== "all") queryParams.status = statusFilter;

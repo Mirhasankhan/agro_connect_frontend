@@ -513,7 +513,7 @@ export default function BuyerProfilePage() {
                   {/* Street Address */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 tracking-wider mb-2">
-                      Delivery Street Address
+                      Address
                     </label>
                     <textarea
                       rows={3}

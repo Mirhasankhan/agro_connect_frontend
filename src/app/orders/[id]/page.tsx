@@ -31,6 +31,8 @@ import {
   formatUnit,
   getOrderStatusColor,
 } from "@/utils/formatters";
+import { useDeliveryTracking } from "@/hooks/useDeliveryTracking";
+import LiveDeliveryMap from "@/components/tracking/LiveDeliveryMap";
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -43,6 +45,30 @@ export default function OrderDetailsPage() {
   });
 
   const order = data?.data;
+
+  const activeDelivery =
+    order?.deliveries && order.deliveries.length > 0
+      ? order.deliveries[order.deliveries.length - 1]
+      : null;
+
+  // Real-time GPS live tracking hook
+  const {
+    latitude: liveLat,
+    longitude: liveLng,
+    heading: liveHeading,
+    speed: liveSpeed,
+    isTracking: liveIsTracking,
+    status: liveStatus,
+    lastUpdated: liveLastUpdated,
+  } = useDeliveryTracking(activeDelivery?.id, {
+    initialLatitude: activeDelivery?.latitude,
+    initialLongitude: activeDelivery?.longitude,
+    initialHeading: activeDelivery?.heading,
+    initialSpeed: activeDelivery?.speed,
+    initialIsTracking: activeDelivery?.isTracking,
+    initialStatus: activeDelivery?.status,
+    initialUpdatedAt: activeDelivery?.trackingUpdatedAt || activeDelivery?.updatedAt,
+  });
 
   // Review modal state
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
@@ -126,10 +152,6 @@ export default function OrderDetailsPage() {
   const statusColors = getOrderStatusColor(order.status);
   const isDelivered = order.status === "Delivered";
 
-  const activeDelivery =
-    order.deliveries && order.deliveries.length > 0
-      ? order.deliveries[order.deliveries.length - 1]
-      : null;
   const driver = activeDelivery?.driver;
   const isDriverAssigned = Boolean(driver?.id);
 
@@ -295,7 +317,8 @@ export default function OrderDetailsPage() {
           </div>
 
           {isDriverAssigned && driver ? (
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5">
+            <>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-slate-50/70 border border-slate-200/80 rounded-2xl p-5">
               {/* Driver Identity & Vehicle Info */}
               <div className="flex items-center gap-4">
                 <div className="relative w-14 h-14 rounded-full bg-emerald-100 border-2 border-emerald-300 overflow-hidden shrink-0 flex items-center justify-center font-bold text-base text-emerald-800 shadow-xs">
@@ -368,6 +391,27 @@ export default function OrderDetailsPage() {
                 </Link>
               </div>
             </div>
+
+            {/* Real-Time Interactive Live Delivery Map */}
+            {activeDelivery && (
+              <div className="pt-2">
+                <LiveDeliveryMap
+                  deliveryId={activeDelivery.id}
+                  driver={driver}
+                  shippingAddress={order.shippingAddress}
+                  currentLatitude={liveLat ?? activeDelivery.latitude}
+                  currentLongitude={liveLng ?? activeDelivery.longitude}
+                  currentHeading={liveHeading ?? activeDelivery.heading}
+                  currentSpeed={liveSpeed ?? activeDelivery.speed}
+                  isTracking={liveIsTracking || Boolean(activeDelivery.isTracking)}
+                  status={liveStatus || activeDelivery.status}
+                  lastUpdated={liveLastUpdated}
+                  height="380px"
+                  onRefresh={refetch}
+                />
+              </div>
+            )}
+          </>
           ) : (
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200/80 text-xs text-slate-600">
               <div className="flex items-start gap-3">

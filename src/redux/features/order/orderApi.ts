@@ -158,6 +158,41 @@ const orderApi = baseApi.injectEndpoints({
       }),
       providesTags: ["Order"],
     }),
+
+    getDeliveryTrackingSnapshot: builder.query<
+      TApiResponse<any>,
+      string
+    >({
+      query: (deliveryId) => ({
+        url: `/order/delivery/tracking/${deliveryId}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Order", id }],
+    }),
+
+    startDeliveryTracking: builder.mutation<
+      TApiResponse<any>,
+      { deliveryId: string; latitude?: number; longitude?: number; heading?: number; speed?: number }
+    >({
+      query: (data) => ({
+        url: "/order/delivery/tracking/start",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Order", id: arg.deliveryId }, "Order"],
+    }),
+
+    stopDeliveryTracking: builder.mutation<
+      TApiResponse<any>,
+      { deliveryId: string }
+    >({
+      query: (data) => ({
+        url: "/order/delivery/tracking/stop",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: (result, error, arg) => [{ type: "Order", id: arg.deliveryId }, "Order"],
+    }),
   }),
 });
 
@@ -174,4 +209,8 @@ export const {
   useMarkDeliveryStatusMutation,
   useSendDeliveryCompletionOtpMutation,
   useVerifyDeliveryCompletionOtpMutation,
+  useGetDeliveryTrackingSnapshotQuery,
+  useStartDeliveryTrackingMutation,
+  useStopDeliveryTrackingMutation,
 } = orderApi;
+
