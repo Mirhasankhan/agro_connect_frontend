@@ -3,13 +3,12 @@
  * Loads Google Maps JavaScript API idempotently without duplicate script tags.
  */
 
-const DEFAULT_MAPS_API_KEY = "AIzaSyD_dV0eoWcI8MEoPSB5gXN_peqd69IQciI";
+
 
 export const getGoogleMapsApiKey = (): string => {
   return (
     process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ||
-    process.env.GOOGLE_MAPS_API_KEY ||
-    DEFAULT_MAPS_API_KEY
+    process.env.GOOGLE_MAPS_API_KEY || "sfsdfsdf"    
   );
 };
 
