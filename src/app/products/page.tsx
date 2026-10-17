@@ -217,7 +217,7 @@ export default function ProductsPage() {
           {/* Sidebar Filters (Desktop & Mobile Drawer) */}
           <aside
             className={`lg:block ${mobileFilterOpen ? "block mb-6" : "hidden"
-              } bg-white border border-slate-200/90 rounded-2xl p-5 space-y-6 h-fit shadow-sm`}
+              } lg:sticky lg:top-24 lg:self-start bg-white border border-slate-200/90 rounded-2xl p-5 space-y-6 h-fit shadow-sm`}
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
