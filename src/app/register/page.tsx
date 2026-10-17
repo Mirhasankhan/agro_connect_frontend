@@ -24,6 +24,9 @@ const registerSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["BUYER", "PRODUCER", "DRIVER"]),
+  termsAccepted: z.boolean().refine((accepted) => accepted, {
+    message: "You must agree to the Terms and Conditions and Privacy Policy",
+  }),
 });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
@@ -51,7 +54,13 @@ export default function RegisterPage() {
 
   const onSubmit = async (values: RegisterFormValues) => {
     try {
-      const response = await registerUser(values).unwrap();
+      const registrationValues = {
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+      };
+      const response = await registerUser(registrationValues).unwrap();
       toast.success(
         response.message || "Verification code sent to your email!",
       );
@@ -222,6 +231,39 @@ export default function RegisterPage() {
               </div>
               {errors.password && (
                 <p className="form-error">{errors.password.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="flex items-start gap-2.5 text-xs leading-relaxed text-slate-600">
+                <input
+                  type="checkbox"
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                  disabled={isLoading}
+                  {...register("termsAccepted")}
+                />
+                <span>
+                  I agree to the{" "}
+                  <Link
+                    href="/terms-and-conditions"
+                    target="_blank"
+                    className="font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+                  >
+                    Terms and Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy-policy"
+                    target="_blank"
+                    className="font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
+              </label>
+              {errors.termsAccepted && (
+                <p className="form-error">{errors.termsAccepted.message}</p>
               )}
             </div>
 

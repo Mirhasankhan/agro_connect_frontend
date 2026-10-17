@@ -180,10 +180,10 @@ export default function Footer() {
             rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/" className="hover:text-emerald-400 transition-colors">
+            <Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/" className="hover:text-emerald-400 transition-colors">
+            <Link href="/terms-and-conditions" className="hover:text-emerald-400 transition-colors">
               Terms of Service
             </Link>
             <Link href="/" className="hover:text-emerald-400 transition-colors">
