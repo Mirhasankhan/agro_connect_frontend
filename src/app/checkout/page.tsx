@@ -14,7 +14,16 @@ import {
   ArrowLeft,
   AlertCircle,
   CheckCircle2,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { toast } from "react-toastify";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -87,6 +96,7 @@ export default function CheckoutPage() {
 
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+  const [policyModalOpen, setPolicyModalOpen] = useState(false);
 
   // Sync default address if available
   React.useEffect(() => {
@@ -514,11 +524,107 @@ export default function CheckoutPage() {
                 )}
               </button>
 
+              {/* Cancellation Policy Banner & Trigger */}
+              <div className="pt-3 border-t border-slate-100 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    Buyer Protection
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPolicyModalOpen(true)}
+                    className="text-emerald-700 hover:text-emerald-800 font-bold underline transition-colors inline-flex items-center gap-1"
+                  >
+                    <span>View Cancellation Policy</span>
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Orders can be cancelled for a 100% full refund at any time before produce is dispatched to the central aggregation hub.
+                </p>
+              </div>
 
             </div>
           </div>
         </div>
       </main>
+
+      {/* Cancellation Policy Dialog */}
+      <Dialog open={policyModalOpen} onOpenChange={setPolicyModalOpen}>
+        <DialogContent className="sm:max-w-lg bg-white border border-slate-200 shadow-xl rounded-3xl p-6 sm:p-8">
+          <DialogHeader className="space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-1">
+              <FileText className="w-6 h-6" />
+            </div>
+            <DialogTitle className="font-serif text-2xl font-bold text-slate-900">
+              Refund & Cancellation Policy
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-500 leading-relaxed">
+              Agro Connect guarantees fresh, certified agricultural produce from local farms with fair, transparent terms for buyers and producers.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2 text-xs text-slate-600 max-h-[60vh] overflow-y-auto pr-1">
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+              <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                1. Full Refund Window (Before Hub Dispatch)
+              </h4>
+              <p className="text-slate-600 leading-relaxed">
+                You may cancel your entire order or individual items with an instant 100% full refund (including delivery fee) at any point while the order is pending harvest preparation.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+              <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                2. Once Dispatched to Hub
+              </h4>
+              <p className="text-slate-600 leading-relaxed">
+                Because agricultural commodities are perishable, once a farmer marks produce as &quot;Sent to Hub&quot;, automatic cancellation locks to prevent food wastage. Admin review is required for special requests.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+              <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                3. Out for Delivery & Doorstep OTP
+              </h4>
+              <p className="text-slate-600 leading-relaxed">
+                When your order is out for delivery with a transporter, real-time GPS tracking is active. Delivery completion is verified with a secure 6-digit OTP sent to your email.
+              </p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+              <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                4. 24-Hour Quality Dispute Window
+              </h4>
+              <p className="text-slate-600 leading-relaxed">
+                If produce arrives damaged, rotten, or incorrect, submit a photo report within 24 hours of delivery. Admin will mediate and issue a prompt refund.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2 flex items-center justify-between border-t border-slate-100 gap-3">
+            <Link
+              href="/refund-and-cancellation-policy"
+              target="_blank"
+              className="text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5 transition-colors"
+            >
+              <span>Read Full Dedicated Policy</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPolicyModalOpen(false)}
+              className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold transition-colors"
+            >
+              I Understand
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>

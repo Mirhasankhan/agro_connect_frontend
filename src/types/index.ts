@@ -332,6 +332,7 @@ export interface TProducerOrderItemDetails {
   unitPrice: number;
   isReviewed: boolean;
   status: ItemStatus;
+  cancelReason?: string | null;
   updatedAt?: string;
   product?: {
     imageUrls: string[];

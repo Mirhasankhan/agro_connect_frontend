@@ -16,12 +16,15 @@ import {
   MessageSquare,
   Phone,
   Clock,
+  XCircle,
+  Ban,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ReviewModal from "@/components/order/ReviewModal";
 import ReportModal from "@/components/order/ReportModal";
 import ReportViewModal from "@/components/order/ReportViewModal";
+import CancelOrderModal from "@/components/order/CancelOrderModal";
 import { useGetOrderDetailsQuery } from "@/redux/features/order/orderApi";
 import { useAppSelector } from "@/redux/hooks";
 import { TReport } from "@/types";
@@ -95,6 +98,38 @@ export default function OrderDetailsPage() {
     productName: string;
   } | null>(null);
 
+  // Cancellation modal state
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [cancelModalConfig, setCancelModalConfig] = useState<{
+    mode: "order" | "item";
+    orderItemId?: string;
+    targetName: string;
+    refundEstimate: number;
+  }>({
+    mode: "order",
+    targetName: "",
+    refundEstimate: 0,
+  });
+
+  const handleOpenCancelOrder = (totalAmount: number, orderIdDisplay: string) => {
+    setCancelModalConfig({
+      mode: "order",
+      targetName: `Order #${orderIdDisplay}`,
+      refundEstimate: totalAmount,
+    });
+    setCancelModalOpen(true);
+  };
+
+  const handleOpenCancelItem = (orderItemId: string, productName: string, subtotal: number) => {
+    setCancelModalConfig({
+      mode: "item",
+      orderItemId,
+      targetName: productName,
+      refundEstimate: subtotal,
+    });
+    setCancelModalOpen(true);
+  };
+
   const handleOpenReview = (orderItemId: string, productName: string, isReviewed?: boolean) => {
     if (isReviewed) return;
     setSelectedReviewItem({ orderItemId, productName });
@@ -155,9 +190,21 @@ export default function OrderDetailsPage() {
 
   const statusColors = getOrderStatusColor(order.status);
   const isDelivered = order.status === "Delivered";
+  const isCancelled = order.status === "Cancelled" || order.status === "Refunded";
+  const isPartiallyCancelled = order.status === "PartiallyCancelled" || order.paymentStatus === "PartiallyRefunded";
 
   const driver = activeDelivery?.driver;
   const isDriverAssigned = Boolean(driver?.id);
+
+  const activeItems = order.items?.filter((it) => it.status !== "Cancelled") || [];
+  const hasDispatchedItems = order.items?.some(
+    (it) => it.status === "SentToHub" || it.status === "Delivered"
+  );
+  const canCancelFullOrder =
+    (order.status === "Active" || order.status === "Pending") &&
+    activeItems.length > 0 &&
+    !hasDispatchedItems &&
+    !isDriverAssigned;
 
   // Delivery timestamp and 24h report eligibility
   const deliveryTime = activeDelivery?.updatedAt
@@ -231,17 +278,59 @@ export default function OrderDetailsPage() {
             </div>
 
             <div className="flex sm:flex-col sm:items-end justify-between items-center gap-2">
-              <span
-                className={`px-3 py-1 rounded-full text-xs font-bold border ${statusColors.badge}`}
-              >
-                {order.status}
-              </span>
+              <div className="flex items-center gap-2">
+                {canCancelFullOrder && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleOpenCancelOrder(
+                        order.totalAmount,
+                        order.orderId || order.id.slice(-8).toUpperCase()
+                      )
+                    }
+                    className="px-3 py-1 rounded-full text-xs font-bold border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors flex items-center gap-1.5 shadow-xs"
+                  >
+                    <Ban className="w-3.5 h-3.5" />
+                    <span>Cancel Order</span>
+                  </button>
+                )}
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold border ${statusColors.badge}`}
+                >
+                  {order.status}
+                </span>
+              </div>
               <span className="text-xs text-slate-500">
                 Payment:{" "}
                 <span className="text-emerald-600 font-semibold">{order.paymentStatus}</span>
               </span>
             </div>
           </div>
+
+          {/* Cancellation Alerts */}
+          {isCancelled && (
+            <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-3">
+              <XCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <div className="space-y-0.5 text-xs">
+                <p className="font-bold text-sm">Order Cancelled & Refunded</p>
+                <p className="text-rose-700">
+                  {order.cancelReason || "This order was cancelled."} Full refund has been issued to your original payment method via Stripe.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {isPartiallyCancelled && !isCancelled && (
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="space-y-0.5 text-xs">
+                <p className="font-bold text-sm">Partial Order Cancellation</p>
+                <p className="text-amber-700">
+                  One or more items in this order could not be fulfilled or were cancelled. Refunds have been issued to your payment method. The remaining items continue along the scheduled delivery route.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Timeline Progress */}
           <div className="py-2">
@@ -455,9 +544,28 @@ export default function OrderDetailsPage() {
                 className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1">
-                  <h4 className="font-serif font-bold text-base text-slate-900">
-                    {item.productName || "Product"}
-                  </h4>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h4
+                      className={`font-serif font-bold text-base ${
+                        item.status === "Cancelled"
+                          ? "text-slate-400 line-through"
+                          : "text-slate-900"
+                      }`}
+                    >
+                      {item.productName || "Product"}
+                    </h4>
+                    {item.status === "Cancelled" && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                        <XCircle className="w-3 h-3" />
+                        Cancelled & Refunded
+                      </span>
+                    )}
+                    {item.status === "SentToHub" && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        At Hub
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-slate-500">
                     Quantity: {item.quantity}{" "}
                     {item.sellingUnit && <span>{formatUnit(item.sellingUnit)}</span>} ×{" "}
@@ -465,12 +573,45 @@ export default function OrderDetailsPage() {
                       {formatCurrency(item.unitPrice)}
                     </span>
                   </p>
+                  {item.cancelReason && (
+                    <p className="text-[11px] text-rose-700 bg-rose-50/80 p-2 rounded-xl border border-rose-200/80 max-w-md">
+                      <span className="font-semibold">Cancellation reason:</span> {item.cancelReason}
+                    </p>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-end gap-6">
-                  <span className="font-mono font-bold text-emerald-600 text-base">
+                <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
+                  <span
+                    className={`font-mono font-bold text-base ${
+                      item.status === "Cancelled"
+                        ? "text-slate-400 line-through"
+                        : "text-emerald-600"
+                    }`}
+                  >
                     {formatCurrency(item.subtotal)}
                   </span>
+
+                  {/* Cancel Pending Item Option */}
+                  {item.status === "Pending" &&
+                    !isCancelled &&
+                    !isDelivered &&
+                    !isDriverAssigned && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleOpenCancelItem(
+                            item.id,
+                            item.productName || "Product",
+                            item.subtotal
+                          )
+                        }
+                        className="px-2.5 py-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition-colors flex items-center gap-1 shadow-2xs"
+                        title="Cancel this harvest item"
+                      >
+                        <Ban className="w-3.5 h-3.5" />
+                        <span>Cancel Item</span>
+                      </button>
+                    )}
 
                   {/* If order is delivered, allow reviewing item or show Reviewed status */}
                   {isDelivered && (
@@ -647,6 +788,20 @@ export default function OrderDetailsPage() {
           productName={viewingReport.productName}
         />
       )}
+
+      {/* Cancel Order/Item Modal */}
+      <CancelOrderModal
+        isOpen={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        mode={cancelModalConfig.mode}
+        orderId={order.id}
+        orderItemId={cancelModalConfig.orderItemId}
+        targetName={cancelModalConfig.targetName}
+        refundEstimate={cancelModalConfig.refundEstimate}
+        onSuccess={() => {
+          refetch();
+        }}
+      />
 
       <Footer />
     </div>

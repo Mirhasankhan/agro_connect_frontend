@@ -193,6 +193,51 @@ const orderApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "Order", id: arg.deliveryId }, "Order"],
     }),
+
+    buyerCancelOrder: builder.mutation<
+      TApiResponse<null>,
+      { orderId: string; reason: string }
+    >({
+      query: ({ orderId, reason }) => ({
+        url: `/order/buyer/cancel/${orderId}`,
+        method: "PATCH",
+        body: { reason },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        "Order",
+        { type: "Order", id: arg.orderId },
+      ],
+    }),
+
+    buyerCancelOrderItem: builder.mutation<
+      TApiResponse<null>,
+      { orderItemId: string; reason: string; orderId?: string }
+    >({
+      query: ({ orderItemId, reason }) => ({
+        url: `/order/buyer/cancel-item/${orderItemId}`,
+        method: "PATCH",
+        body: { reason },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        "Order",
+        ...(arg.orderId ? [{ type: "Order" as const, id: arg.orderId }] : []),
+      ],
+    }),
+
+    producerCancelOrderItem: builder.mutation<
+      TApiResponse<null>,
+      { orderItemId: string; reason: string }
+    >({
+      query: ({ orderItemId, reason }) => ({
+        url: `/order/producer/cancel-item/${orderItemId}`,
+        method: "PATCH",
+        body: { reason },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        "Order",
+        { type: "Order", id: `item-${arg.orderItemId}` },
+      ],
+    }),
   }),
 });
 
@@ -212,5 +257,9 @@ export const {
   useGetDeliveryTrackingSnapshotQuery,
   useStartDeliveryTrackingMutation,
   useStopDeliveryTrackingMutation,
+  useBuyerCancelOrderMutation,
+  useBuyerCancelOrderItemMutation,
+  useProducerCancelOrderItemMutation,
 } = orderApi;
+
 

@@ -121,8 +121,14 @@ export const getOrderStatusColor = (
     case "Cancelled":
     case "Refunded":
       return {
-        badge: "bg-red-500/20 text-red-300 border-red-500/40",
+        badge: "bg-red-500/20 text-red-600 border-red-500/40",
         dot: "bg-red-400",
+      };
+    case "PartiallyCancelled":
+    case "PartiallyRefunded":
+      return {
+        badge: "bg-orange-500/20 text-orange-600 border-orange-500/40",
+        dot: "bg-orange-400",
       };
     case "Pending":
     default:

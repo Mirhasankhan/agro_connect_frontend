@@ -179,12 +179,15 @@ export default function Footer() {
             © {new Date().getFullYear()} Agro Connect Bangladesh. All
             rights reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center gap-6">
             <Link href="/privacy-policy" className="hover:text-emerald-400 transition-colors">
               Privacy Policy
             </Link>
             <Link href="/terms-and-conditions" className="hover:text-emerald-400 transition-colors">
               Terms of Service
+            </Link>
+            <Link href="/refund-and-cancellation-policy" className="hover:text-emerald-400 transition-colors">
+              Refund & Cancellation Policy
             </Link>
             <Link href="/" className="hover:text-emerald-400 transition-colors">
               Agricultural Standards
