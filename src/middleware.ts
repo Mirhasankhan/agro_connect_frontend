@@ -58,7 +58,7 @@ export function middleware(req: NextRequest) {
   }
 
   // 2. Authenticated PRODUCER: Strictly isolated to Producer Dashboard & Onboarding
-  if (role === "PRODUCER" || role === "ADMIN") {
+  if (role === "PRODUCER") {
     if (!isProducerRoute) {
       return NextResponse.redirect(new URL("/producer/dashboard", req.url));
     }
