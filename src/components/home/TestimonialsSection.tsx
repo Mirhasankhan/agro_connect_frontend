@@ -43,7 +43,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     name: "Mamadou Bakayoko",
-    role: "Agro Fleet Transporter (3.5T Van)",
+    role: "Agro Transporter (3.5T Van)",
     location: "Yamoussoukro",
     badge: "Verified Transporter",
     avatar:

@@ -359,7 +359,7 @@ export default function LiveDeliveryMap({
       const infoContent = `
         <div style="font-family:sans-serif;padding:8px;min-width:180px;">
           <div style="font-size:12px;font-weight:bold;color:#065f46;">🚚 ${driver?.fullName || "Delivery Driver"}</div>
-          <div style="font-size:11px;color:#475569;margin-top:2px;">Vehicle: ${driver?.vehicleType || "Fleet Transport"} (${driver?.registrationNumber || "Certified"})</div>
+          <div style="font-size:11px;color:#475569;margin-top:2px;">Vehicle: ${driver?.vehicleType || "Transport"} (${driver?.registrationNumber || "Certified"})</div>
           ${typeof currentSpeed === "number" ? `<div style="font-size:11px;font-weight:600;color:#0284c7;margin-top:4px;">Speed: ${(currentSpeed * 3.6).toFixed(0)} km/h</div>` : ""}
           <div style="font-size:10px;color:#059669;font-weight:600;margin-top:4px;">Live driver current location</div>
         </div>
